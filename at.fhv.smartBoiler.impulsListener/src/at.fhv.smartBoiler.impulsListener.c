@@ -47,6 +47,7 @@ void resetCounter(int signal_number) {
 void terminateHandler() {
 	close(gpio_file_descriptor);
 	remove(filename);
+	exit(0);
 }
 
 void *thread_doOutput (int *gpio_port) {
