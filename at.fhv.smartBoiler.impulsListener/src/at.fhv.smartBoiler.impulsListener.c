@@ -5,18 +5,22 @@
  Version     :
  Copyright   : Eclipse Public License
  Description :
+ Caveats	 : Messung mit Sekunden-Granularität limitiert auf <3.6kW/h
+ 	 	 	   Time-Out nicht definiert, power-off kann nicht detektiert werden
  ============================================================================
  */
 
 #include <signal.h>
 #include <poll.h>
-#include <string.h>
+#include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/fcntl.h>
 #include <sys/signal.h>
-#include <unistd.h>
 #include <time.h>
+#include <unistd.h>
 
 #define GPIO_FN_MAXLEN	32
 #define POLL_TIMEOUT	-1
@@ -26,6 +30,10 @@ sig_atomic_t impulsCount = 0;
 sig_atomic_t timeCount = 0;
 time_t periodStartTime;
 time_t bufferTime;
+pthread_t timerThread;
+FILE *statusFile;
+int gpio_file_descriptor;
+char* filename;
 int watt = -1;
 
 void resetCounter(int signal_number) {
@@ -36,10 +44,22 @@ void resetCounter(int signal_number) {
 	printf("[OK] reset\n");
 }
 
-void statusOutput(int signal_number) {
-	time_t nowTime = time(NULL);
-	time_t elapsedTime = nowTime - periodStartTime;
-	printf("%d/%d/%d\n", impulsCount, elapsedTime, watt);
+void terminateHandler() {
+	close(gpio_file_descriptor);
+	remove(filename);
+}
+
+void *thread_doOutput (int *gpio_port) {
+	while(1) {
+		statusFile = fopen(filename, "w");
+		time_t nowTime = time(NULL);
+		time_t elapsedTime = nowTime - periodStartTime;
+		fprintf(statusFile, "%d/%d/%d", impulsCount, elapsedTime, watt);
+		fflush(statusFile);
+		fclose(statusFile);
+		sleep(1);
+	}
+	return NULL;
 }
 
 void initializeSignalHandlers() {
@@ -48,10 +68,10 @@ void initializeSignalHandlers() {
 	sa_resetCounter.sa_handler = &resetCounter;
 	sigaction(SIGUSR1, &sa_resetCounter, NULL);
 
-	struct sigaction sa_statusOutput;
-	memset(&sa_statusOutput, 0, sizeof(sa_statusOutput));
-	sa_statusOutput.sa_handler = &statusOutput;
-	sigaction(SIGUSR2, &sa_statusOutput, NULL);
+	struct sigaction sa_terminateHandler;
+	memset(&sa_terminateHandler, 0, sizeof(sa_terminateHandler));
+	sa_terminateHandler.sa_handler = &terminateHandler;
+	sigaction(SIGINT, &sa_terminateHandler, NULL);
 }
 
 int main(int argc, char **argv) {
@@ -62,10 +82,12 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 
+	filename = (char*)malloc(32);
 	char fn[GPIO_FN_MAXLEN];
-	int fd, ret;
+	int ret;
 	struct pollfd pfd;
 	char rdbuf[RDBUF_LEN];
+	int gpio_port = atoi(argv[1]);
 
 	periodStartTime = time(NULL);
 
@@ -73,20 +95,22 @@ int main(int argc, char **argv) {
 	memset(fn, 0x00, GPIO_FN_MAXLEN);
 
 	initializeSignalHandlers();
+	// copy filename into char *filename
+	sprintf(filename, "%d_%d", (int) getpid(), (int) gpio_port);
+	// create periodic update thread
+	pthread_create(&timerThread, NULL, thread_doOutput, NULL);
 
-	printf("Process ID is %d\n", (int) getpid());
+	snprintf(fn, GPIO_FN_MAXLEN-1, "/sys/class/gpio/gpio%d/value", gpio_port);
 
-	snprintf(fn, GPIO_FN_MAXLEN-1, "/sys/class/gpio/gpio%s/value", argv[1]);
-
-	fd = open(fn, O_RDONLY);
-	if (fd < 0) {
+	gpio_file_descriptor = open(fn, O_RDONLY);
+	if (gpio_file_descriptor < 0) {
 		perror(fn);
 		return 2;
 	}
-	pfd.fd = fd;
+	pfd.fd = gpio_file_descriptor;
 	pfd.events = POLLPRI | POLLERR;
 
-	ret = read(fd, rdbuf, RDBUF_LEN - 1);
+	ret = read(gpio_file_descriptor, rdbuf, RDBUF_LEN - 1);
 	if (ret < 0) {
 		perror("read()");
 		return 4;
@@ -94,7 +118,7 @@ int main(int argc, char **argv) {
 
 	while (1) {
 		memset(rdbuf, 0x00, RDBUF_LEN);
-		lseek(fd, 0, SEEK_SET);
+		lseek(gpio_file_descriptor, 0, SEEK_SET);
 		ret = poll(&pfd, POLLIN, POLL_TIMEOUT);
 		if (ret == -1) {
 			// occurs on signal handling
@@ -102,14 +126,14 @@ int main(int argc, char **argv) {
 		}
 		if (ret < 0) {
 			perror("poll()");
-			close(fd);
+			close(gpio_file_descriptor);
 			return 3;
 		}
 		if (ret == 0) {
 			printf("timeout\n");
 			continue;
 		}
-		ret = read(fd, rdbuf, RDBUF_LEN - 1);
+		ret = read(gpio_file_descriptor, rdbuf, RDBUF_LEN - 1);
 
 		if (*rdbuf == '0') {
 			impulsCount++;
@@ -123,10 +147,14 @@ int main(int argc, char **argv) {
 		}
 
 		if (ret < 0) {
-			perror("read()");
+			// Do not output on SIGINT
+			//perror("read()");
 			return 4;
 		}
 	}
-	close(fd);
+
+
+
+	close(gpio_file_descriptor);
 	return 0;
 }
