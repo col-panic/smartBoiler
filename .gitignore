@@ -1,0 +1,7 @@
+.bash_history
+.bashrc
+.config/
+.eclipse/
+.profile
+bin/
+*.class
