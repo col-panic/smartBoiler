@@ -19,7 +19,7 @@ public class RasbPiController {
 	} 
 	
 	public static List<ImpulsCounterInformation> getImpulsCounterInformation() {
-		return null;
+		return GpioControl.getImpulsCounterInformation();
 	}
 	
 	public static List<Integer> getTipImpulsCountInformation() {

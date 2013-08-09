@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import at.fhv.smartgrid.rasbpi.RasbPiController;
+import at.fhv.smartgrid.rasbpi.internal.ImpulsCounterInformation;
 import at.fhv.smartgrid.rasbpi.internal.SensorInformation;
 
 public class SmartBoilerTest {
@@ -18,23 +19,29 @@ public class SmartBoilerTest {
 
 		List<SensorInformation> sl = RasbPiController.getSensorInformation();
 		for (SensorInformation sensorInformation : sl) {
-			System.out.println(sensorInformation.sensorId + " "
-					+ sensorInformation.sensorValue);
+			System.out.println(sensorInformation.getSensorId() + " "
+					+ sensorInformation.getSensorValue());
 		}
 
 		RasbPiController.setRelaisPowerState(true);
 
 	
-			Thread.sleep(5000);
-
+		for (int i = 0; i < 20; i++) {
+			Thread.sleep(20000);
+			List<ImpulsCounterInformation> ici = RasbPiController.getImpulsCounterInformation();
+			for (ImpulsCounterInformation impulsCounterInformation : ici) {
+				System.out.println(impulsCounterInformation.impulsCounterId+" "+impulsCounterInformation.countingStart+" "+impulsCounterInformation.impulsOccurences);
+			}
+			sl = RasbPiController.getSensorInformation();
+			for (SensorInformation sensorInformation : sl) {
+				System.out.println(sensorInformation.getSensorId() + " "
+						+ sensorInformation.getSensorValue());
+			}
+		}
 		
 		RasbPiController.setRelaisPowerState(false);
 
-		sl = RasbPiController.getSensorInformation();
-		for (SensorInformation sensorInformation : sl) {
-			System.out.println(sensorInformation.sensorId + " "
-					+ sensorInformation.sensorValue);
-		}
+		
 
 	}
 }

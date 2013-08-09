@@ -44,11 +44,11 @@ public class OneWireDeviceDirectoryWalker extends DirectoryWalker<SensorInformat
 			return true;
 		if (directory.getName().startsWith(DIRECTORY_PREFIX)) {
 			si = new SensorInformation();
-			si.sensorId = directory.getName();
+			si.setSensorId(directory.getName());
 
 			String value = FileUtils.readFileToString(new File(directory,
 					"w1_slave"));
-			si.sensorValue = parseOneWireSensorSlaveFile(value.split("\n")[1]);
+			si.setSensorValue(parseOneWireSensorSlaveFile(value.split("\n")[1]));
 			results.add(si);
 		}
 

@@ -6,7 +6,13 @@ import java.util.List;
 public class ImpulsCounterInformation {
 
 	public String impulsCounterId;
-	public Date coutingStart;
-	public List<Integer> impulsOccurences;
+	public Date countingStart;
+	public List<Long> impulsOccurences;
+	
+	public ImpulsCounterInformation() {
+		countingStart = new Date();
+	}
+	
+
 	
 }
