@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:marketPriceInformation xmlns:tns="http://www.example.org/MarketPriceInformationList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/MarketPriceInformationList MarketPriceInformationList.xsd ">
+  <tns:origin>Fachhochschule Vorarlberg, internal price information</tns:origin>
+  <tns:creationDate>2013-07-30T14:42:00</tns:creationDate>
+  <tns:referenceDateTime>2013-07-31T00:00:00</tns:referenceDateTime>
+  <tns:priceList>
+    <tns:priceEntry>
+      <tns:ordinalNumber>1</tns:ordinalNumber>
+      <tns:price>133</tns:price>
+    </tns:priceEntry>
+    <tns:priceEntry>
+     <tns:ordinalNumber>2</tns:ordinalNumber>
+     <tns:price>135</tns:price>
+    </tns:priceEntry>
+  </tns:priceList>
+</tns:marketPriceInformation>
