@@ -1,0 +1,1 @@
+/opt/java/bin/java -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y -cp rsc/MarketPriceInformationList.xsd:lib/commons-io-2.4.jar:lib/pi4j-core.jar:lib/pi4j-device.jar:lib/pi4j-gpio-extension.jar:bin/. at.fhv.smartgrid.SmartBoilerTest
