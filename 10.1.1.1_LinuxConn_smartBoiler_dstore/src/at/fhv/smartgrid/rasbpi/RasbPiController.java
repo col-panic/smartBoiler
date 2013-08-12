@@ -7,6 +7,7 @@ import at.fhv.smartgrid.rasbpi.internal.MarketPriceAtom;
 import at.fhv.smartgrid.rasbpi.internal.SensorInformation;
 import at.fhv.smartgrid.rasbpi.internal.gpio.GpioControl;
 import at.fhv.smartgrid.rasbpi.internal.onewire.LinuxOneWireSensorInformation;
+import at.fhv.smartgrid.rasbpi.marketprice.MarketPriceHelper;
 
 public class RasbPiController {
 
@@ -22,16 +23,12 @@ public class RasbPiController {
 		return GpioControl.getImpulsCounterInformation();
 	}
 	
-	public static List<Integer> getTipImpulsCountInformation() {
-		return null;
-	}
-	
 	public static long getCurrentMarketPricesListTimestamp() {
-		return 0L;
+		return MarketPriceHelper.getCurrentMarketPricesListTimestamp();
 	}
 	
 	public static List<MarketPriceAtom> getCurrentMarketPrices() {
-		return null;
+		return MarketPriceHelper.getCurrentMarketPrices();
 	}
 	
 	/**
