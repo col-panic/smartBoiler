@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2013 Fachhochschule Vorarlberg (FHV).
+  
+  Contributors:
+      Marco Descher - initial implementation
+-->
+<schema targetNamespace="http://www.example.org/MarketPriceInformationList" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/MarketPriceInformationList">
+
+    <complexType name="marketPriceAtom">
+    	<sequence minOccurs="1" maxOccurs="unbounded">
+    		<element name="ordinalNumber" type="int" minOccurs="1"
+    			maxOccurs="1">
+                <annotation>
+                	<documentation>The time period the contained price value is valid for in (n * 15minutes)+reference dateTime.</documentation>
+                </annotation>
+    		</element>
+    		<element name="price" type="int" minOccurs="1" maxOccurs="1">
+    			<annotation>
+    				<documentation>The price in Eurocent</documentation>
+    			</annotation></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="marketPriceInformation">
+    	<sequence>
+            <element name="origin" type="string" minOccurs="0" maxOccurs="1">
+            	<annotation>
+            		<documentation>Information related to the origin or creator of the market price information</documentation>
+            	</annotation></element>
+            <element name="creationDate" type="dateTime" minOccurs="1"
+    			maxOccurs="1">
+                <annotation>
+                	<documentation>The creation date time of this market price information </documentation>
+                </annotation>
+            </element>
+    		<element name="referenceDateTime" type="dateTime"
+    			minOccurs="1" maxOccurs="1">
+                <annotation>
+                	<documentation>The reference date time for the price list elements. Denotes the starting time of the ordinal for the price atom elements.</documentation>
+                </annotation>
+    		</element>
+    		<element name="priceList" type="tns:marketPriceList"
+    			minOccurs="1" maxOccurs="1">
+                <annotation>
+                	<documentation>The price list, containing the single ordinal entries defining the price ordered by ordinal.</documentation>
+                </annotation>
+    		</element>
+    	</sequence>
+    </complexType>
+    
+    <element name="marketPriceInformation" type="tns:marketPriceInformation"></element>
+
+
+    <complexType name="marketPriceList">
+    	<sequence>
+    		<element name="priceEntry" type="tns:marketPriceAtom" minOccurs="1" maxOccurs="unbounded"></element>
+    	</sequence>
+    </complexType>
+</schema>
