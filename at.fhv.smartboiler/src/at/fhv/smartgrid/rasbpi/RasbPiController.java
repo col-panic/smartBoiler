@@ -9,44 +9,81 @@ import at.fhv.smartgrid.rasbpi.internal.gpio.GpioControl;
 import at.fhv.smartgrid.rasbpi.internal.onewire.LinuxOneWireSensorInformation;
 import at.fhv.smartgrid.rasbpi.marketprice.MarketPriceHelper;
 
-public class RasbPiController {
+public class RasbPiController implements ISmartController {
 
-	/**
-	 * Deliver a list of 1-wire sensor information entries
-	 * @return
+	private static ISmartController instance;
+
+	private RasbPiController() {
+	}
+
+	public static ISmartController getInstance() {
+		if (instance == null) {
+			instance = new RasbPiController();
+		}
+		return instance;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhv.smartgrid.rasbpi.ISmartController#getSensorInformation()
 	 */
-	public static List<SensorInformation> getSensorInformation() {
+	@Override
+	public List<SensorInformation> getSensorInformation() {
 		return LinuxOneWireSensorInformation.getSensorInformationList();
-	} 
-	
-	/**
-	 * Deliver a list of connected impuls counter information entries
-	 * @return
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.fhv.smartgrid.rasbpi.ISmartController#getImpulsCounterInformation()
 	 */
-	public static List<ImpulsCounterInformation> getImpulsCounterInformation() {
+	@Override
+	public List<ImpulsCounterInformation> getImpulsCounterInformation() {
 		return GpioControl.getImpulsCounterInformation();
 	}
-	
-	public static long getCurrentMarketPricesListTimestamp() {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.fhv.smartgrid.rasbpi.ISmartController#getCurrentMarketPricesListTimestamp
+	 * ()
+	 */
+	@Override
+	public long getCurrentMarketPricesListTimestamp() {
 		return MarketPriceHelper.getCurrentMarketPricesListTimestamp();
 	}
-	
-	public static List<MarketPriceAtom> getCurrentMarketPrices() {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhv.smartgrid.rasbpi.ISmartController#getCurrentMarketPrices()
+	 */
+	@Override
+	public List<MarketPriceAtom> getCurrentMarketPrices() {
 		return MarketPriceHelper.getCurrentMarketPrices();
 	}
-	
-	/**
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param newState state to toggle the relais to
+	 * @see
+	 * at.fhv.smartgrid.rasbpi.ISmartController#setRelaisPowerState(boolean)
 	 */
-	public static void setRelaisPowerState(boolean newState) {
+	@Override
+	public void setRelaisPowerState(boolean newState) {
 		GpioControl.setRelaisPowerState(newState);
 	}
-	
-	/**
-	 * @return current state of the relais
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.fhv.smartgrid.rasbpi.ISmartController#getRelaisPowerState()
 	 */
-	public static boolean getRelaisPowerState() {
+	@Override
+	public boolean getRelaisPowerState() {
 		return GpioControl.getRelaisPowerState();
 	}
 
