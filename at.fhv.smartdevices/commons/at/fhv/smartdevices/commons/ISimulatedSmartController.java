@@ -9,7 +9,7 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
  * @author kepe
  *
  */
-public interface ISimulatedController extends ISmartController {
+public interface ISimulatedSmartController extends ISmartController {
 	public void SetTime(long date);
 
 }

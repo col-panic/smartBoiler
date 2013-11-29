@@ -16,7 +16,7 @@ import at.fhv.smartgrid.rasbpi.internal.SensorInformation;
  * @author kepe
  *
  */
-public class SimulatedController implements ISimulatedController {
+public class SimulatedController implements ISimulatedSmartController {
 
 	private long stateTimeStamp;
 	private List<SensorInformation> sis;
