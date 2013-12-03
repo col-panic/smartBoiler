@@ -9,5 +9,5 @@ package at.fhv.smartdevices.commons;
  */
 public interface IScheduler {
 	public boolean pause(long timeInSec);
-
+	
 }

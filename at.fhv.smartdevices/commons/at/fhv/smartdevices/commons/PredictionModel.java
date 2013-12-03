@@ -3,7 +3,6 @@
  */
 package at.fhv.smartdevices.commons;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,5 +20,6 @@ public class PredictionModel {
 	public HashMap<Integer,String> getSignature()
 	{
 		throw new UnsupportedOperationException("TODO");
+		
 	}
 }

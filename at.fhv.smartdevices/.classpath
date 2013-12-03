@@ -3,7 +3,10 @@
 	<classpathentry kind="src" path="commons"/>
 	<classpathentry kind="src" path="simulation"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Refs"/>
 	<classpathentry kind="src" path="/10.1.1.1_LinuxConn_smartBoiler_dstore"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/Program Files/Weka-3-6/weka-src.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Weka-3-6/weka.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
