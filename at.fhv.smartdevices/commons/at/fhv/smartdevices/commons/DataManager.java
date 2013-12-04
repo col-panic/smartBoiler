@@ -5,6 +5,8 @@ package at.fhv.smartdevices.commons;
 
 import java.util.*;
 
+import org.simpleframework.xml.*;
+
 import at.fhv.smartgrid.rasbpi.*;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
@@ -12,53 +14,64 @@ import at.fhv.smartgrid.rasbpi.internal.*;
  * @author kepe_nb
  *
  */
+
 public class DataManager {
-
-	private long _lastCollected;
-	private ISmartController _controller;
-	private BaseScheduler _scheduler;
 	
-	private HashMap<String, List<Float>> _sensorInformationHistory;
-	private HashMap<Long, Boolean> _relaisPowerState;
-	private long _pricesTimeStamp=-1;
-	private HashMap<Long, Integer> _prices;
-
-	public DataManager(ISmartController controller, BaseScheduler scheduler)
-	{
-		_lastCollected = scheduler.getDate();
+	private ISmartController _controller;
 		
-		_scheduler = scheduler;
+	private long _timeStamp;
+	private long _pricesTimeStamp=-1;
+		
+	//private SensorInformationHistory _sensorInformationHistory;
+	private HashMap<String, HashMap<Long,Float>> _sensorInformationHistory;
+	private HashMap<Long, Boolean> _relaisPowerStateHistory;
+	
+	private HashMap<Long, Integer> _pricesHistory;
+	
+
+	/**
+	 * 
+	 * @param controller ... the smart controller to collect the data from
+	 */
+	public DataManager(ISmartController controller)
+	{
 		_controller = controller;
 		
-		_prices = new HashMap<Long, Integer>();
+		_pricesHistory = new HashMap<Long, Integer>();		
 		
-		_sensorInformationHistory =  new HashMap<String,List<Float>>();		
-		List<SensorInformation> siList = _controller.getSensorInformation();
-		for (SensorInformation si : siList) {
-			List<Float> values = new ArrayList<Float>();
-			values.add(si.getSensorValue());
-			_sensorInformationHistory.put(si.getSensorId(), values);
-		}
-		_relaisPowerState.put(_lastCollected, _controller.getRelaisPowerState());
+		_sensorInformationHistory = createSensorHistoryMaps(_controller.getSensorInformation());
 		
-		//TODO: implement impuls counter info.	
+		_relaisPowerStateHistory = new HashMap<Long,Boolean>();
+		
+		
+		
+		/*TODO:impuls counter information
+		 * List<ImpulsCounterInformation> iciList = _controller.getImpulsCounterInformation();
+		for (ImpulsCounterInformation ici : iciList) {
+			ici.countingStart.getTime();
+			ici.
+		}*/
+		
 	}
+
+	
+	
 
 	/**
 	 * Called to perform a data collection on sensors and relais
+	 * @param dateTime ... should be the current timestamp
 	 */
-	public void CollectData(long dateTime) {
-		_lastCollected = _scheduler.getDate();
+	public void collectData(long dateTime) {
+		_timeStamp = dateTime;
 		
 		List<SensorInformation> siList = _controller.getSensorInformation();
-		for (SensorInformation si : siList) {			
-			List<Float> values = _sensorInformationHistory.get(si.getSensorId());
-			List<Float> newValues = new ArrayList<Float>();
-			values.addAll(newValues);			
-			_sensorInformationHistory.put(si.getSensorId(), values);
+		for (SensorInformation si : siList) {	
+			Float newValue = si.getSensorValue();			
+			HashMap<Long, Float> values = _sensorInformationHistory.get(si.getSensorId());
+			values.put(dateTime, newValue);	
 		}
 		
-		//TODO: implement impuls counter info.
+		
 		if(_pricesTimeStamp != _controller.getCurrentMarketPricesListTimestamp())
 		{
 			
@@ -67,12 +80,36 @@ public class DataManager {
 		    {
 		    	_pricesTimeStamp = _controller.getCurrentMarketPricesListTimestamp();
 		    	for (MarketPriceAtom priceAtom : atoms) {
-		    		_prices.put(priceAtom.validFrom,priceAtom.price);
+		    		_pricesHistory.put(priceAtom.validFrom,priceAtom.price);
 		    	}
 		    }
 		}		
-		_relaisPowerState.put(_lastCollected, _controller.getRelaisPowerState());
+		_relaisPowerStateHistory.put(_timeStamp, _controller.getRelaisPowerState());
+		
+		persistData();
+		//TODO: collect impuls counter info.
 	}
 	
+		
+	/**
+	 * Helper method to create the sensor history data structure
+	 * @returns a hashmap
+	 */
+	private HashMap<String,HashMap<Long,Float>> createSensorHistoryMaps(List<SensorInformation> siList) {
+		HashMap<String,HashMap<Long,Float>> retVal =  new HashMap<String,HashMap<Long,Float>>();			
+		
+		for (SensorInformation si : siList) {			
+			HashMap<Long,Float> siHistoryMap = new HashMap<Long,Float>();
+			retVal.put(si.getSensorId(), siHistoryMap);		
+		}
+		return retVal;
+	}
 	
+	/**
+	 * Helper method to serialize the data
+	 */
+	private void persistData()
+	{
+		
+	}	
 }

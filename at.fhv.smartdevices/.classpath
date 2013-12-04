@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="src" path="/10.1.1.1_LinuxConn_smartBoiler_dstore"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="3rdparty/simple-xml-2.7.1/jar/simple-xml-2.7.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
