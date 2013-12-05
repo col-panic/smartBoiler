@@ -43,7 +43,8 @@ public class SimulatedController implements ISimulatedSmartController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		sis=new ArrayList<SensorInformation>();
+		
+		SetSensorInformation();		
 	}	
 
 	
@@ -82,10 +83,12 @@ public class SimulatedController implements ISimulatedSmartController {
 	@Override
 	public void SetTime(long now) {
 		
-		Date startDate = new Date(stateTimeStamp);
-		Date dateNow=new Date(now);
+		Calendar startDate = Calendar.getInstance();
+		startDate.setTimeInMillis(stateTimeStamp);
+		Calendar dateNow=Calendar.getInstance();
+		dateNow.setTimeInMillis(now);
 		
-		double elapsedTime=(dateNow.getTime()-startDate.getTime())/1000.0;
+		double elapsedTime=(dateNow.getTimeInMillis()-startDate.getTimeInMillis())/1000.0;
 		if(elapsedTime<=60)
 		{
 			//no detectable change!
@@ -116,12 +119,12 @@ public class SimulatedController implements ISimulatedSmartController {
 			}	
 		}
 
-	private void SetImpulsCounter(Date startDate, double[] discreteSwitch) {
+	private void SetImpulsCounter(Calendar startDate, double[] discreteSwitch) {
 				
 		icis = new ArrayList<ImpulsCounterInformation>();
 		ImpulsCounterInformation ic = new ImpulsCounterInformation(); 
 		ic.impulsCounterId=COUNTER_ID;
-		ic.countingStart=startDate;
+		ic.countingStart=startDate.getTime();
 		ic.impulsOccurences = new ArrayList<Long>();
 		
 		//in Wh
@@ -191,7 +194,7 @@ public class SimulatedController implements ISimulatedSmartController {
 
 
 
-	private double[][] simulateDHWH(Date dateNow, Date startDate) {
+	private double[][] simulateDHWH(Calendar dateNow, Calendar startDate) {
 		int minNow = getMinutesSinceYearStarted(dateNow);
 		int minStartDate = getMinutesSinceYearStarted(startDate);
 		int amount = minNow-minStartDate;
@@ -219,15 +222,15 @@ public class SimulatedController implements ISimulatedSmartController {
 		return currentRelaisState;
 	}
 
-	private int getMinutesSinceYearStarted(Date date) {		
+	private int getMinutesSinceYearStarted(Calendar date) {		
 		Calendar c =  Calendar.getInstance();
 		c.set(Calendar.DAY_OF_MONTH, 1);
-		c.set(Calendar.MONTH, 1);
+		c.set(Calendar.MONTH, 0);
 		c.set(Calendar.HOUR_OF_DAY, 1);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
-		Date startOfYear = c.getTime();
-		int minutesSinceStartOfYear = (int) Math.floor((date.getTime()-startOfYear.getTime())/1000.0/60.0);
+		c.set(Calendar.YEAR, date.get(Calendar.YEAR));		
+		int minutesSinceStartOfYear = (int) Math.max(0, Math.floor((date.getTimeInMillis()-c.getTimeInMillis())/1000.0/60.0));
 		return minutesSinceStartOfYear;
 	}
 	
