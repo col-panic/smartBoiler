@@ -12,7 +12,7 @@ import at.fhv.smartgrid.rasbpi.internal.*;
  * @author kepe_nb 
  */
 
-public class DataManager {
+public class DataManager implements ISchedulable {
 
 	private final String SIH_FILENAME = "sih.xml";
 	private final String RELAIS_FILENAME = "relais.xml";
@@ -33,6 +33,8 @@ public class DataManager {
 	private SerializableTreeMap<Long, Integer> _costsHistory;
 
 	private SerializableTreeMap<Long, Long> _iciHistory;
+	
+	private long _scheduleTimeStep;
 
 	/**
 	 * 
@@ -178,5 +180,21 @@ public class DataManager {
 		SerializationHelper.serialize(_costsHistory, COSTS_FILENAME);
 		SerializationHelper.serialize(_relaisPowerStateHistory, RELAIS_FILENAME);
 		SerializationHelper.serialize(_iciHistory, ICI_FILENAME);
+	}
+
+	@Override
+	public void scheduledMethod(Long time) {
+		collectData(time);		
+	}
+
+	@Override
+	public long getScheduleTimeStep() {
+		return _scheduleTimeStep;
+	}
+
+	@Override
+	public void setScheduleTimeStep(Long value) {
+		_scheduleTimeStep = value;
+		
 	}
 }
