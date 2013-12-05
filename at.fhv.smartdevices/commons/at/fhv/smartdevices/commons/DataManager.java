@@ -9,7 +9,7 @@ import at.fhv.smartgrid.rasbpi.*;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
 /**
- * @author kepe_nb 
+ * @author kepe_nb
  */
 
 public class DataManager implements ISchedulable {
@@ -21,28 +21,28 @@ public class DataManager implements ISchedulable {
 
 	private ISmartController _controller;
 
-	private long _timeStamp;
+	private Clock _clock;
+
 	private long _pricesTimeStamp = -1;
-
 	private HashMap<String, Float> _sensorSensitivity;
-
 	private SerializableTreeMap<String, SerializableTreeMap<Long, Float>> _sensorInformationHistory;
-
 	private SerializableTreeMap<Long, Boolean> _relaisPowerStateHistory;
-
 	private SerializableTreeMap<Long, Integer> _costsHistory;
-
 	private SerializableTreeMap<Long, Long> _iciHistory;
-	
-	private long _scheduleTimeStep;
+
+	private long _scheduleTimeStep = 10000;
+	private int _priority = 10;
+
+	private Boolean _isrunning = false;
 
 	/**
 	 * 
-	 * @param controller the smart controller to collect the data from
+	 * @param controller
+	 *            the smart controller to collect the data from
 	 */
-	public DataManager(ISmartController controller) {
+	public DataManager(ISmartController controller, Clock clock) {
 		_controller = controller;
-
+		_clock = clock;
 		restoreData();
 
 		// TODO! Generalize as input parameter check for errors
@@ -53,21 +53,22 @@ public class DataManager implements ISchedulable {
 	}
 
 	/**
-	 * Called to perform a data collection on the controller sensors and persist them
+	 * Called to perform a data collection on the controller sensors and persist
+	 * them
 	 * 
-	 * @param dateTime current time
+	 * @param dateTime
+	 *            current time
 	 */
-	public void collectData(long dateTime) {
-		_timeStamp = dateTime;
+	public void collectData() {
 		Boolean changeInData = false;
 
 		List<SensorInformation> siList = _controller.getSensorInformation();
 		for (SensorInformation si : siList) {
 			Float newValue = si.getSensorValue();
 			SerializableTreeMap<Long, Float> values = _sensorInformationHistory.get(si.getSensorId());
-			if (values.lastEntry() == null || 
-					(Math.abs(values.lastEntry().getValue() - newValue) > _sensorSensitivity.get(si.getSensorId()))) {
-				values.put(dateTime, newValue);
+			if (values.lastEntry() == null
+					|| (Math.abs(values.lastEntry().getValue() - newValue) > _sensorSensitivity.get(si.getSensorId()))) {
+				values.put(_clock.getDate(), newValue);
 				changeInData = true;
 			}
 			_sensorInformationHistory.put(si.getSensorId(), values);
@@ -86,16 +87,18 @@ public class DataManager implements ISchedulable {
 		}
 		Boolean currentState = _controller.getRelaisPowerState();
 		if (_relaisPowerStateHistory.size() == 0 || _relaisPowerStateHistory.lastEntry().getValue() != currentState) {
-			_relaisPowerStateHistory.put(_timeStamp, currentState);
+			_relaisPowerStateHistory.put(_clock.getDate(), currentState);
 			changeInData = true;
 		}
 
 		List<ImpulsCounterInformation> iciList = _controller.getImpulsCounterInformation();
-		for (ImpulsCounterInformation ici : iciList) {
-			long offset = ici.countingStart.getTime();
-			if(!_iciHistory.containsKey(offset) || _iciHistory.get(offset)!=iciList.size()){
-				_iciHistory.put(offset, (long) iciList.size());
-				changeInData=true;
+		if (iciList != null) {
+			for (ImpulsCounterInformation ici : iciList) {
+				long offset = ici.countingStart.getTime();
+				if (!_iciHistory.containsKey(offset) || _iciHistory.get(offset) != iciList.size()) {
+					_iciHistory.put(offset, (long) iciList.size());
+					changeInData = true;
+				}
 			}
 		}
 
@@ -103,15 +106,14 @@ public class DataManager implements ISchedulable {
 			persistData();
 		}
 	}
-	
+
 	/**
 	 * @return the _sensorInformationHistory
 	 */
-	public SerializableTreeMap<String, SerializableTreeMap<Long, Float>> GetSensorInformationHistory()
-	{
+	public SerializableTreeMap<String, SerializableTreeMap<Long, Float>> GetSensorInformationHistory() {
 		return _sensorInformationHistory;
-	}	
-	
+	}
+
 	/**
 	 * @return the _pricesTimeStamp
 	 */
@@ -154,7 +156,7 @@ public class DataManager implements ISchedulable {
 			retVal.put(si.getSensorId(), siHistory);
 		}
 		return retVal;
-	}	
+	}
 
 	/**
 	 * Helper Method to check for locally stored data, create new objects
@@ -164,27 +166,23 @@ public class DataManager implements ISchedulable {
 
 		_costsHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Integer>(), COSTS_FILENAME);
 
-		_sensorInformationHistory = SerializationHelper.deserialize(createSensorHistoryMaps(_controller.getSensorInformation()),
-				SIH_FILENAME);
+		_sensorInformationHistory = SerializationHelper.deserialize(
+				createSensorHistoryMaps(_controller.getSensorInformation()), SIH_FILENAME);
 
-		_relaisPowerStateHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Boolean>(), RELAIS_FILENAME);
+		_relaisPowerStateHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Boolean>(),
+				RELAIS_FILENAME);
 
 		_iciHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Long>(), ICI_FILENAME);
-	}	
+	}
 
 	/**
 	 * Helper method to serialize all data
-	 */	 
+	 */
 	private void persistData() {
 		SerializationHelper.serialize(_sensorInformationHistory, SIH_FILENAME);
 		SerializationHelper.serialize(_costsHistory, COSTS_FILENAME);
 		SerializationHelper.serialize(_relaisPowerStateHistory, RELAIS_FILENAME);
 		SerializationHelper.serialize(_iciHistory, ICI_FILENAME);
-	}
-
-	@Override
-	public void scheduledMethod(Long time) {
-		collectData(time);		
 	}
 
 	@Override
@@ -195,6 +193,23 @@ public class DataManager implements ISchedulable {
 	@Override
 	public void setScheduleTimeStep(Long value) {
 		_scheduleTimeStep = value;
-		
+
+	}
+
+	@Override
+	public void run() {
+		_isrunning = true;
+		collectData();
+		_isrunning = false;
+	}
+
+	@Override
+	public int getPriority() {
+		return _priority;
+	}
+
+	@Override
+	public Boolean isRunning() {
+		return _isrunning;
 	}
 }

@@ -15,7 +15,7 @@ import at.fhv.smartgrid.rasbpi.internal.*;
 
 public class ControllerTests {
 
-	private Calendar _currentTime = Calendar.getInstance();
+	Calendar _currentTime = Calendar.getInstance();
 
 	@Before
 	public void before(){

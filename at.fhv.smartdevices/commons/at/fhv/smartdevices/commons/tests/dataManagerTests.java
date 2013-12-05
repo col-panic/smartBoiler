@@ -11,22 +11,27 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.fhv.smartdevices.commons.Clock;
 import at.fhv.smartdevices.commons.DataManager;
 import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
+import at.fhv.smartgrid.rasbpi.ISmartController;
 /**
  * @author kepe
  *
  */
 public class dataManagerTests {
 	
-	private SimulatedDHWHController _controller = new SimulatedDHWHController();
-	
+	ISmartController _controller = new SimulatedDHWHController();
+	Clock _clock;
 	
 	@Before
 	public void before()
-	{		
-		_controller.SetTime(0);
-		DataManager dm= new DataManager(_controller);
+	{				
+		_controller = new SimulatedDHWHController();
+		_clock = new Clock(_controller);
+		long timeStep = 3600*1000;
+		_clock.waitFor(timeStep);
+		DataManager dm= new DataManager(_controller, _clock);
 		Field fields[] = DataManager.class.getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
@@ -48,13 +53,13 @@ public class dataManagerTests {
 	@Test
 	public void testSerializationDeserialization()
 	{		
-		DataManager dm = new DataManager(_controller);
-		for (int i = 1; i < 100; i++) {
-			long time = 3600*i*1000;
-			_controller.SetTime(time);
-			dm.collectData(time);			
+		long timeStep = 3600*1000;
+		DataManager dm = new DataManager(_controller, _clock);
+		for (int i = 1; i < 100; i++) {			
+			_clock.waitFor(timeStep);
+			dm.collectData();			
 		}		
-		DataManager dm2 = new DataManager(_controller);
+		DataManager dm2 = new DataManager(_controller, _clock);
 		assertArrayEquals(dm.getCostsHistory().keySet().toArray(),dm2.getCostsHistory().keySet().toArray());
 		assertArrayEquals(dm.getIciHistory().values().toArray(),dm2.getIciHistory().values().toArray());
 		assertArrayEquals(dm.getRelaisPowerStateHistory().values().toArray(), dm2.getRelaisPowerStateHistory().values().toArray());
