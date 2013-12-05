@@ -12,18 +12,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.fhv.smartdevices.commons.DataManager;
-import at.fhv.smartdevices.simulatedDHWH.SimulatedController;
+import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
 /**
  * @author kepe
  *
  */
 public class dataManagerTests {
 	
-	private SimulatedController _controller = new SimulatedController(0);
+	private SimulatedDHWHController _controller = new SimulatedDHWHController();
+	
 	
 	@Before
 	public void before()
 	{		
+		_controller.SetTime(0);
 		DataManager dm= new DataManager(_controller);
 		Field fields[] = DataManager.class.getDeclaredFields();
 		for (Field field : fields) {
@@ -40,11 +42,12 @@ public class dataManagerTests {
 				}				
 			}				
 		}
+		
 	}
 
 	@Test
 	public void testSerializationDeserialization()
-	{			
+	{		
 		DataManager dm = new DataManager(_controller);
 		for (int i = 1; i < 100; i++) {
 			long time = 3600*i*1000;

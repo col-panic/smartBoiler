@@ -13,7 +13,9 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
  */
 public abstract class BaseScheduler{
 	private ISmartController _controller;	
-	private Calendar _start;
+	private long _start;
+	private int _dataAquisitionTimeStep = 1000;
+	private int _optimizationTimeStep = 3600000;
 	
 	public long getDate(){
 			Calendar cal = Calendar.getInstance();
@@ -31,6 +33,10 @@ public abstract class BaseScheduler{
 	}
 	public BaseScheduler(ISmartController controller){
 		_controller=controller;		
-		_start = Calendar.getInstance();
+		_start = Calendar.getInstance().getTimeInMillis();
+	}
+	
+	public void startScheduling(DataManager dataMngr, IModelBuilder modelBdr, IOptimizer optimizer){
+		
 	}
 }

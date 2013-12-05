@@ -7,29 +7,31 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import at.fhv.smartdevices.simulatedDHWH.SimulatedController;
+import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
 public class ControllerTests {
 
-	private Calendar currentTime = Calendar.getInstance();
+	private Calendar _currentTime = Calendar.getInstance();
 
 	@Before
 	public void before(){
-	
-		currentTime.set(Calendar.HOUR, 0);
-		currentTime.set(Calendar.MINUTE, 0);
-		currentTime.set(Calendar.SECOND, 0);
+		_currentTime = Calendar.getInstance();
+		_currentTime.set(Calendar.HOUR, 1);
+		_currentTime.set(Calendar.AM_PM, Calendar.AM);
+		_currentTime.set(Calendar.MINUTE, 0);
+		_currentTime.set(Calendar.SECOND, 0);
 	}
 	
 	
 	@Test
 	public void testTemperatureDecrease() {
 		try {
-			SimulatedController sc = new SimulatedController(getDate(0, 0, 3));
-
+			SimulatedDHWHController sc = new SimulatedDHWHController();
+			sc.SetTime(getDate(0, 0, 3));
 			sc.SetTime(getDate(1, 0, 0));
 			float oldSensorValue = -Float.MAX_VALUE;
 			List<SensorInformation> sis = sc.getSensorInformation();
@@ -52,8 +54,8 @@ public class ControllerTests {
 	@Test
 	public void testTemperatureIncrease() {
 		try {
-			SimulatedController sc = new SimulatedController(getDate(0, 0, 3));
-
+			SimulatedDHWHController sc = new SimulatedDHWHController();
+			sc.SetTime(getDate(0, 0, 3));
 			sc.SetTime(getDate(1, 0, 0));
 			float oldSensorValue = Float.MAX_VALUE;
 			List<SensorInformation> sis = sc.getSensorInformation();
@@ -77,9 +79,10 @@ public class ControllerTests {
 	public void TestPriceSignalTimeStamp(){
 	
 		//set the clock to 1pm to ensure a first price signal
-		SimulatedController sc = new SimulatedController(getDate(0, 0, 0));
-		long startTime = getDate(0,13,0);
-		sc.SetTime(startTime);
+		SimulatedDHWHController sc = new SimulatedDHWHController();
+		sc.SetTime(getDate(0, 0, 3));		
+		_currentTime.getTime().toString();
+		sc.SetTime(getDate(0,13,0));
 		assertTrue(sc.getCurrentMarketPricesListTimestamp()>0);
 		
 		//set the clock to 4pm and check, whether still the same price signal
@@ -116,7 +119,8 @@ public class ControllerTests {
 	public void testImpulsCounter()
 	{
 		try {
-			SimulatedController sc = new SimulatedController(getDate(0, 0, 3));
+			SimulatedDHWHController sc = new SimulatedDHWHController();
+			sc.SetTime(getDate(0, 0, 3));
 
 			long startDate = getDate(1, 0, 0);
 			sc.SetTime(startDate);
@@ -136,10 +140,10 @@ public class ControllerTests {
 
 	//Helper method to make a time step.
 	private long getDate(int days, int hours, int min) {
-		currentTime.add(Calendar.DAY_OF_MONTH, days);
-		currentTime.add(Calendar.HOUR, hours);
-		currentTime.add(Calendar.MINUTE, min);
-		return currentTime.getTimeInMillis();
+		_currentTime.add(Calendar.DAY_OF_MONTH, days);
+		_currentTime.add(Calendar.HOUR, hours);
+		_currentTime.add(Calendar.MINUTE, min);
+		return _currentTime.getTimeInMillis();
 	}
 
 }
