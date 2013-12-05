@@ -9,312 +9,32 @@
                   <object class="java.lang.Float">39.87601</object>
                </value>
                <value>
-                  <key class="java.lang.Long">7200000</key>
-                  <object class="java.lang.Float">39.75071</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">10800000</key>
-                  <object class="java.lang.Float">39.626198</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">14400000</key>
-                  <object class="java.lang.Float">39.502472</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">18000000</key>
-                  <object class="java.lang.Float">39.379524</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">21600000</key>
-                  <object class="java.lang.Float">39.25735</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">25200000</key>
-                  <object class="java.lang.Float">38.946518</object>
-               </value>
-               <value>
                   <key class="java.lang.Long">28800000</key>
                   <object class="java.lang.Float">38.766247</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">32400000</key>
-                  <object class="java.lang.Float">38.64794</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">36000000</key>
-                  <object class="java.lang.Float">38.53038</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">39600000</key>
-                  <object class="java.lang.Float">38.41356</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">43200000</key>
-                  <object class="java.lang.Float">38.297478</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">46800000</key>
-                  <object class="java.lang.Float">38.182125</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">50400000</key>
-                  <object class="java.lang.Float">38.028606</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">54000000</key>
-                  <object class="java.lang.Float">37.91495</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">57600000</key>
-                  <object class="java.lang.Float">37.802013</object>
                </value>
                <value>
                   <key class="java.lang.Long">61200000</key>
                   <object class="java.lang.Float">37.689785</object>
                </value>
                <value>
-                  <key class="java.lang.Long">64800000</key>
-                  <object class="java.lang.Float">37.559235</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">68400000</key>
-                  <object class="java.lang.Float">37.448536</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">72000000</key>
-                  <object class="java.lang.Float">37.338535</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">75600000</key>
-                  <object class="java.lang.Float">37.22923</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">79200000</key>
-                  <object class="java.lang.Float">37.120613</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">82800000</key>
-                  <object class="java.lang.Float">37.01268</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">86400000</key>
-                  <object class="java.lang.Float">36.90543</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">90000000</key>
-                  <object class="java.lang.Float">36.798855</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">93600000</key>
-                  <object class="java.lang.Float">36.69295</object>
-               </value>
-               <value>
                   <key class="java.lang.Long">97200000</key>
                   <object class="java.lang.Float">36.587715</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">100800000</key>
-                  <object class="java.lang.Float">36.483143</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">104400000</key>
-                  <object class="java.lang.Float">36.37923</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">108000000</key>
-                  <object class="java.lang.Float">36.27597</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">111600000</key>
-                  <object class="java.lang.Float">35.809956</object>
                </value>
                <value>
                   <key class="java.lang.Long">115200000</key>
                   <object class="java.lang.Float">35.178272</object>
                </value>
                <value>
-                  <key class="java.lang.Long">118800000</key>
-                  <object class="java.lang.Float">35.082584</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">122400000</key>
-                  <object class="java.lang.Float">34.979492</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">126000000</key>
-                  <object class="java.lang.Float">34.88506</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">129600000</key>
-                  <object class="java.lang.Float">34.79122</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">133200000</key>
-                  <object class="java.lang.Float">34.697975</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">136800000</key>
-                  <object class="java.lang.Float">34.605316</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">140400000</key>
-                  <object class="java.lang.Float">34.491703</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">144000000</key>
-                  <object class="java.lang.Float">34.400345</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">147600000</key>
-                  <object class="java.lang.Float">34.309563</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">151200000</key>
-                  <object class="java.lang.Float">34.219353</object>
-               </value>
-               <value>
                   <key class="java.lang.Long">154800000</key>
                   <object class="java.lang.Float">34.12971</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">158400000</key>
-                  <object class="java.lang.Float">34.040634</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">162000000</key>
-                  <object class="java.lang.Float">33.952118</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">165600000</key>
-                  <object class="java.lang.Float">33.864162</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">169200000</key>
-                  <object class="java.lang.Float">33.77676</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">172800000</key>
-                  <object class="java.lang.Float">33.689907</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">176400000</key>
-                  <object class="java.lang.Float">33.603603</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">180000000</key>
-                  <object class="java.lang.Float">33.517845</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">183600000</key>
-                  <object class="java.lang.Float">33.432625</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">187200000</key>
-                  <object class="java.lang.Float">33.347942</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">190800000</key>
-                  <object class="java.lang.Float">33.263794</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">194400000</key>
-                  <object class="java.lang.Float">33.180176</object>
                </value>
                <value>
                   <key class="java.lang.Long">198000000</key>
                   <object class="java.lang.Float">32.96479</object>
                </value>
                <value>
-                  <key class="java.lang.Long">201600000</key>
-                  <object class="java.lang.Float">32.851303</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">205200000</key>
-                  <object class="java.lang.Float">32.770287</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">208800000</key>
-                  <object class="java.lang.Float">32.68978</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">212400000</key>
-                  <object class="java.lang.Float">32.609783</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">216000000</key>
-                  <object class="java.lang.Float">32.53029</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">219600000</key>
-                  <object class="java.lang.Float">32.451294</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">223200000</key>
-                  <object class="java.lang.Float">32.3728</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">226800000</key>
-                  <object class="java.lang.Float">32.2948</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">230400000</key>
-                  <object class="java.lang.Float">32.21729</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">234000000</key>
-                  <object class="java.lang.Float">32.14027</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">237600000</key>
-                  <object class="java.lang.Float">32.009777</object>
-               </value>
-               <value>
                   <key class="java.lang.Long">241200000</key>
                   <object class="java.lang.Float">31.934065</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">244800000</key>
-                  <object class="java.lang.Float">31.85883</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">248400000</key>
-                  <object class="java.lang.Float">31.78407</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">252000000</key>
-                  <object class="java.lang.Float">31.70978</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">255600000</key>
-                  <object class="java.lang.Float">31.63596</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">259200000</key>
-                  <object class="java.lang.Float">31.562605</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">262800000</key>
-                  <object class="java.lang.Float">31.489712</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">266400000</key>
-                  <object class="java.lang.Float">31.417278</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">270000000</key>
-                  <object class="java.lang.Float">31.3453</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">273600000</key>
-                  <object class="java.lang.Float">31.273777</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">277200000</key>
-                  <object class="java.lang.Float">31.202705</object>
-               </value>
-               <value>
-                  <key class="java.lang.Long">280800000</key>
-                  <object class="java.lang.Float">31.132082</object>
                </value>
                <value>
                   <key class="java.lang.Long">284400000</key>

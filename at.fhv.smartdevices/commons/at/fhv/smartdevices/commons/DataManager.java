@@ -176,7 +176,7 @@ public class DataManager {
 	private void persistData() {
 		SerializationHelper.serialize(_sensorInformationHistory, SIH_FILENAME);
 		SerializationHelper.serialize(_costsHistory, COSTS_FILENAME);
-		SerializationHelper.serialize(_relaisPowerStateHistory, SIH_FILENAME);
-		SerializationHelper.serialize(_iciHistory, RELAIS_FILENAME);
+		SerializationHelper.serialize(_relaisPowerStateHistory, RELAIS_FILENAME);
+		SerializationHelper.serialize(_iciHistory, ICI_FILENAME);
 	}
 }

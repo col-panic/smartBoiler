@@ -4,7 +4,6 @@
 package at.fhv.smartdevices.commons;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
