@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import at.fhv.smartdevices.commons.DataManager;
 import at.fhv.smartdevices.commons.ISimulatedSmartController;
-import at.fhv.smartdevices.simulatedcontroller.SimulatedController;
+import at.fhv.smartdevices.simulatedDHWH.SimulatedController;
 import at.fhv.smartgrid.rasbpi.*;
 /**
  * @author kepe

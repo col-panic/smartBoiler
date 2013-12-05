@@ -1,4 +1,4 @@
-package at.fhv.smartdevices.simulatedcontroller;
+package at.fhv.smartdevices.simulatedDHWH;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

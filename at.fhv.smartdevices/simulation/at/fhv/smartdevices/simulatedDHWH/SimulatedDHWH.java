@@ -1,4 +1,4 @@
-package at.fhv.smartdevices.simulatedcontroller;
+package at.fhv.smartdevices.simulatedDHWH;
 /**
  * @author kepe
  *

@@ -1,19 +1,15 @@
 /**
- * 
+ * Central class to manage data acquisition and data persistence
  */
 package at.fhv.smartdevices.commons;
 
-import java.io.File;
 import java.util.*;
-
-import org.simpleframework.xml.*;
-import org.simpleframework.xml.core.Persister;
 
 import at.fhv.smartgrid.rasbpi.*;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
 /**
- * @author kepe_nb Central class to manage data acquisition
+ * @author kepe_nb 
  */
 
 public class DataManager {
@@ -55,9 +51,9 @@ public class DataManager {
 	}
 
 	/**
-	 * Called to perform a data collection on sensors and relais
+	 * Called to perform a data collection on the controller sensors and persist them
 	 * 
-	 * @param dateTime the current timestamp
+	 * @param dateTime current time
 	 */
 	public void collectData(long dateTime) {
 		_timeStamp = dateTime;
@@ -102,29 +98,44 @@ public class DataManager {
 		}
 
 		if (changeInData) {
-			try {
-				persistData();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			persistData();
 		}
+	}
+	
+	/**
+	 * @return the _sensorInformationHistory
+	 */
+	public SerializableTreeMap<String, SerializableTreeMap<Long, Float>> GetSensorInformationHistory()
+	{
+		return _sensorInformationHistory;
+	}	
+	
+	/**
+	 * @return the _pricesTimeStamp
+	 */
+	public long get_pricesTimeStamp() {
+		return _pricesTimeStamp;
 	}
 
 	/**
-	 * Helper Method to check for locally stored data, create new objects
-	 * otherwise.
+	 * @return the _relaisPowerStateHistory
 	 */
-	private void restoreData() {
+	public SerializableTreeMap<Long, Boolean> getRelaisPowerStateHistory() {
+		return _relaisPowerStateHistory;
+	}
 
-		_costsHistory = deserialize(new SerializableTreeMap<Long, Integer>(), COSTS_FILENAME);
+	/**
+	 * @return the _costsHistory
+	 */
+	public SerializableTreeMap<Long, Integer> getCostsHistory() {
+		return _costsHistory;
+	}
 
-		_sensorInformationHistory = deserialize(createSensorHistoryMaps(_controller.getSensorInformation()),
-				SIH_FILENAME);
-
-		_relaisPowerStateHistory = deserialize(new SerializableTreeMap<Long, Boolean>(), RELAIS_FILENAME);
-
-		_iciHistory = deserialize(new SerializableTreeMap<Long, Long>(), ICI_FILENAME);
+	/**
+	 * @return the _iciHistory
+	 */
+	public SerializableTreeMap<Long, Long> getIciHistory() {
+		return _iciHistory;
 	}
 
 	/**
@@ -141,45 +152,31 @@ public class DataManager {
 			retVal.put(si.getSensorId(), siHistory);
 		}
 		return retVal;
-	}
+	}	
 
 	/**
-	 * Tries to deserialize the data stored in the file to create an instance of
-	 * type T and return that.
-	 * 
-	 * @param instance The instance to overwrite - is returned if deserialization
-	 *            is not possible
-	 * @param filename The file of serialized data
-	 * @return the instance of type T resulting from deserialization, or the
-	 *         passed instance otherwise.
+	 * Helper Method to check for locally stored data, create new objects
+	 * otherwise.
 	 */
-	private <T> T deserialize(T instance, String filename) {
-		Serializer serializer = new Persister();
-		File file = new File(filename);
-		if (file.exists()) {
-			try {
-				return serializer.read(instance, file);
-			} catch (Exception e) {
-				return instance;
-			}
-		}
-		return instance;
-	}
+	private void restoreData() {
+
+		_costsHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Integer>(), COSTS_FILENAME);
+
+		_sensorInformationHistory = SerializationHelper.deserialize(createSensorHistoryMaps(_controller.getSensorInformation()),
+				SIH_FILENAME);
+
+		_relaisPowerStateHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Boolean>(), RELAIS_FILENAME);
+
+		_iciHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Long>(), ICI_FILENAME);
+	}	
 
 	/**
-	 * Helper method to serialize the data
-	 * 
-	 * @throws Exception
-	 */
-	private void persistData() throws Exception {
-		Serializer serializer = new Persister();
-		File sIfile = new File(SIH_FILENAME);
-		serializer.write(_sensorInformationHistory, sIfile);
-		File pricesfile = new File(COSTS_FILENAME);
-		serializer.write(_costsHistory, pricesfile);
-		File relaisFile = new File(RELAIS_FILENAME);
-		serializer.write(_relaisPowerStateHistory, relaisFile);
-		File iciFile = new File(ICI_FILENAME);
-		serializer.write(_iciHistory, iciFile);
+	 * Helper method to serialize all data
+	 */	 
+	private void persistData() {
+		SerializationHelper.serialize(_sensorInformationHistory, SIH_FILENAME);
+		SerializationHelper.serialize(_costsHistory, COSTS_FILENAME);
+		SerializationHelper.serialize(_relaisPowerStateHistory, SIH_FILENAME);
+		SerializationHelper.serialize(_iciHistory, RELAIS_FILENAME);
 	}
 }
