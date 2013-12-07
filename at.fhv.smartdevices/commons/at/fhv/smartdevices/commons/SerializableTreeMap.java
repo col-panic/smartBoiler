@@ -21,6 +21,11 @@ import org.simpleframework.xml.*;
 @Root
 public class SerializableTreeMap<K, V> extends TreeMap<K, V> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@ElementMap(entry="value", key="key")
 	private TreeMap<K,V> _map;
 	

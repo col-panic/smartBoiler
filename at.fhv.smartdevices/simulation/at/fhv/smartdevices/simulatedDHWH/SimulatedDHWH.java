@@ -5,15 +5,15 @@ package at.fhv.smartdevices.simulatedDHWH;
  */
 public class SimulatedDHWH{
 	
-	 private static final double c_p=4.18e3;//[J/kgK] specific heat
+	 //private static final double c_p=4.18e3;//[J/kgK] specific heat
 	 private static final double pEl=2175;//[W] el. power of the heater
-	 private static final double tempIn=12;//[°C] temperature of inlet water;
+	 //private static final double tempIn=12;//[°C] temperature of inlet water;
 	 private static final double tempEnv=20;//[°C] outside temperature;	 
 	 private static final double tempMax=90;//[°C] max allowed temperature in water heater;
-	 private static final double tempMin=38;//[°C] lowest allowed temperature in water heater;	 
+	 //private static final double tempMin=38;//[°C] lowest allowed temperature in water heater;	 
 	 private static final double p1=1.1972;//[W/K] heat conduction * area, Water below Iso/2;
 	 private static final double p2=6.815e5;//[J/K] thermal mass (m_i*c_i) envelope (St,Iso,Bl);
-	 private static final double tempDemand = 38;	
+	 //private static final double tempDemand = 38;	
 	 private static final double deltat=60;
 	 
 	 /**

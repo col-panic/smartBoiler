@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
