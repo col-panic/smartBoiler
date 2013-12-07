@@ -189,12 +189,7 @@ public class DataManager implements ISchedulable {
 	public long getScheduleTimeStep() {
 		return _scheduleTimeStep;
 	}
-
-	@Override
-	public void setScheduleTimeStep(Long value) {
-		_scheduleTimeStep = value;
-
-	}
+	
 
 	@Override
 	public void run() {

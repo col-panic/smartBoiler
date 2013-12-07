@@ -3,9 +3,6 @@
  */
 package at.fhv.smartdevices.commons.tests;
 
-import java.io.*;
-import java.lang.reflect.Field; 
-
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -21,7 +18,7 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
  */
 public class dataManagerTests {
 	
-	ISmartController _controller = new SimulatedDHWHController();
+	ISmartController _controller;
 	Clock _clock;
 	
 	@Before
@@ -29,25 +26,7 @@ public class dataManagerTests {
 	{				
 		_controller = new SimulatedDHWHController();
 		_clock = new Clock(_controller);
-		long timeStep = 3600*1000;
-		_clock.waitFor(timeStep);
-		DataManager dm= new DataManager(_controller, _clock);
-		Field fields[] = DataManager.class.getDeclaredFields();
-		for (Field field : fields) {
-			field.setAccessible(true);
-			if(field.getName().contains("FILENAME")){
-				File file;
-				try {
-					file = new File(field.get(dm).toString());
-					if(file.exists()){
-						file.delete();
-					}					
-				} catch (Exception e) {					
-					e.printStackTrace();				 
-				}				
-			}				
-		}
-		
+		TestHelper.ClearDataManagerSerialization(_clock, _controller);		
 	}
 
 	@Test

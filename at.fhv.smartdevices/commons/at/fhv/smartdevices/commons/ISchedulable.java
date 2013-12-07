@@ -9,15 +9,9 @@ package at.fhv.smartdevices.commons;
  */
 public interface ISchedulable extends Runnable{
 	 /** 
-	 * @return the schedule time step
+	 * @return the schedule time step (-1 if only to run once)(0 for run all the time)
 	 */
-	public long getScheduleTimeStep();
-	
-	/**
-	 * sets
-	 * @param value the schedule time step
-	 */
-	public void setScheduleTimeStep(Long value);
+	public long getScheduleTimeStep();	
 	
 	/**
 	 * 
@@ -25,5 +19,9 @@ public interface ISchedulable extends Runnable{
 	 */
 	public int getPriority();	
 	
+	/**
+	 * 
+	 * @return true if currently running
+	 */
 	public Boolean isRunning();
 }

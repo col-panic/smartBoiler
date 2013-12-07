@@ -145,7 +145,8 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 				consumption -= 1;
 			}
 		}
-		_icis.add(ic);
+		if(ic.impulsOccurences.size()>0){
+			_icis.add(ic);}
 	}
 
 	private void setSensorInformation() {

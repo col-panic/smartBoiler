@@ -5,6 +5,7 @@ package at.fhv.smartdevices.commons.tests;
 
 import java.util.ArrayList;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import at.fhv.smartdevices.commons.*;
@@ -17,19 +18,39 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
  */
 public class SchedulerTests {
 	
+	ISmartController _controller;
+	Clock _clock;
+	DataManager _dm;
+	
+	@Before
+	public void before()
+	{				
+		_controller = new SimulatedDHWHController();
+		_clock = new Clock(_controller);
+		TestHelper.ClearDataManagerSerialization(_clock, _controller);
+		_dm = new DataManager(_controller, _clock);
+	}
+	
 	@Test
-	public void testDataManager(){
-		ISmartController controller = new SimulatedDHWHController();
-		Clock clock = new Clock(controller);
-		
-		DataManager dm = new DataManager(controller, clock);
-		
-		Scheduler scheduler = new Scheduler(clock);
-		
+	public void testDataManager(){		
 		ArrayList<ISchedulable> schedulables = new ArrayList<ISchedulable>();
-		schedulables.add(dm);
+		schedulables.add(_dm);
 		
-		scheduler.startScheduling(schedulables,30000);
+		Scheduler scheduler = new Scheduler(_clock, schedulables, (long) 36000);	
+		Thread thread =  new Thread(scheduler);
+		thread.start();	
+		
+		while(thread.isAlive())
+		{
+			try {
+				_controller.setRelaisPowerState(!_controller.getRelaisPowerState());
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }

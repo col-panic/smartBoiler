@@ -10,15 +10,30 @@ import java.util.HashMap;
  * @author kepe_nb
  * 
  */
-public class Scheduler {
-	private Boolean _abort = false;
+public class Scheduler implements Runnable{	
 	private Clock _clock;
+	private ArrayList<ISchedulable> _schedulables;
+	private Long _loops;
 
-	public Scheduler(Clock clock) {
-		_clock = clock;
+	public Scheduler(Clock clock, ArrayList<ISchedulable> schedulables) {
+		
+		//TODO: check Long.Max for correct behavior;
+		this(clock, schedulables, Long.MAX_VALUE);		
 	}
 
-	public void startScheduling(ArrayList<ISchedulable> schedulables, long loops) {
+	public Scheduler(Clock clock, ArrayList<ISchedulable> schedulables, Long loops)
+	{
+		_loops=loops;
+		_clock = clock;
+		_schedulables=schedulables;		
+	}	
+
+	@Override
+	public void run() {
+		startScheduling(new ArrayList<ISchedulable>(_schedulables), _loops);		
+	}
+	
+	private void startScheduling(ArrayList<ISchedulable> schedulables, Long loops) {
 
 		long loop=1;
 		HashMap<ISchedulable, Long> map = new HashMap<ISchedulable, Long>();
