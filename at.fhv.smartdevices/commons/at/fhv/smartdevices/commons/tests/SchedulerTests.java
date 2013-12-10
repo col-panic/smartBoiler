@@ -20,7 +20,7 @@ public class SchedulerTests {
 	
 	ISmartController _controller;
 	Clock _clock;
-	DataManager _dm;
+	DataAquisition _dm;
 	
 	@Before
 	public void before()
@@ -28,7 +28,7 @@ public class SchedulerTests {
 		_controller = new SimulatedDHWHController();
 		_clock = new Clock(_controller);
 		TestHelper.ClearDataManagerSerialization(_clock, _controller);
-		_dm = new DataManager(_controller, _clock);
+		_dm = new DataAquisition(_controller, _clock);
 	}
 	
 	@Test

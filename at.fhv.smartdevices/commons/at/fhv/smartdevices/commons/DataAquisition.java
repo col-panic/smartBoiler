@@ -12,7 +12,7 @@ import at.fhv.smartgrid.rasbpi.internal.*;
  * @author kepe_nb
  */
 
-public class DataManager implements ISchedulable {
+public class DataAquisition implements ISchedulable {
 
 	private final String SIH_FILENAME = "sih.xml";
 	private final String RELAIS_FILENAME = "relais.xml";
@@ -40,7 +40,7 @@ public class DataManager implements ISchedulable {
 	 * @param controller
 	 *            the smart controller to collect the data from
 	 */
-	public DataManager(ISmartController controller, Clock clock) {
+	public DataAquisition(ISmartController controller, Clock clock) {
 		_controller = controller;
 		_clock = clock;
 		restoreData();

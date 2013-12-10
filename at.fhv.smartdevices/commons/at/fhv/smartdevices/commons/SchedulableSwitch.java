@@ -10,7 +10,7 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
 
 /**
  * @author kepe_nb
- *
+ * controls the correct switching of the device by setting the relais state(s).
  */
 public class SchedulableSwitch implements ISchedulable {
 

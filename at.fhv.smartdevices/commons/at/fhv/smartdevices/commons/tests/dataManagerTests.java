@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.fhv.smartdevices.commons.Clock;
-import at.fhv.smartdevices.commons.DataManager;
+import at.fhv.smartdevices.commons.DataAquisition;
 import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 /**
@@ -33,12 +33,12 @@ public class dataManagerTests {
 	public void testSerializationDeserialization()
 	{		
 		long timeStep = 3600*1000;
-		DataManager dm = new DataManager(_controller, _clock);
+		DataAquisition dm = new DataAquisition(_controller, _clock);
 		for (int i = 1; i < 100; i++) {			
 			_clock.waitFor(timeStep);
 			dm.collectData();			
 		}		
-		DataManager dm2 = new DataManager(_controller, _clock);
+		DataAquisition dm2 = new DataAquisition(_controller, _clock);
 		assertArrayEquals(dm.getCostsHistory().keySet().toArray(),dm2.getCostsHistory().keySet().toArray());
 		assertArrayEquals(dm.getIciHistory().values().toArray(),dm2.getIciHistory().values().toArray());
 		assertArrayEquals(dm.getRelaisPowerStateHistory().values().toArray(), dm2.getRelaisPowerStateHistory().values().toArray());

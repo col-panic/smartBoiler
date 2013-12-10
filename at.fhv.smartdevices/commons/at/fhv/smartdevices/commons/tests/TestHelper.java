@@ -7,7 +7,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 import at.fhv.smartdevices.commons.Clock;
-import at.fhv.smartdevices.commons.DataManager;
+import at.fhv.smartdevices.commons.DataAquisition;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
 /**
@@ -21,8 +21,8 @@ public class TestHelper {
 		
 		long timeStep = 3600*1000;
 		clock.waitFor(timeStep);
-		DataManager dm= new DataManager(controller, clock);
-		Field fields[] = DataManager.class.getDeclaredFields();
+		DataAquisition dm= new DataAquisition(controller, clock);
+		Field fields[] = DataAquisition.class.getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);
 			if(field.getName().contains("FILENAME")){
