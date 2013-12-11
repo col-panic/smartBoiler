@@ -16,7 +16,7 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
  * @author kepe
  *
  */
-public class dataManagerTests {
+public class DataAqisitionTests {
 	
 	ISmartController _controller;
 	Clock _clock;

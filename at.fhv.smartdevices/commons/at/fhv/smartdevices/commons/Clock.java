@@ -33,15 +33,6 @@ public class Clock {
 		waitFor(1000);
 	}
 	
-	private boolean pause(long timeInSec) {
-		if (ISimulatedSmartController.class.isInstance(_controller)) {
-			ISimulatedSmartController _simController = (ISimulatedSmartController) _controller;
-			_simController.SetTime(getDate() + timeInSec);
-		}
-		return true;
-	}
-	
-		
 	public void waitFor(long time) {
 		if (_simulation) {
 			((ISimulatedSmartController) _controller).SetTime(time);
