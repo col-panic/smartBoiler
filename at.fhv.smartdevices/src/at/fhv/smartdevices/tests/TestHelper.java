@@ -21,7 +21,7 @@ public class TestHelper {
 		
 		long timeStep = 3600*1000;
 		clock.waitFor(timeStep);
-		DataAquisition dm= new DataAquisition(controller, clock);
+		DataAquisition dm= new DataAquisition(controller, clock, true);
 		Field fields[] = DataAquisition.class.getDeclaredFields();
 		for (Field field : fields) {
 			field.setAccessible(true);

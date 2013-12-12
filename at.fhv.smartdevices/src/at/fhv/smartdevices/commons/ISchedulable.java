@@ -17,6 +17,8 @@ public interface ISchedulable extends Runnable{
 	 * 
 	 * @return The cpu priority
 	 */
-	public int getPriority();		
+	public int getPriority();	
+	
+	public Boolean getExeSingleThreaded();
 	
 }

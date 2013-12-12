@@ -24,11 +24,19 @@ public class SchedulableSwitch implements ISchedulable {
 	private Long _next;
 	private Lock _lock = new ReentrantLock();
 	private final Long TimeLoop = (long) 600000;
+	private Boolean _exeSingleThreaded;
 
-	public SchedulableSwitch(ISmartController controller, IReadOnlyClock clock) {
+	
+	public SchedulableSwitch(ISmartController controller, IReadOnlyClock clock)
+	{
+		new SchedulableSwitch(controller, clock, false);
+	}
+	public SchedulableSwitch(ISmartController controller, IReadOnlyClock clock, Boolean exeSingleThreaded) {
 		_controller = controller;
 
 		_clock = clock;
+		
+		_exeSingleThreaded = exeSingleThreaded;
 	}
 
 	public void setSwitchingTimes(SerializableTreeMap<Long, Boolean> switchingTimes) {
@@ -89,6 +97,11 @@ public class SchedulableSwitch implements ISchedulable {
 	public int getPriority() {
 
 		return 10;
+	}
+
+	@Override
+	public Boolean getExeSingleThreaded() {
+		return _exeSingleThreaded;
 	}
 
 }

@@ -39,17 +39,23 @@ public class DataAquisition implements ISchedulable {
 	private SerializableTreeMap<Long, Integer> _costsHistory;
 	private SerializableTreeMap<Long, Long> _iciHistory;
 
-	private long _scheduleTimeStep = 10000;
+	public long scheduleTimeStep = 1*60*1000;
 	private int _priority = 10;
+	private Boolean _exeSingleThreaded;
 
 	/**
 	 * 
 	 * @param controller
 	 *            the smart controller to collect the data from
 	 */
-	public DataAquisition(ISmartController controller, IReadOnlyClock clock) {
+	public DataAquisition(ISmartController controller, IReadOnlyClock clock)
+	{
+		new DataAquisition(controller, clock, false);
+	}
+	public DataAquisition(ISmartController controller, IReadOnlyClock clock, Boolean exeSingleThreaded) {
 		_controller = controller;
 		_clock = clock;
+		_exeSingleThreaded = exeSingleThreaded;
 		restoreData();
 
 		// TODO! Generalize as input parameter check for errors
@@ -194,7 +200,7 @@ public class DataAquisition implements ISchedulable {
 
 	@Override
 	public long getScheduleTimeStep() {
-		return _scheduleTimeStep;
+		return scheduleTimeStep;
 	}
 	
 
@@ -213,5 +219,10 @@ public class DataAquisition implements ISchedulable {
 	@Override
 	public int getPriority() {
 		return _priority;
+	}
+
+	@Override
+	public Boolean getExeSingleThreaded() {
+		return _exeSingleThreaded;
 	}	
 }

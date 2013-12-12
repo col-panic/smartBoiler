@@ -59,7 +59,7 @@ public class Scheduler implements Runnable{
 			map.put(schedulable, schedulable.getScheduleTimeStep() + now);
 		}
 
-		while (now<end) {
+		while (now<=end) {
 			long nextScheduledTime = Long.MAX_VALUE;
 			ISchedulable scheduledClass = null;
 
@@ -76,6 +76,15 @@ public class Scheduler implements Runnable{
 			thread.setPriority(scheduledClass.getPriority());
 			thread.run();
 			retVal.add(thread);
+			if(scheduledClass.getExeSingleThreaded())
+			{
+				try {
+					thread.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			
 			map.put(scheduledClass, scheduledClass.getScheduleTimeStep() + _clock.getDate());
 			now=_clock.getDate();

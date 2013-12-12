@@ -36,8 +36,8 @@ public class SchedulerTests {
 		_controller = new SimulatedDHWHController();
 		_clock = new Clock(_controller);
 		TestHelper.ClearDataManagerSerialization(_clock, _controller);
-		_dm = new DataAquisition(_controller, _clock);
-		_switch = new SchedulableSwitch(_controller, _clock);
+		_dm = new DataAquisition(_controller, _clock, false);
+		_switch = new SchedulableSwitch(_controller, _clock, false);
 	}
 	
 	@Test
@@ -66,7 +66,7 @@ public class SchedulerTests {
 	@Test
 	public void testConcurrentDataAquisitionAndSwitch(){		
 		long totalTimeInMillis = (long) 1000*60*60*24;
-		_clock.SimulationFactor=1000;
+		_clock.SimulationFactor=1500*1000;		
 		ArrayList<ISchedulable> schedulables = new ArrayList<ISchedulable>();
 		schedulables.add(_dm);
 		SerializableTreeMap<Long, Boolean> switchingTimes = new SerializableTreeMap<Long,Boolean>();
@@ -91,12 +91,12 @@ public class SchedulerTests {
 				e.printStackTrace();
 			}
 		}
-		TreeMap<Long,Boolean> psh = _dm.getRelaisStateHistory();
+		TreeMap<Long,Boolean> rsh = _dm.getRelaisStateHistory();
 		Boolean relaisState= true;		
-		assertEquals(psh.size()+1,switchingTimes.size());
+		assertEquals(rsh.size(),switchingTimes.size());
 		
-		for (Long key : psh.navigableKeySet()) {
-			assertEquals(psh.get(key), relaisState);
+		for (Long key : rsh.navigableKeySet()) {
+			assertEquals(rsh.get(key), relaisState);
 			relaisState=!relaisState;
 		}		
 		

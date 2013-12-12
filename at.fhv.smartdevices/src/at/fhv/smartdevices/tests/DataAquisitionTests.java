@@ -33,12 +33,12 @@ public class DataAquisitionTests {
 	public void testSerializationDeserialization()
 	{		
 		long timeStep = 3600*1000;
-		DataAquisition dm = new DataAquisition(_controller, _clock);
+		DataAquisition dm = new DataAquisition(_controller, _clock, true);
 		for (int i = 1; i < 100; i++) {			
 			_clock.waitFor(timeStep);
 			dm.collectData();			
 		}		
-		DataAquisition dm2 = new DataAquisition(_controller, _clock);
+		DataAquisition dm2 = new DataAquisition(_controller, _clock, true);
 		assertArrayEquals(dm.getCostsHistory().keySet().toArray(),dm2.getCostsHistory().keySet().toArray());
 		assertArrayEquals(dm.getIciHistory().values().toArray(),dm2.getIciHistory().values().toArray());
 		assertArrayEquals(dm.getRelaisStateHistory().values().toArray(), dm2.getRelaisStateHistory().values().toArray());
