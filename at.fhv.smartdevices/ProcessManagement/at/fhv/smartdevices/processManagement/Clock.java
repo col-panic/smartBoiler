@@ -41,22 +41,36 @@ public class Clock implements IClock {
 	}
 
 	@Override
-	public void waitFor(long time) {
-		_lock.lock();
-		if (time < getDate()) {
-			return;
-		}
-		if (_simulation) {
-			((ISimulatedSmartController) _controller).SetTime(time);
-			_time = time;
-		} else {
+	public void waitFor(long timeInMillis) {
+		waitUntil(getDate() + timeInMillis);
+	}
 
-			try {
-				this.wait(time - getDate());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+	@Override
+	public void waitUntil(long dateInMillis) {
+		_lock.lock();
+		try {
+			if (dateInMillis < getDate()) {
+				return;
 			}
+			if (_simulation) {
+				((ISimulatedSmartController) _controller).SetTime(dateInMillis);
+				try {
+					Thread.sleep((dateInMillis-_time)/1500); //means about 60sec per day
+					
+				} catch (InterruptedException e) {					
+					e.printStackTrace();
+				}
+				_time = dateInMillis;
+			} else {
+
+				try {
+					this.wait(dateInMillis - getDate());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		} finally {
+			_lock.unlock();
 		}
-		_lock.unlock();
 	}
 }

@@ -3,7 +3,13 @@
  */
 package at.fhv.smartdevices.processManagement.tests;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.TreeMap;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,8 +56,7 @@ public class SchedulerTests {
 			try {
 				_controller.setRelaisPowerState(!_controller.getRelaisPowerState());
 				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (InterruptedException e) {				
 				e.printStackTrace();
 			}
 		}
@@ -59,14 +64,15 @@ public class SchedulerTests {
 	}
 	@Test
 	public void testConcurrency(){		
-		long totalTimeInMillis = (long) 3600000*48;
+		long totalTimeInMillis = (long) 1000*60*60*24;
 		ArrayList<ISchedulable> schedulables = new ArrayList<ISchedulable>();
 		schedulables.add(_dm);
 		SerializableTreeMap<Long, Boolean> switchingTimes = new SerializableTreeMap<Long,Boolean>();
 		Boolean switchState = false;
-		for (int i = 0; i < totalTimeInMillis; i+=900000) {
+		long now = _clock.getDate();
+		for (int i = 0; i <= totalTimeInMillis; i+=1000*60*15) {
 			switchState = !switchState;
-			switchingTimes.put(_clock.getDate()+(i),switchState);
+			switchingTimes.put(now+(i),switchState);
 		}
 		_switch.setSwitchingTimes(switchingTimes);
 		schedulables.add(_switch);
@@ -79,11 +85,18 @@ public class SchedulerTests {
 		{
 			try {				
 				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (InterruptedException e) {				
 				e.printStackTrace();
 			}
 		}
+		TreeMap<Long,Boolean> psh = _dm.getRelaisPowerStateHistory();
+		Boolean relaisState= true;		
+		assertEquals(psh.size()+1,switchingTimes.size());
+		
+		for (Long key : psh.navigableKeySet()) {
+			assertEquals(psh.get(key), relaisState);
+			relaisState=!relaisState;
+		}		
 		
 	}
 

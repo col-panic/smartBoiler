@@ -8,5 +8,6 @@ package at.fhv.smartdevices.commons;
  *
  */
 public interface IClock extends IReadOnlyClock {
-	public void waitFor(long time);
+	public void waitUntil(long dateInMillis);
+	public void waitFor(long timeInMillis);
 }

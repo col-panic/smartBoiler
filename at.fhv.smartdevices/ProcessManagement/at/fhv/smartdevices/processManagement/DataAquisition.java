@@ -4,11 +4,13 @@
 package at.fhv.smartdevices.processManagement;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import at.fhv.smartdevices.commons.IReadOnlyClock;
 import at.fhv.smartdevices.commons.ISchedulable;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
-import at.fhv.smartdevices.commons.SerializationHelper;
+import at.fhv.smartdevices.processManagement.tests.SerializationHelper;
 import at.fhv.smartgrid.rasbpi.*;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
@@ -26,6 +28,8 @@ public class DataAquisition implements ISchedulable {
 	private ISmartController _controller;
 
 	private IReadOnlyClock _clock;
+	
+	private Lock _lock = new ReentrantLock();
 
 	private long _pricesTimeStamp = -1;
 	private HashMap<String, Float> _sensorSensitivity;
@@ -36,8 +40,6 @@ public class DataAquisition implements ISchedulable {
 
 	private long _scheduleTimeStep = 10000;
 	private int _priority = 10;
-
-	private Boolean _isrunning = false;
 
 	/**
 	 * 
@@ -197,18 +199,18 @@ public class DataAquisition implements ISchedulable {
 
 	@Override
 	public void run() {
-		_isrunning = true;
-		collectData();
-		_isrunning = false;
+		_lock.lock();
+		try{
+			collectData();
+		}
+		finally
+		{
+			_lock.unlock();
+		}
 	}
 
 	@Override
 	public int getPriority() {
 		return _priority;
-	}
-
-	@Override
-	public Boolean isRunning() {
-		return _isrunning;
-	}
+	}	
 }

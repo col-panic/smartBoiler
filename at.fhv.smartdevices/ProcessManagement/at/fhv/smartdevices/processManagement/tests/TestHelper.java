@@ -6,7 +6,7 @@ package at.fhv.smartdevices.processManagement.tests;
 import java.io.File;
 import java.lang.reflect.Field;
 
-import at.fhv.smartdevices.processManagement.Clock;
+import at.fhv.smartdevices.commons.IClock;
 import at.fhv.smartdevices.processManagement.DataAquisition;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
@@ -16,7 +16,7 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
  */
 public class TestHelper {
 
-	public static void ClearDataManagerSerialization(Clock clock, ISmartController controller)
+	public static void ClearDataManagerSerialization(IClock clock, ISmartController controller)
 	{
 		
 		long timeStep = 3600*1000;

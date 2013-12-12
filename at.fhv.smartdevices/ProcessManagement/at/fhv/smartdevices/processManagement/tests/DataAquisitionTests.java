@@ -16,10 +16,10 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
  * @author kepe
  *
  */
-public class DataAqisitionTests {
+public class DataAquisitionTests {
 	
-	ISmartController _controller;
-	Clock _clock;
+	public ISmartController _controller;
+	public Clock _clock;
 	
 	@Before
 	public void before()
