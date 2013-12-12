@@ -41,7 +41,7 @@ public class DataAquisitionTests {
 		DataAquisition dm2 = new DataAquisition(_controller, _clock);
 		assertArrayEquals(dm.getCostsHistory().keySet().toArray(),dm2.getCostsHistory().keySet().toArray());
 		assertArrayEquals(dm.getIciHistory().values().toArray(),dm2.getIciHistory().values().toArray());
-		assertArrayEquals(dm.getRelaisPowerStateHistory().values().toArray(), dm2.getRelaisPowerStateHistory().values().toArray());
+		assertArrayEquals(dm.getRelaisStateHistory().values().toArray(), dm2.getRelaisStateHistory().values().toArray());
 		assertArrayEquals(dm.GetSensorInformationHistory().values().toArray(), dm2.GetSensorInformationHistory().values().toArray());
 	}
 		

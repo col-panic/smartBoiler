@@ -3,6 +3,8 @@
  */
 package at.fhv.smartdevices;
 
+import helper.SerializationHelper;
+
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -129,7 +131,7 @@ public class DataAquisition implements ISchedulable {
 	/**
 	 * @return the _relaisPowerStateHistory
 	 */
-	public SerializableTreeMap<Long, Boolean> getRelaisPowerStateHistory() {
+	public SerializableTreeMap<Long, Boolean> getRelaisStateHistory() {
 		return _relaisPowerStateHistory;
 	}
 

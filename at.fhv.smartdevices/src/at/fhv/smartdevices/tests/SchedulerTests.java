@@ -41,11 +41,11 @@ public class SchedulerTests {
 	}
 	
 	@Test
-	public void testDataAquisition(){		
+	public void testAsynchronousDataAquisition(){		
 		ArrayList<ISchedulable> schedulables = new ArrayList<ISchedulable>();
 		schedulables.add(_dm);
 		
-		Scheduler scheduler = new Scheduler(_clock, schedulables, (long) 36000);	
+		Scheduler scheduler = new Scheduler(_clock, schedulables, (long) 24*3600*1000);	
 		Thread thread =  new Thread(scheduler);
 		thread.start();	
 		
@@ -59,18 +59,20 @@ public class SchedulerTests {
 			}
 		}
 		
-		
+		assertTrue(_dm.GetSensorInformationHistory().size()>0);
+		assertTrue(_dm.get_pricesTimeStamp()>0);
 		
 	}
 	@Test
 	public void testConcurrentDataAquisitionAndSwitch(){		
 		long totalTimeInMillis = (long) 1000*60*60*24;
+		_clock.SimulationFactor=1000;
 		ArrayList<ISchedulable> schedulables = new ArrayList<ISchedulable>();
 		schedulables.add(_dm);
 		SerializableTreeMap<Long, Boolean> switchingTimes = new SerializableTreeMap<Long,Boolean>();
 		Boolean switchState = false;
 		long now = _clock.getDate();
-		for (int i = 0; i <= totalTimeInMillis; i+=1000*60*15) {
+		for (int i = 0; i < totalTimeInMillis; i+=1000*60*15) {
 			switchState = !switchState;
 			switchingTimes.put(now+(i),switchState);
 		}
@@ -89,7 +91,7 @@ public class SchedulerTests {
 				e.printStackTrace();
 			}
 		}
-		TreeMap<Long,Boolean> psh = _dm.getRelaisPowerStateHistory();
+		TreeMap<Long,Boolean> psh = _dm.getRelaisStateHistory();
 		Boolean relaisState= true;		
 		assertEquals(psh.size()+1,switchingTimes.size());
 		
