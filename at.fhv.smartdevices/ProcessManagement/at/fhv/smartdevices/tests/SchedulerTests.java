@@ -1,23 +1,21 @@
 /**
  * 
  */
-package at.fhv.smartdevices.processManagement.tests;
+package at.fhv.smartdevices.tests;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.TreeMap;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import at.fhv.smartdevices.Clock;
+import at.fhv.smartdevices.DataAquisition;
+import at.fhv.smartdevices.SchedulableSwitch;
+import at.fhv.smartdevices.Scheduler;
 import at.fhv.smartdevices.commons.*;
-import at.fhv.smartdevices.processManagement.Clock;
-import at.fhv.smartdevices.processManagement.DataAquisition;
-import at.fhv.smartdevices.processManagement.Scheduler;
 import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
@@ -61,9 +59,11 @@ public class SchedulerTests {
 			}
 		}
 		
+		
+		
 	}
 	@Test
-	public void testConcurrency(){		
+	public void testConcurrentDataAquisitionAndSwitch(){		
 		long totalTimeInMillis = (long) 1000*60*60*24;
 		ArrayList<ISchedulable> schedulables = new ArrayList<ISchedulable>();
 		schedulables.add(_dm);

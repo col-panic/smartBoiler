@@ -1,7 +1,7 @@
 /**
  * Central class to manage data acquisition and data persistence
  */
-package at.fhv.smartdevices.processManagement;
+package at.fhv.smartdevices;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -10,7 +10,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import at.fhv.smartdevices.commons.IReadOnlyClock;
 import at.fhv.smartdevices.commons.ISchedulable;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
-import at.fhv.smartdevices.processManagement.tests.SerializationHelper;
 import at.fhv.smartgrid.rasbpi.*;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
@@ -20,10 +19,10 @@ import at.fhv.smartgrid.rasbpi.internal.*;
 
 public class DataAquisition implements ISchedulable {
 
-	private final String SIH_FILENAME = "sih.xml";
-	private final String RELAIS_FILENAME = "relais.xml";
-	private final String COSTS_FILENAME = "costs.xml";
-	private final String ICI_FILENAME = "ici.xml";
+	private final String SIH_FILENAME = "dataStore/sih.xml";
+	private final String RELAIS_FILENAME = "dataStore/relais.xml";
+	private final String COSTS_FILENAME = "dataStore/costs.xml";
+	private final String ICI_FILENAME = "dataStore/ici.xml";
 
 	private ISmartController _controller;
 

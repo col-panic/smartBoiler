@@ -1,15 +1,15 @@
 /**
  * 
  */
-package at.fhv.smartdevices.processManagement.tests;
+package at.fhv.smartdevices.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import at.fhv.smartdevices.processManagement.Clock;
-import at.fhv.smartdevices.processManagement.DataAquisition;
+import at.fhv.smartdevices.Clock;
+import at.fhv.smartdevices.DataAquisition;
 import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 /**
