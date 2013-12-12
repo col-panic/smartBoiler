@@ -1,13 +1,13 @@
 /**
  * 
  */
-package at.fhv.smartdevices.commons.tests;
+package at.fhv.smartdevices.processManagement.tests;
 
 import java.io.File;
 import java.lang.reflect.Field;
 
-import at.fhv.smartdevices.commons.Clock;
-import at.fhv.smartdevices.commons.DataAquisition;
+import at.fhv.smartdevices.processManagement.Clock;
+import at.fhv.smartdevices.processManagement.DataAquisition;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
 /**

@@ -1,10 +1,14 @@
 /**
  * Central class to manage data acquisition and data persistence
  */
-package at.fhv.smartdevices.commons;
+package at.fhv.smartdevices.processManagement;
 
 import java.util.*;
 
+import at.fhv.smartdevices.commons.IReadOnlyClock;
+import at.fhv.smartdevices.commons.ISchedulable;
+import at.fhv.smartdevices.commons.SerializableTreeMap;
+import at.fhv.smartdevices.commons.SerializationHelper;
 import at.fhv.smartgrid.rasbpi.*;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
@@ -21,7 +25,7 @@ public class DataAquisition implements ISchedulable {
 
 	private ISmartController _controller;
 
-	private Clock _clock;
+	private IReadOnlyClock _clock;
 
 	private long _pricesTimeStamp = -1;
 	private HashMap<String, Float> _sensorSensitivity;
@@ -40,7 +44,7 @@ public class DataAquisition implements ISchedulable {
 	 * @param controller
 	 *            the smart controller to collect the data from
 	 */
-	public DataAquisition(ISmartController controller, Clock clock) {
+	public DataAquisition(ISmartController controller, IReadOnlyClock clock) {
 		_controller = controller;
 		_clock = clock;
 		restoreData();

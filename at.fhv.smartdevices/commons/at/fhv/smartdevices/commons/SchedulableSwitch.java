@@ -15,14 +15,14 @@ import at.fhv.smartgrid.rasbpi.ISmartController;
 public class SchedulableSwitch implements ISchedulable {
 
 	private ISmartController _controller;
-	private Clock _clock;
+	private IReadOnlyClock _clock;
 	
 	private SerializableTreeMap<Long, Boolean> _switchingTimes = new SerializableTreeMap<Long,Boolean>();
 	private Long _next;
 	private Boolean _running =false;
 	private Lock _lock = new ReentrantLock();
 	
-	public SchedulableSwitch(ISmartController controller, Clock clock)
+	public SchedulableSwitch(ISmartController controller, IReadOnlyClock clock)
 	{
 		_controller = controller;
 		
@@ -63,7 +63,7 @@ public class SchedulableSwitch implements ISchedulable {
 	@Override
 	public long getScheduleTimeStep() {
 		
-		_next = _switchingTimes.ceilingEntry(_clock.getDate()).getKey();
+		_next = _switchingTimes.ceilingEntry(_clock.getDate()+1).getKey();
 		
 		return _next - _clock.getDate();
 	}
