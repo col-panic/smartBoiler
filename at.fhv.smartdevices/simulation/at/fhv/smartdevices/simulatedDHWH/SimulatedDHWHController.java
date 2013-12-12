@@ -138,7 +138,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 		float consumption = 0;
 		for (int seconds = 0; seconds < discreteSwitch.length * 60; seconds++) {
 			int minute = (int) Math.floor(seconds / 60.0);
-			consumption += discreteSwitch[minute] * 2200.0 / 3600.0;
+			consumption += discreteSwitch[minute] * SimulatedDHWH.pEl / 3600.0;
 			if (consumption > 1) {
 				// System.out.println(minute+":"+seconds+"/"+consumption);
 				ic.impulsOccurences.add((long) (seconds * 1000));
@@ -193,6 +193,12 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 		return dayStart.getTimeInMillis() + 24 * 60 * 60 * 1000;
 	}
 
+	/**
+	 * simulates the dhwh behavior and returns the switch [0] and the temperature [1]
+	 * @param dateNow
+	 * @param startDate
+	 * @return
+	 */
 	private double[][] simulateDHWH(Calendar dateNow, Calendar startDate) {
 		int minNow = getMinutesSinceYearStarted(dateNow);
 		int minStartDate = getMinutesSinceYearStarted(startDate);

@@ -125,11 +125,11 @@ public class ControllerTests {
 			sc.SetTime(startDate);
 			sc.setRelaisPowerState(true);
 			
-			sc.SetTime(getDate(3, 0, 0));
+			sc.SetTime(getDate(0, 1, 0));
 			
 			ImpulsCounterInformation ici = sc.getImpulsCounterInformation().get(0);
 			assertTrue(ici.countingStart.getTime()==startDate);
-     		assertTrue(ici.impulsOccurences.size()==158070);
+     		assertTrue(ici.impulsOccurences.size()==2175);
 	
 		} catch (Exception e) {
 			fail();

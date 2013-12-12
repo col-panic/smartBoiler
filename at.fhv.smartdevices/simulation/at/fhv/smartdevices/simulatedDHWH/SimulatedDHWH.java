@@ -6,7 +6,7 @@ package at.fhv.smartdevices.simulatedDHWH;
 public class SimulatedDHWH{
 	
 	 //private static final double c_p=4.18e3;//[J/kgK] specific heat
-	 private static final double pEl=2175;//[W] el. power of the heater
+	 static final double pEl=2175;//[W] el. power of the heater
 	 //private static final double tempIn=12;//[°C] temperature of inlet water;
 	 private static final double tempEnv=20;//[°C] outside temperature;	 
 	 private static final double tempMax=90;//[°C] max allowed temperature in water heater;
