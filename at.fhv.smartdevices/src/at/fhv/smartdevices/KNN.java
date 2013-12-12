@@ -20,7 +20,7 @@ public class KNN implements ISchedulable{
 	private SchedulableSwitch _switcher;
 	private Lock _lock = new ReentrantLock();
 	
-	public KNN(long timestep, DataAquisition dA, SchedulableSwitch switcher){
+	public KNN(long timestep, DataAquisition dA,  SchedulableSwitch switcher){
 		
 		_timeStep=timestep;
 		_dataAquisition = dA;
