@@ -1,6 +1,3 @@
-/**
- * 
- */
 package at.fhv.smartdevices.tests;
 
 import static org.junit.Assert.*;
@@ -43,6 +40,5 @@ public class DataAquisitionTests {
 		assertArrayEquals(dm.getIciHistory().values().toArray(),dm2.getIciHistory().values().toArray());
 		assertArrayEquals(dm.getRelaisStateHistory().values().toArray(), dm2.getRelaisStateHistory().values().toArray());
 		assertArrayEquals(dm.GetSensorInformationHistory().values().toArray(), dm2.GetSensorInformationHistory().values().toArray());
-	}
-		
+	}		
 }

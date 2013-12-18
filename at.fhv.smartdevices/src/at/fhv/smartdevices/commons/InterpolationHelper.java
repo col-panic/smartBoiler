@@ -18,13 +18,13 @@ public class InterpolationHelper {
 	 * 
 	 * @return f(x1) as double array
 	 */
-	public static Double[] interpolateLinear(Double[] x0, Double[] y0, Double[] x1) {
-		Double[] y1 = new Double[x1.length];
+	public static double[] interpolateLinear(double[] x0, double[] y0, double[] x1) {
+		double[] y1 = new double[x1.length];
 
 		for (int i = 0; i < x1.length; i++) {
 			int index = Arrays.binarySearch(x0, x1[i]);
 			// if contained
-			if (index > 0) {
+			if (index >= 0) {
 				y1[i] = y0[index];
 			}
 			// if not contained, interpolation necessary
@@ -48,23 +48,24 @@ public class InterpolationHelper {
 		return y1;
 	}
 
-	public static Double[] createLinearArray(Double x_start, double deltaT, Double x_end) {
-		ArrayList<Double> retVal = new ArrayList<Double>();
-		Double x_current = x_start;
-		while (x_current < x_end) {
-			retVal.add(x_current);
+	public static double[] createLinearArray(double x_start, double deltaT, double x_end) {
+		int amount =(int) Math.round((x_end-x_start)/deltaT);
+		double[] retVal = new double[(int) Math.round((x_end-x_start)/deltaT)];
+		double x_current = x_start;
+		for (int i=0; i<amount;i++) {
+			retVal[i]=(x_current);
 			x_current += deltaT;
 		}
-		return (Double[]) retVal.toArray();
+		return retVal;
 	}
 
-	public static Double[] interpolateBinary(Double[] x0, Double[] y0, Double[] x1) {
-		Double[] y1 = new Double[x1.length];
+	public static double[] interpolateBinary(double[] x0, double[] y0, double[] x1) {
+		double [] y1 = new double[x1.length];
 
 		for (int i = 0; i < x1.length; i++) {
 			int index = Arrays.binarySearch(x0, x1[i]);
 			// if contained
-			if (index > 0) {
+			if (index >= 0) {
 				y1[i] = y0[index];
 			} else {
 				index = -index - 1;
@@ -76,5 +77,36 @@ public class InterpolationHelper {
 			}
 		}
 		return y1;
+	}
+	
+	public static <K extends Number, V>  double[] keysToDoubleArray(SerializableTreeMap<K, V> map)
+	{
+		int amount = map.keySet().size();
+		Number[] keys = (Number[]) map.keySet().toArray(new Number[amount]);	
+		double[] retVal = new double[amount];
+		for (int i=0;i<amount;i++) {
+			retVal[i] = keys[i].doubleValue();
+		}		
+		return retVal;		
+	}		
+	
+	public static <K, V extends Number>  double[] valuesToDoubleArray(SerializableTreeMap<K, V> map)
+	{
+		int amount = map.values().size();
+		Number[] values = (Number[]) map.values().toArray(new Number[amount]);
+		
+		double[] retVal = new double[amount];
+		for (int i=0;i<amount;i++) {			
+			retVal[i] = values[i].doubleValue();
+		}		
+		return retVal;		
+	}
+
+	public static SerializableTreeMap<Long, Byte> ConvertTreeMapBooleanValueToByte(SerializableTreeMap<Long, Boolean> map){
+		SerializableTreeMap<Long, Byte> retVal = new SerializableTreeMap<Long, Byte>();
+			for (Long key : map.keySet()) {
+				retVal.put(key,map.get(key)?(byte)1:(byte)0);
+			}
+		return retVal;
 	}
 }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package at.fhv.smartdevices.tests;
 
 import java.io.File;

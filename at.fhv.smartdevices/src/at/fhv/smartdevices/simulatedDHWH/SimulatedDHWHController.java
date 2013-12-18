@@ -213,7 +213,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 			u[minute] = currentRelaisState;
 		}
 
-		double[][] result = SimulatedDHWH.simulateDHWH(u, _currentTemp, demand);
+		double[][] result = SimulatedDHWH.simulateDHWH(u, _currentTemp, demand, 60);
 		return result;
 	}
 

@@ -32,8 +32,7 @@ public class SerializableTreeMap<K, V> extends TreeMap<K, V> {
 	public SerializableTreeMap()
 	{
 		_map = new TreeMap<K, V>();
-	}
-	
+	}	
 	@Override
 	public void clear() {
 		
