@@ -1,8 +1,8 @@
 package at.fhv.smartdevices.simulatedDHWH;
 
-import java.util.Arrays;
 import java.util.TreeMap;
 
+import at.fhv.smartdevices.commons.InterpolationHelper;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
 
 /**
@@ -88,42 +88,28 @@ public class SimulatedDHWH {
 		return retVal;
 	}
 
-	public static SerializableTreeMap<Long, Double> calculateDemand(TreeMap<Long, Boolean> u, TreeMap<Long, Double> temp, double deltaT) {
+	public static SerializableTreeMap<Long, Double> calculateDemand(TreeMap<Long, Boolean> switchMap, TreeMap<Long, Double> temp, long deltaT) {
 		SerializableTreeMap<Long, Double> retVal = new SerializableTreeMap<Long, Double>();
-		Double[] x0 = temp.keySet().toArray(new Double[temp.keySet().size()]);
-		Double[] y0 = temp.values().toArray(new Double[temp.values().size()]);
-		Double[] x1 = u.keySet().toArray(new Double[u.keySet().size()]);
-		Double[] y1 = interpolateLinear(x0, y0, x1);
 		
+		Double t_start = (double) Math.min(switchMap.firstKey(), temp.firstKey());
+		Double t_end = (double) Math.max(switchMap.lastKey(), temp.lastKey());
+		Double[] t = InterpolationHelper.createLinearArray(t_start, deltaT, t_end);
 		
+		Double[] t_T = temp.keySet().toArray(new Double[temp.keySet().size()]);
+		Double[] T = temp.values().toArray(new Double[temp.values().size()]);
+		Double[] T_int = InterpolationHelper.interpolateLinear(t_T, T, t);
+		
+		Double[] t_u = switchMap.keySet().toArray(new Double[switchMap.keySet().size()]);
+		Double[] u = switchMap.values().toArray(new Double[switchMap.values().size()]);
+		Double[] u_int = InterpolationHelper.interpolateBinary(t_u, u, t);
+		
+		Double[] Q_dem = new Double[t.length-1];
+	    for (int i=1;i<t.length;i++) {	    	
+			Q_dem[i-1]=((T_int[i]-(T_int[i-1]*Math.exp(-p1/p2*deltaT)))/(1-Math.exp(-p1/p2*deltaT)))*p1-(pEl*u_int[i-1]*deltaT)+(p1*(tempEnv-T_int[i-1])*deltaT);
+			retVal.put((Long) Math.round(t[i-1]), Q_dem[i-1]);
+		}		
 		return retVal;
 	}
 
-	private static Double[] interpolateLinear(Double[] x0, Double[] y0, Double[] x1) {
-		Double[] y1 = new Double[x1.length];
-		
-		for (int i = 0; i < x1.length; i++) {
-			int index = Arrays.binarySearch(x0, x1[i]);
-			//if contained
-			if(index>0){
-				y1[i]=y0[index];				
-			}
-			//if not contained, interpolation necessary
-			else{
-				index=-index+1;
-				if(index>0 && index<x0.length-1){
-					y1[i] = y0[index]+((y0[index+1]-y0[index])/(x0[index+1]-x0[index])*(x1[i]-x0[index]));
-				}
-				//extrapolate
-				else if(index==0){
-					y1[i] = y0[index]-((y0[index+1]-y0[index])/(x0[index+1]-x0[index])*(x0[index])-x1[i]);
-					}
-				else if (index==x0.length-1){
-					y1[i] = y0[index]-((y0[index]-y0[index-1])/(x0[index]-x0[index-1])*(x1[i]-x0[index]));
-				}					
-			}
-		}
-		
-		return y1;
-	}
+	
 }
