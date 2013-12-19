@@ -3,6 +3,7 @@
  */
 package at.fhv.smartdevices.simulatedDHWHTests;
 
+import java.util.Collection;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -15,33 +16,73 @@ import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWH;
 
 /**
  * @author kepe
- *
+ * 
  */
 public class SimulatedDHWHTests {
 
 	@Test
-	public void testInverseModel(){
+	public void inverseModelNoDemandNoInterpolationTest() {
+		testInverseModel(600, 1, 0, 100, 1e-3);
+	}
+
+	@Test
+	public void inverseModelNoDemandWithInterpolationTest() {
+		testInverseModel(600, 10, 0, 100, 1e-3);
+	}
+
+	@Test
+	public void inverseModelWithDemandNoInterpolationTest() {
+		testInverseModel(600, 1, 1000, 100, 1e-3);
+	}
+	
+	@Test
+	public void inverseModelWithDemandWithInterpolationTest() {
+		testInverseModel(600, 10, 1000, 100, 1e2);
+	}
+
+	private void testInverseModel(int deltat, int interpolationFactor, double maxDemand, int iterations, double error) {
 		SerializableTreeMap<Long, Boolean> switchMap = new SerializableTreeMap<Long, Boolean>();
-		SerializableTreeMap<Long, Double> temp = new SerializableTreeMap<Long,Double>();
-		double temp0=40.0;
-		long deltat=600;
+		SerializableTreeMap<Long, Double> temp = new SerializableTreeMap<Long, Double>();
+		SerializableTreeMap<Long, Double> demands = new SerializableTreeMap<Long, Double>();
+		double temp0 = 40.0;
+
 		Random random = new Random();
 		Boolean u = false;
-		for (Long i=0L;i<100;i++){
-			
-			temp.put(i*deltat, temp0);
+		for (Long i = 0L; i < iterations; i++) {
+			temp.put(i * deltat, temp0);
+			double demand = random.nextDouble() * maxDemand;
+			demands.put(i * deltat, demand);
 			byte uByte = 0;
-			if(u)
-			{uByte=1;}
-			double[][] temp1 = SimulatedDHWH.simulateDHWH(uByte, temp0, random.nextDouble(), deltat);
-			switchMap.put(i*deltat, temp1[0][0]>0);
+			if (u) {
+				uByte = 1;
+			}
+			double[][] temp1 = SimulatedDHWH.simulateDHWH(uByte, temp0, demand, deltat);
+			switchMap.put(i * deltat, temp1[0][0] > 0);
 			temp0 = temp1[1][1];
-			u = random.nextBoolean();				
-		}	
-		TreeMap<Long, Double> demand = SimulatedDHWH.calculateDemand(switchMap, temp, deltat/600);
-		for (Double d : demand.values()) {
-			assertTrue(Math.abs(d)<10);
+			u = random.nextBoolean();
 		}
-		
-	}	
+		TreeMap<Long, Double> measureddemands = SimulatedDHWH.calculateDemand(switchMap, temp, deltat
+				/ interpolationFactor);
+		if (interpolationFactor == 1) {
+			for (Long key : measureddemands.keySet()) {
+				System.out.println("real:" + demands.get(key));
+				System.out.println("measured:" + measureddemands.get(key));
+				assertEquals(demands.get(key), measureddemands.get(key), error);
+			}			
+		}
+		else{
+			double measuredSum = getSum(measureddemands.values());
+			double realSum = getSum(demands.values());
+			assertEquals(realSum*interpolationFactor, measuredSum, error*measureddemands.size());
+		}
+	}
+
+	private double getSum(Collection<Double> values) {
+		double retVal = 0;
+		for (Double value : values) {
+			retVal+=value;
+		}
+
+		return retVal;
+	}
 }

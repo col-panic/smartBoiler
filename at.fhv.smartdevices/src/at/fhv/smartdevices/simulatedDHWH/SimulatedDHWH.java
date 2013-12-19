@@ -2,6 +2,7 @@ package at.fhv.smartdevices.simulatedDHWH;
 
 import at.fhv.smartdevices.commons.SerializableTreeMap;
 import at.fhv.smartdevices.helper.InterpolationHelper;
+import at.fhv.smartdevices.helper.SerializableTreeMapHelper;
 
 /**
  * @author kepe
@@ -90,27 +91,42 @@ public class SimulatedDHWH {
 		retVal[1][timeSteps] = temp[timeSteps];
 		return retVal;
 	}
+	
+	public static double[] calculateDemand(double[] temp, double[] u, double deltat){
+		double[] Q_dem = new double[temp.length];
+		for (int i=1;i<temp.length;i++) {	    	
+			Q_dem[i-1]=calculateDemand(temp[i], temp[i-1], u[i-1], deltat);
+		}	
+		return Q_dem;
+	}
+	
+	public static double calculateDemand(double temp_1, double temp_0, double u, double deltat){
+		double dem = -((p2*(temp_1-temp_0)/deltat)-(u*pEl)-(p1*(tempEnv-((temp_0+temp_1)/2))));
+		//double lambda = Math.exp(-p1/p2*deltat);
+		//double dem = ((temp_0*lambda -(temp_1))*p1/(1-lambda)+(u*pEl)+(tempEnv*p1));
+		return dem;
+	}
 
 	public static SerializableTreeMap<Long, Double> calculateDemand(SerializableTreeMap<Long, Boolean> switchBoolMap, SerializableTreeMap<Long, Double> temp, long deltat) {
 		SerializableTreeMap<Long, Double> retVal = new SerializableTreeMap<Long, Double>();
-		SerializableTreeMap<Long, Byte> switchMap = InterpolationHelper.ConvertTreeMapBooleanValueToByte(switchBoolMap); 
+		SerializableTreeMap<Long, Byte> switchMap = SerializableTreeMapHelper.ConvertTreeMapBooleanValueToByte(switchBoolMap); 
 		
 		double t_start = (double) Math.min(switchMap.firstKey(), temp.firstKey());
 		double t_end = (double) Math.max(switchMap.lastKey(), temp.lastKey());
 		double[] t = InterpolationHelper.createLinearArray(t_start, deltat, t_end);
 		
-		double[] t_T = InterpolationHelper.keysToDoubleArray(temp);
-		double[] T = InterpolationHelper.valuesToDoubleArray(temp);
+		double[] t_T = SerializableTreeMapHelper.keysToDoubleArray(temp);
+		double[] T = SerializableTreeMapHelper.valuesToDoubleArray(temp);
 		double[] T_int = InterpolationHelper.interpolateLinear(t_T, T, t);
 		
-		double[] t_u = InterpolationHelper.keysToDoubleArray(switchMap);
-		double[] u = InterpolationHelper.valuesToDoubleArray(switchMap);
+		double[] t_u = SerializableTreeMapHelper.keysToDoubleArray(switchMap);
+		double[] u = SerializableTreeMapHelper.valuesToDoubleArray(switchMap);
 		double[] u_int = InterpolationHelper.interpolateBinary(t_u, u, t);
 		
-		double[] Q_dem = new double[t.length-1];
-	    for (int i=1;i<t.length;i++) {	    	
-			Q_dem[i-1]=((p2*(T_int[i]-T_int[i-1])/deltat)-(u_int[i-1]*pEl)-(p1*(tempEnv-T_int[i-1])));
-	    	//Q_dem[i-1]=((T_int[i]-(T_int[i-1]*Math.exp(-p1/p2*deltaT)))/(1-Math.exp(-p1/p2*deltaT)))*p1-(pEl*u_int[i-1]*deltaT)+(p1*(tempEnv-T_int[i-1])*deltat);
+		double[] Q_dem = calculateDemand(T_int,u_int,deltat);
+		
+		for (int i=1;i<Q_dem.length;i++) {
+			Q_dem[i-1]=calculateDemand(T_int[i], T_int[i-1], u_int[i-1], deltat);
 			retVal.put((Long) Math.round(t[i-1]), Q_dem[i-1]);
 		}		
 		return retVal;
