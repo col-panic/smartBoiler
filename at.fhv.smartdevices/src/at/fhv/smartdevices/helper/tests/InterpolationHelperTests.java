@@ -1,12 +1,13 @@
 /**
  * 
  */
-package at.fhv.smartdevices.commons.tests;
+package at.fhv.smartdevices.helper.tests;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-import at.fhv.smartdevices.commons.InterpolationHelper;
+import at.fhv.smartdevices.helper.InterpolationHelper;
 
 /**
  * @author kepe

@@ -1,7 +1,7 @@
 package at.fhv.smartdevices.simulatedDHWH;
 
-import at.fhv.smartdevices.commons.InterpolationHelper;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
+import at.fhv.smartdevices.helper.InterpolationHelper;
 
 /**
  * @author kepe

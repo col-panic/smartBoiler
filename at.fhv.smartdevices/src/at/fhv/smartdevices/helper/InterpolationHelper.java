@@ -1,9 +1,11 @@
 /**
  * 
  */
-package at.fhv.smartdevices.commons;
+package at.fhv.smartdevices.helper;
 
 import java.util.Arrays;
+
+import at.fhv.smartdevices.commons.SerializableTreeMap;
 
 /**
  * @author kepe

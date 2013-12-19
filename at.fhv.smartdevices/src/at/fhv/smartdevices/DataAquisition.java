@@ -3,8 +3,6 @@
  */
 package at.fhv.smartdevices;
 
-import helper.SerializationHelper;
-
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,6 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import at.fhv.smartdevices.commons.IReadOnlyClock;
 import at.fhv.smartdevices.commons.ISchedulable;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
+import at.fhv.smartdevices.helper.SerializationHelper;
 import at.fhv.smartgrid.rasbpi.*;
 import at.fhv.smartgrid.rasbpi.internal.*;
 

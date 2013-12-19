@@ -1,7 +1,7 @@
 /**
  * Helper class provides static methods to deserialize and serialize simple objects
  */
-package helper;
+package at.fhv.smartdevices.helper;
 
 import java.io.File;
 
