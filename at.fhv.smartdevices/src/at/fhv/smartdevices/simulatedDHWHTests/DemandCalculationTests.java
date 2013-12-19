@@ -12,13 +12,14 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import at.fhv.smartdevices.commons.SerializableTreeMap;
+import at.fhv.smartdevices.simulatedDHWH.DemandCalculationModel;
 import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWH;
 
 /**
  * @author kepe
  * 
  */
-public class SimulatedDHWHTests {
+public class DemandCalculationTests {
 
 	@Test
 	public void inverseModelNoDemandNoInterpolationTest() {
@@ -61,7 +62,7 @@ public class SimulatedDHWHTests {
 			temp0 = temp1[1][1];
 			u = random.nextBoolean();
 		}
-		TreeMap<Long, Double> measureddemands = SimulatedDHWH.calculateDemand(switchMap, temp, deltat
+		TreeMap<Long, Double> measureddemands = DemandCalculationModel.calculateDemand(switchMap, temp, deltat
 				/ interpolationFactor);
 		if (interpolationFactor == 1) {
 			for (Long key : measureddemands.keySet()) {
