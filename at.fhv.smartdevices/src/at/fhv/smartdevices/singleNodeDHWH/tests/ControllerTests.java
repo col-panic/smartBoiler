@@ -1,4 +1,4 @@
-package at.fhv.smartdevices.singleNodeDHWHTests;
+package at.fhv.smartdevices.singleNodeDHWH.tests;
 
 import static org.junit.Assert.*;
 

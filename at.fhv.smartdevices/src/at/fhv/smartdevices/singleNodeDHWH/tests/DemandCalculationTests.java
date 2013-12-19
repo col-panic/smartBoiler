@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices.singleNodeDHWHTests;
+package at.fhv.smartdevices.singleNodeDHWH.tests;
 
 import java.util.Collection;
 import java.util.Random;
