@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices.simulatedDHWHTests;
+package at.fhv.smartdevices.singleNodeDHWHTests;
 
 import java.util.Collection;
 import java.util.Random;
@@ -12,8 +12,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import at.fhv.smartdevices.commons.SerializableTreeMap;
-import at.fhv.smartdevices.simulatedDHWH.DemandCalculationModel;
-import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWH;
+import at.fhv.smartdevices.singleNodeDHWH.DemandCalculationModel;
+import at.fhv.smartdevices.singleNodeDHWH.SingleNodeDHWHThermalModel;
 
 /**
  * @author kepe
@@ -57,7 +57,7 @@ public class DemandCalculationTests {
 			if (u) {
 				uByte = 1;
 			}
-			double[][] temp1 = SimulatedDHWH.simulateDHWH(uByte, temp0, demand, deltat);
+			double[][] temp1 = SingleNodeDHWHThermalModel.simulateDHWH(uByte, temp0, demand, deltat);
 			switchMap.put(i * deltat, temp1[0][0] > 0);
 			temp0 = temp1[1][1];
 			u = random.nextBoolean();

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices;
+package at.fhv.smartdevices.scheduling;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

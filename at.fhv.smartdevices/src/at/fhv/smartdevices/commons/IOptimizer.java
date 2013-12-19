@@ -3,7 +3,7 @@
  */
 package at.fhv.smartdevices.commons;
 
-import at.fhv.smartdevices.DataAquisition;
+import at.fhv.smartdevices.scheduling.DataAquisition;
 
 /**
  * @author kepe

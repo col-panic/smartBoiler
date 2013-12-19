@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  * @author kepe
- * 
+ * provides methods for linear and boolean interpolation
  */
 public class InterpolationHelper {
 

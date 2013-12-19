@@ -1,10 +1,10 @@
-package at.fhv.smartdevices.tests;
+package at.fhv.smartdevices.scheduling.tests;
 
 import java.io.File;
 import java.lang.reflect.Field;
 
-import at.fhv.smartdevices.DataAquisition;
 import at.fhv.smartdevices.commons.IClock;
+import at.fhv.smartdevices.scheduling.DataAquisition;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
 /**

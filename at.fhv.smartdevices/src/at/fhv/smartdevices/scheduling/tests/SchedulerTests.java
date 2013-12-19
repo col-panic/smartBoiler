@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices.tests;
+package at.fhv.smartdevices.scheduling.tests;
 
 import static org.junit.Assert.*;
 
@@ -11,12 +11,12 @@ import java.util.TreeMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.fhv.smartdevices.Clock;
-import at.fhv.smartdevices.DataAquisition;
-import at.fhv.smartdevices.SchedulableSwitch;
-import at.fhv.smartdevices.Scheduler;
 import at.fhv.smartdevices.commons.*;
-import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
+import at.fhv.smartdevices.scheduling.Clock;
+import at.fhv.smartdevices.scheduling.DataAquisition;
+import at.fhv.smartdevices.scheduling.SchedulableSwitch;
+import at.fhv.smartdevices.scheduling.Scheduler;
+import at.fhv.smartdevices.singleNodeDHWH.SimulatedDHWHController;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
 /**

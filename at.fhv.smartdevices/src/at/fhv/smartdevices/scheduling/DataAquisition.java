@@ -1,7 +1,7 @@
 /**
  * Central class to manage data acquisition and data persistence
  */
-package at.fhv.smartdevices;
+package at.fhv.smartdevices.scheduling;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;

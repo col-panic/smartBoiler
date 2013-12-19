@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices;
+package at.fhv.smartdevices.scheduling;
 
 import java.util.ArrayList;
 import java.util.HashMap;

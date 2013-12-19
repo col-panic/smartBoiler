@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices;
+package at.fhv.smartdevices.scheduling;
 
 import java.util.Calendar;
 import java.util.concurrent.locks.Lock;

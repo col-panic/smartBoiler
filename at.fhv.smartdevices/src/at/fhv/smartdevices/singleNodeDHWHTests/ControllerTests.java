@@ -1,4 +1,4 @@
-package at.fhv.smartdevices.simulatedDHWHTests;
+package at.fhv.smartdevices.singleNodeDHWHTests;
 
 import static org.junit.Assert.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
+import at.fhv.smartdevices.singleNodeDHWH.SimulatedDHWHController;
 import at.fhv.smartgrid.rasbpi.internal.*;
 
 public class ControllerTests {

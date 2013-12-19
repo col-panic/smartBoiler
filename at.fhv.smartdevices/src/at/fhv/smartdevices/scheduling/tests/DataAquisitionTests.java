@@ -1,13 +1,13 @@
-package at.fhv.smartdevices.tests;
+package at.fhv.smartdevices.scheduling.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import at.fhv.smartdevices.Clock;
-import at.fhv.smartdevices.DataAquisition;
-import at.fhv.smartdevices.simulatedDHWH.SimulatedDHWHController;
+import at.fhv.smartdevices.scheduling.Clock;
+import at.fhv.smartdevices.scheduling.DataAquisition;
+import at.fhv.smartdevices.singleNodeDHWH.SimulatedDHWHController;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 /**
  * @author kepe

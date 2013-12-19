@@ -1,4 +1,4 @@
-package at.fhv.smartdevices.simulatedDHWH;
+package at.fhv.smartdevices.singleNodeDHWH;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +14,7 @@ import at.fhv.smartgrid.rasbpi.internal.SensorInformation;
 
 /**
  * @author kepe
- * 
+ * Simulates a dhwh by using the single node dhwh thermal model
  */
 public class SimulatedDHWHController implements ISimulatedSmartController {
 
@@ -138,7 +138,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 		float consumption = 0;
 		for (int seconds = 0; seconds < discreteSwitch.length * 60; seconds++) {
 			int minute = (int) Math.floor(seconds / 60.0);
-			consumption += discreteSwitch[minute] * SimulatedDHWH.pEl / 3600.0;
+			consumption += discreteSwitch[minute] * SingleNodeDHWHThermalModel.pEl / 3600.0;
 			if (consumption > 1) {
 				// System.out.println(minute+":"+seconds+"/"+consumption);
 				ic.impulsOccurences.add((long) (seconds * 1000));
@@ -213,7 +213,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 			u[minute] = currentRelaisState;
 		}
 
-		double[][] result = SimulatedDHWH.simulateDHWH(u, _currentTemp, demand, 60);
+		double[][] result = SingleNodeDHWHThermalModel.simulateDHWH(u, _currentTemp, demand, 60);
 		return result;
 	}
 

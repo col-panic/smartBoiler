@@ -1,9 +1,9 @@
-package at.fhv.smartdevices.simulatedDHWH;
+package at.fhv.smartdevices.singleNodeDHWH;
 /**
  * @author kepe
  * 
  */
-public class SimulatedDHWH {
+public class SingleNodeDHWHThermalModel {
 
 	// private static final double c_p=4.18e3;//[J/kgK] specific heat
 	static final double pEl = 2175;// [W] el. power of the heater

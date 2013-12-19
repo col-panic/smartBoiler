@@ -1,7 +1,7 @@
 /**
- * 
+ * Provides methods to calculate the demand of a DHWH by using the single node thermal model.
  */
-package at.fhv.smartdevices.simulatedDHWH;
+package at.fhv.smartdevices.singleNodeDHWH;
 
 import at.fhv.smartdevices.commons.SerializableTreeMap;
 import at.fhv.smartdevices.helper.InterpolationHelper;
@@ -29,7 +29,7 @@ public class DemandCalculationModel {
 		double[] u_int = InterpolationHelper.interpolateBinary(t_u, u, t);
 				
 		for (int i=1;i<t.length;i++) {			
-			retVal.put((Long) Math.round(t[i-1]), SimulatedDHWH.calculateDemand(T_int[i], T_int[i-1], u_int[i-1], deltat));
+			retVal.put((Long) Math.round(t[i-1]), SingleNodeDHWHThermalModel.calculateDemand(T_int[i], T_int[i-1], u_int[i-1], deltat));
 		}		
 		return retVal;
 	}	

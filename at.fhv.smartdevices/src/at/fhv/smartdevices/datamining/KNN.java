@@ -1,13 +1,15 @@
 /**
  * 
  */
-package at.fhv.smartdevices;
+package at.fhv.smartdevices.datamining;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import at.fhv.smartdevices.commons.ISchedulable;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
+import at.fhv.smartdevices.scheduling.DataAquisition;
+import at.fhv.smartdevices.scheduling.SchedulableSwitch;
 
 /**
  * @author kepe
