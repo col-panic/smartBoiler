@@ -1,7 +1,5 @@
 package at.fhv.smartdevices.simulatedDHWH;
 
-import java.util.TreeMap;
-
 import at.fhv.smartdevices.commons.InterpolationHelper;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
 
@@ -33,6 +31,8 @@ public class SimulatedDHWH {
 	 *            start temperature
 	 * @param demand
 	 *            the demand in W
+	 * @param deltat
+	 * 			  the time step size
 	 * @return a two dimensional array holding: the adapted switch [0][*] and
 	 *         the resulted temperature[1][*]
 	 */
@@ -47,6 +47,8 @@ public class SimulatedDHWH {
 	 *            start temperature
 	 * @param demand
 	 *            the demand in W
+	 * @param deltat
+	 * 			  the time step size
 	 * @return a two dimensional array holding: the adapted switch [0][*] and
 	 *         the resulted temperature[1][*]
 	 */
@@ -64,6 +66,8 @@ public class SimulatedDHWH {
 	 *            the demand in W
 	 * @param timeSteps
 	 *            the number of steps to take
+	 * @param deltat
+	 * 			  the time step size
 	 * @return a two dimensional array holding: the adapted switch [0][*] and
 	 *         the resulted temperature[1][*]
 	 */
@@ -75,10 +79,9 @@ public class SimulatedDHWH {
 		for (int i = 1; i <= timeSteps; i++) {
 			if (temp[i - 1] > tempMax) {
 				u[i - 1] = 0;
-			} else {
-				temp[i] = (temp[i - 1] * lambda)
-						+ ((1 - lambda) * ((u[i - 1] * pEl / p1) - (demand[i - 1] / p1) + tempEnv));
-			}
+			} 
+			temp[i] = (temp[i - 1] * lambda)+ ((1 - lambda) * ((u[i - 1] * pEl / p1) - (demand[i - 1] / p1) + tempEnv));
+			
 		}
 		for (int i = 0; i < timeSteps; i++) {
 			retVal[0][i] = u[i];
@@ -88,13 +91,13 @@ public class SimulatedDHWH {
 		return retVal;
 	}
 
-	public static SerializableTreeMap<Long, Double> calculateDemand(SerializableTreeMap<Long, Boolean> switchBoolMap, SerializableTreeMap<Long, Double> temp, long deltaT) {
+	public static SerializableTreeMap<Long, Double> calculateDemand(SerializableTreeMap<Long, Boolean> switchBoolMap, SerializableTreeMap<Long, Double> temp, long deltat) {
 		SerializableTreeMap<Long, Double> retVal = new SerializableTreeMap<Long, Double>();
 		SerializableTreeMap<Long, Byte> switchMap = InterpolationHelper.ConvertTreeMapBooleanValueToByte(switchBoolMap); 
 		
 		double t_start = (double) Math.min(switchMap.firstKey(), temp.firstKey());
 		double t_end = (double) Math.max(switchMap.lastKey(), temp.lastKey());
-		double[] t = InterpolationHelper.createLinearArray(t_start, deltaT, t_end);
+		double[] t = InterpolationHelper.createLinearArray(t_start, deltat, t_end);
 		
 		double[] t_T = InterpolationHelper.keysToDoubleArray(temp);
 		double[] T = InterpolationHelper.valuesToDoubleArray(temp);
@@ -106,7 +109,8 @@ public class SimulatedDHWH {
 		
 		double[] Q_dem = new double[t.length-1];
 	    for (int i=1;i<t.length;i++) {	    	
-			Q_dem[i-1]=((T_int[i]-(T_int[i-1]*Math.exp(-p1/p2*deltaT)))/(1-Math.exp(-p1/p2*deltaT)))*p1-(pEl*u_int[i-1]*deltaT)+(p1*(tempEnv-T_int[i-1])*deltaT);
+			Q_dem[i-1]=((p2*(T_int[i]-T_int[i-1])/deltat)-(u_int[i-1]*pEl)-(p1*(tempEnv-T_int[i-1])));
+	    	//Q_dem[i-1]=((T_int[i]-(T_int[i-1]*Math.exp(-p1/p2*deltaT)))/(1-Math.exp(-p1/p2*deltaT)))*p1-(pEl*u_int[i-1]*deltaT)+(p1*(tempEnv-T_int[i-1])*deltat);
 			retVal.put((Long) Math.round(t[i-1]), Q_dem[i-1]);
 		}		
 		return retVal;

@@ -24,22 +24,23 @@ public class SimulatedDHWHTests {
 		SerializableTreeMap<Long, Boolean> switchMap = new SerializableTreeMap<Long, Boolean>();
 		SerializableTreeMap<Long, Double> temp = new SerializableTreeMap<Long,Double>();
 		double temp0=40.0;
-		long deltat=6000;
+		long deltat=600;
 		Random random = new Random();
 		Boolean u = false;
 		for (Long i=0L;i<100;i++){
-			switchMap.put(i*deltat, u);
+			
 			temp.put(i*deltat, temp0);
 			byte uByte = 0;
 			if(u)
 			{uByte=1;}
 			double[][] temp1 = SimulatedDHWH.simulateDHWH(uByte, temp0, random.nextDouble(), deltat);
+			switchMap.put(i*deltat, temp1[0][0]>0);
 			temp0 = temp1[1][1];
 			u = random.nextBoolean();				
 		}	
-		TreeMap<Long, Double> demand = SimulatedDHWH.calculateDemand(switchMap, temp, deltat);
+		TreeMap<Long, Double> demand = SimulatedDHWH.calculateDemand(switchMap, temp, deltat/600);
 		for (Double d : demand.values()) {
-			assertEquals(d.doubleValue(), 0.0);
+			assertTrue(Math.abs(d)<10);
 		}
 		
 	}	

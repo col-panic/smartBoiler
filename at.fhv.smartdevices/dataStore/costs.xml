@@ -1,196 +1,100 @@
 <serializableTreeMap>
    <_map>
       <value>
-         <key class="java.lang.Long">1386889200641</key>
-         <object class="java.lang.Integer">4310</object>
+         <key class="java.lang.Long">1387494000339</key>
+         <object class="java.lang.Integer">3670</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386892800641</key>
-         <object class="java.lang.Integer">4231</object>
+         <key class="java.lang.Long">1387497600339</key>
+         <object class="java.lang.Integer">3620</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386896400641</key>
-         <object class="java.lang.Integer">4151</object>
+         <key class="java.lang.Long">1387501200339</key>
+         <object class="java.lang.Integer">3554</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386900000641</key>
-         <object class="java.lang.Integer">4038</object>
+         <key class="java.lang.Long">1387504800339</key>
+         <object class="java.lang.Integer">3531</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386903600641</key>
-         <object class="java.lang.Integer">4124</object>
+         <key class="java.lang.Long">1387508400339</key>
+         <object class="java.lang.Integer">3484</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386907200641</key>
-         <object class="java.lang.Integer">4349</object>
+         <key class="java.lang.Long">1387512000339</key>
+         <object class="java.lang.Integer">3738</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386910800641</key>
-         <object class="java.lang.Integer">5993</object>
+         <key class="java.lang.Long">1387515600339</key>
+         <object class="java.lang.Integer">4873</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386914400641</key>
-         <object class="java.lang.Integer">8000</object>
+         <key class="java.lang.Long">1387519200339</key>
+         <object class="java.lang.Integer">6540</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386918000641</key>
-         <object class="java.lang.Integer">8271</object>
+         <key class="java.lang.Long">1387522800339</key>
+         <object class="java.lang.Integer">6408</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386921600641</key>
-         <object class="java.lang.Integer">7844</object>
+         <key class="java.lang.Long">1387526400339</key>
+         <object class="java.lang.Integer">6300</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386925200641</key>
-         <object class="java.lang.Integer">7594</object>
+         <key class="java.lang.Long">1387530000339</key>
+         <object class="java.lang.Integer">6343</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386928800641</key>
-         <object class="java.lang.Integer">7761</object>
+         <key class="java.lang.Long">1387533600339</key>
+         <object class="java.lang.Integer">6326</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386932400641</key>
-         <object class="java.lang.Integer">7093</object>
+         <key class="java.lang.Long">1387537200339</key>
+         <object class="java.lang.Integer">6182</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386936000641</key>
-         <object class="java.lang.Integer">7043</object>
+         <key class="java.lang.Long">1387540800339</key>
+         <object class="java.lang.Integer">6096</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386939600641</key>
-         <object class="java.lang.Integer">7093</object>
+         <key class="java.lang.Long">1387544400339</key>
+         <object class="java.lang.Integer">6000</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386943200641</key>
-         <object class="java.lang.Integer">7700</object>
+         <key class="java.lang.Long">1387548000339</key>
+         <object class="java.lang.Integer">6219</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386946800641</key>
-         <object class="java.lang.Integer">9511</object>
+         <key class="java.lang.Long">1387551600339</key>
+         <object class="java.lang.Integer">6443</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386950400641</key>
-         <object class="java.lang.Integer">12565</object>
+         <key class="java.lang.Long">1387555200339</key>
+         <object class="java.lang.Integer">7224</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386954000641</key>
-         <object class="java.lang.Integer">10645</object>
+         <key class="java.lang.Long">1387558800339</key>
+         <object class="java.lang.Integer">7119</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386957600641</key>
-         <object class="java.lang.Integer">8718</object>
+         <key class="java.lang.Long">1387562400339</key>
+         <object class="java.lang.Integer">6500</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386961200641</key>
-         <object class="java.lang.Integer">7186</object>
+         <key class="java.lang.Long">1387566000339</key>
+         <object class="java.lang.Integer">6083</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386964800641</key>
-         <object class="java.lang.Integer">6693</object>
+         <key class="java.lang.Long">1387569600339</key>
+         <object class="java.lang.Integer">5529</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386968400641</key>
-         <object class="java.lang.Integer">6012</object>
+         <key class="java.lang.Long">1387573200339</key>
+         <object class="java.lang.Integer">4688</object>
       </value>
       <value>
-         <key class="java.lang.Long">1386972000641</key>
-         <object class="java.lang.Integer">4686</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1386975600641</key>
-         <object class="java.lang.Integer">4298</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1386979200641</key>
-         <object class="java.lang.Integer">4206</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1386982800641</key>
-         <object class="java.lang.Integer">3970</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1386986400641</key>
-         <object class="java.lang.Integer">4009</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1386990000641</key>
-         <object class="java.lang.Integer">4114</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1386993600641</key>
-         <object class="java.lang.Integer">4421</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1386997200641</key>
-         <object class="java.lang.Integer">5896</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387000800641</key>
-         <object class="java.lang.Integer">8092</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387004400641</key>
-         <object class="java.lang.Integer">9553</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387008000641</key>
-         <object class="java.lang.Integer">8668</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387011600641</key>
-         <object class="java.lang.Integer">7956</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387015200641</key>
-         <object class="java.lang.Integer">7790</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387018800641</key>
-         <object class="java.lang.Integer">7261</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387022400641</key>
-         <object class="java.lang.Integer">7056</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387026000641</key>
-         <object class="java.lang.Integer">7030</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387029600641</key>
-         <object class="java.lang.Integer">7251</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387033200641</key>
-         <object class="java.lang.Integer">8388</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387036800641</key>
-         <object class="java.lang.Integer">11270</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387040400641</key>
-         <object class="java.lang.Integer">11072</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387044000641</key>
-         <object class="java.lang.Integer">7499</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387047600641</key>
-         <object class="java.lang.Integer">6162</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387051200641</key>
-         <object class="java.lang.Integer">5507</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387054800641</key>
-         <object class="java.lang.Integer">4930</object>
-      </value>
-      <value>
-         <key class="java.lang.Long">1387058400641</key>
-         <object class="java.lang.Integer">3800</object>
+         <key class="java.lang.Long">1387576800339</key>
+         <object class="java.lang.Integer">3845</object>
       </value>
    </_map>
 </serializableTreeMap>
