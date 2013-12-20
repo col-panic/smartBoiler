@@ -33,7 +33,7 @@ public class DataAquisitionTests {
 		DataAquisition dm = new DataAquisition(_controller, _clock, true);
 		for (int i = 1; i < 100; i++) {			
 			_clock.waitFor(timeStep);
-			dm.collectData();			
+			dm.run();			
 		}		
 		DataAquisition dm2 = new DataAquisition(_controller, _clock, true);
 		assertArrayEquals(dm.getCostsHistory().keySet().toArray(),dm2.getCostsHistory().keySet().toArray());

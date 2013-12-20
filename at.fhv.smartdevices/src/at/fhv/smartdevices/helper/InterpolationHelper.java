@@ -15,10 +15,10 @@ public class InterpolationHelper {
 	 * Interpolate the function f(x0)=y0 at the points x1 and return the result
 	 * f(x1)
 	 * 
-	 * @return f(x1) as double array
+	 * @return f(x1) as float array
 	 */
-	public static double[] interpolateLinear(double[] x0, double[] y0, double[] x1) {
-		double[] y1 = new double[x1.length];
+	public static float[] interpolateLinear(float[] x0, float[] y0, float[] x1) {
+		float[] y1 = new float[x1.length];
 
 		for (int i = 0; i < x1.length; i++) {
 			int index = Arrays.binarySearch(x0, x1[i]);
@@ -45,10 +45,10 @@ public class InterpolationHelper {
 		return y1;
 	}
 
-	public static double[] createLinearArray(double x_start, double deltaT, double x_end) {
+	public static float[] createLinearArray(float x_start, float deltaT, float x_end) {
 		int amount =(int) Math.round((x_end-x_start)/deltaT);
-		double[] retVal = new double[(int) Math.round((x_end-x_start)/deltaT)];
-		double x_current = x_start;
+		float[] retVal = new float[(int) Math.round((x_end-x_start)/deltaT)];
+		float x_current = x_start;
 		for (int i=0; i<amount;i++) {
 			retVal[i]=(x_current);
 			x_current += deltaT;
@@ -56,8 +56,8 @@ public class InterpolationHelper {
 		return retVal;
 	}
 
-	public static double[] interpolateBinary(double[] x0, double[] y0, double[] x1) {
-		double [] y1 = new double[x1.length];
+	public static float[] interpolateBinary(float[] x0, float[] y0, float[] x1) {
+		float [] y1 = new float[x1.length];
 
 		for (int i = 0; i < x1.length; i++) {
 			int index = Arrays.binarySearch(x0, x1[i]);

@@ -5,31 +5,31 @@ package at.fhv.smartdevices.singleNodeDHWH;
 
 import at.fhv.smartdevices.commons.SerializableTreeMap;
 import at.fhv.smartdevices.helper.InterpolationHelper;
-import at.fhv.smartdevices.helper.SerializableTreeMapHelper;
+import at.fhv.smartdevices.helper.MapHelper;
 
 /**
  * @author kepe
  *
  */
 public class DemandCalculationModel {
-	public static SerializableTreeMap<Long, Double> calculateDemand(SerializableTreeMap<Long, Boolean> switchBoolMap, SerializableTreeMap<Long, Double> temp, long deltat) {
-		SerializableTreeMap<Long, Double> retVal = new SerializableTreeMap<Long, Double>();
-		SerializableTreeMap<Long, Byte> switchMap = SerializableTreeMapHelper.ConvertTreeMapBooleanValueToByte(switchBoolMap); 
+	public static SerializableTreeMap<Long, Float> calculateDemand(SerializableTreeMap<Long, Boolean> switchBoolMap, SerializableTreeMap<Long, Float> temp, long deltat) {
+		SerializableTreeMap<Long, Float> retVal = new SerializableTreeMap<Long, Float>();
+		SerializableTreeMap<Long, Byte> switchMap = MapHelper.ConvertTreeMapBooleanValueToByte(switchBoolMap); 
 		
-		double t_start = (double) Math.min(switchMap.firstKey(), temp.firstKey());
-		double t_end = (double) Math.max(switchMap.lastKey(), temp.lastKey());
-		double[] t = InterpolationHelper.createLinearArray(t_start, deltat, t_end);
+		float t_start = (float) Math.min(switchMap.firstKey(), temp.firstKey());
+		float t_end = (float) Math.max(switchMap.lastKey(), temp.lastKey());
+		float[] t = InterpolationHelper.createLinearArray(t_start, deltat, t_end);
 		
-		double[] t_T = SerializableTreeMapHelper.keysToDoubleArray(temp);
-		double[] T = SerializableTreeMapHelper.valuesToDoubleArray(temp);
-		double[] T_int = InterpolationHelper.interpolateLinear(t_T, T, t);
+		float[] t_T = MapHelper.keysToDoubleArray(temp);
+		float[] T = MapHelper.valuesToDoubleArray(temp);
+		float[] T_int = InterpolationHelper.interpolateLinear(t_T, T, t);
 		
-		double[] t_u = SerializableTreeMapHelper.keysToDoubleArray(switchMap);
-		double[] u = SerializableTreeMapHelper.valuesToDoubleArray(switchMap);
-		double[] u_int = InterpolationHelper.interpolateBinary(t_u, u, t);
+		float[] t_u = MapHelper.keysToDoubleArray(switchMap);
+		float[] u = MapHelper.valuesToDoubleArray(switchMap);
+		float[] u_int = InterpolationHelper.interpolateBinary(t_u, u, t);
 				
 		for (int i=1;i<t.length;i++) {			
-			retVal.put((Long) Math.round(t[i-1]), SingleNodeDHWHThermalModel.calculateDemand(T_int[i], T_int[i-1], u_int[i-1], deltat));
+			retVal.put((long) Math.round(t[i-1]), SingleNodeDHWHThermalModel.calculateDemand(T_int[i], T_int[i-1], u_int[i-1], deltat));
 		}		
 		return retVal;
 	}	

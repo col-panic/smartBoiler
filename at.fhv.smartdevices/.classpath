@@ -5,5 +5,7 @@
 	<classpathentry kind="src" path="/10.1.1.1_LinuxConn_smartBoiler_dstore"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="3rdparty/simple-xml-2.7.1/jar/simple-xml-2.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/energie/Dropbox/git/smartBoiler/at.fhv.smartdevices/3rdparty/commons-collections4-4.0/commons-collections4-4.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/energie/Dropbox/git/smartBoiler/at.fhv.smartdevices/3rdparty/commons-primitives-1.0/commons-primitives-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,48 +5,48 @@
          <object class="at.fhv.smartdevices.commons.SerializableTreeMap">
             <_map>
                <value>
-                  <key class="java.lang.Long">1387465035713</key>
+                  <key class="java.lang.Long">1387465858150</key>
                   <object class="java.lang.Float">39.748627</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387497435713</key>
+                  <key class="java.lang.Long">1387498258150</key>
                   <object class="java.lang.Float">38.655968</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387526235713</key>
-                  <object class="java.lang.Float">37.486275</object>
+                  <key class="java.lang.Long">1387527058150</key>
+                  <object class="java.lang.Float">37.486618</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387558635713</key>
-                  <object class="java.lang.Float">36.439743</object>
+                  <key class="java.lang.Long">1387559458150</key>
+                  <object class="java.lang.Float">36.440174</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387594635713</key>
-                  <object class="java.lang.Float">35.427174</object>
+                  <key class="java.lang.Long">1387595458150</key>
+                  <object class="java.lang.Float">35.42758</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387623435713</key>
-                  <object class="java.lang.Float">34.34656</object>
+                  <key class="java.lang.Long">1387624258150</key>
+                  <object class="java.lang.Float">34.34739</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387659435713</key>
-                  <object class="java.lang.Float">33.338146</object>
+                  <key class="java.lang.Long">1387660258150</key>
+                  <object class="java.lang.Float">33.339104</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387695435713</key>
-                  <object class="java.lang.Float">31.969479</object>
+                  <key class="java.lang.Long">1387696258150</key>
+                  <object class="java.lang.Float">31.940506</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387731435713</key>
-                  <object class="java.lang.Float">30.943617</object>
+                  <key class="java.lang.Long">1387735858150</key>
+                  <object class="java.lang.Float">30.832344</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387774635713</key>
-                  <object class="java.lang.Float">29.908508</object>
+                  <key class="java.lang.Long">1387779058150</key>
+                  <object class="java.lang.Float">29.815447</object>
                </value>
                <value>
-                  <key class="java.lang.Long">1387792635713</key>
-                  <object class="java.lang.Float">28.882465</object>
+                  <key class="java.lang.Long">1387800658150</key>
+                  <object class="java.lang.Float">28.553564</object>
                </value>
             </_map>
          </object>

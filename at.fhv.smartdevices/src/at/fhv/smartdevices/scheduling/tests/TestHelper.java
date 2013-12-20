@@ -2,9 +2,12 @@ package at.fhv.smartdevices.scheduling.tests;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Random;
 
 import at.fhv.smartdevices.commons.IClock;
+import at.fhv.smartdevices.commons.SerializableTreeMap;
 import at.fhv.smartdevices.scheduling.DataAquisition;
+import at.fhv.smartdevices.singleNodeDHWH.SingleNodeDHWHThermalModel;
 import at.fhv.smartgrid.rasbpi.ISmartController;
 
 /**
@@ -34,5 +37,5 @@ public class TestHelper {
 				}				
 			}				
 		}
-	}
+	}		
 }

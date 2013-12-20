@@ -29,6 +29,11 @@ public class SerializableTreeMap<K, V> extends TreeMap<K, V> {
 	@ElementMap(entry="value", key="key")
 	private TreeMap<K,V> _map;
 	
+	public SerializableTreeMap(SerializableTreeMap<K, V> map)
+	{
+		_map = new TreeMap<K,V>(map);	
+	}
+	
 	public SerializableTreeMap()
 	{
 		_map = new TreeMap<K, V>();

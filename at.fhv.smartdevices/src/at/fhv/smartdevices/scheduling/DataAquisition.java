@@ -28,7 +28,7 @@ public class DataAquisition implements ISchedulable {
 	private ISmartController _controller;
 
 	private IReadOnlyClock _clock;
-	
+
 	private Lock _lock = new ReentrantLock();
 
 	private long _pricesTimeStamp = -1;
@@ -38,7 +38,7 @@ public class DataAquisition implements ISchedulable {
 	private SerializableTreeMap<Long, Integer> _costsHistory;
 	private SerializableTreeMap<Long, Long> _iciHistory;
 
-	public long scheduleTimeStep = 1*60*1000;
+	public long scheduleTimeStep = 1 * 60 * 1000;
 	private int _priority = 10;
 	private Boolean _exeSingleThreaded;
 
@@ -47,10 +47,10 @@ public class DataAquisition implements ISchedulable {
 	 * @param controller
 	 *            the smart controller to collect the data from
 	 */
-	public DataAquisition(ISmartController controller, IReadOnlyClock clock)
-	{
+	public DataAquisition(ISmartController controller, IReadOnlyClock clock) {
 		new DataAquisition(controller, clock, false);
 	}
+
 	public DataAquisition(ISmartController controller, IReadOnlyClock clock, Boolean exeSingleThreaded) {
 		_controller = controller;
 		_clock = clock;
@@ -71,7 +71,7 @@ public class DataAquisition implements ISchedulable {
 	 * @param dateTime
 	 *            current time
 	 */
-	public void collectData() {
+	private void collectData() {
 		Boolean changeInData = false;
 
 		List<SensorInformation> siList = _controller.getSensorInformation();
@@ -123,7 +123,12 @@ public class DataAquisition implements ISchedulable {
 	 * @return the _sensorInformationHistory
 	 */
 	public SerializableTreeMap<String, SerializableTreeMap<Long, Float>> GetSensorInformationHistory() {
-		return _sensorInformationHistory;
+		_lock.lock();
+		try {
+			return new SerializableTreeMap<String, SerializableTreeMap<Long, Float>>(_sensorInformationHistory);
+		} finally {
+			_lock.unlock();
+		}
 	}
 
 	/**
@@ -137,21 +142,36 @@ public class DataAquisition implements ISchedulable {
 	 * @return the _relaisPowerStateHistory
 	 */
 	public SerializableTreeMap<Long, Boolean> getRelaisStateHistory() {
-		return _relaisPowerStateHistory;
+		_lock.lock();
+		try {
+			return new SerializableTreeMap<Long, Boolean>(_relaisPowerStateHistory);
+		} finally {
+			_lock.unlock();
+		}
 	}
 
 	/**
 	 * @return the _costsHistory
 	 */
 	public SerializableTreeMap<Long, Integer> getCostsHistory() {
-		return _costsHistory;
+		_lock.lock();
+		try {
+			return new SerializableTreeMap<Long, Integer>(_costsHistory);
+		} finally {
+			_lock.unlock();
+		}
 	}
 
 	/**
 	 * @return the _iciHistory
 	 */
 	public SerializableTreeMap<Long, Long> getIciHistory() {
-		return _iciHistory;
+		_lock.lock();
+		try {
+			return new SerializableTreeMap<Long, Long>(_iciHistory);
+		} finally {
+			_lock.unlock();
+		}
 	}
 
 	/**
@@ -201,16 +221,13 @@ public class DataAquisition implements ISchedulable {
 	public long getScheduleTimeStep() {
 		return scheduleTimeStep;
 	}
-	
 
 	@Override
 	public void run() {
 		_lock.lock();
-		try{
+		try {
 			collectData();
-		}
-		finally
-		{
+		} finally {
 			_lock.unlock();
 		}
 	}
@@ -223,5 +240,14 @@ public class DataAquisition implements ISchedulable {
 	@Override
 	public Boolean getExeSingleThreaded() {
 		return _exeSingleThreaded;
-	}	
+	}
+	
+	public <K,V> void persistData(String fileName, SerializableTreeMap<K,V> treemap){
+		SerializationHelper.serialize(treemap, fileName);
+	}
+	
+	public <K,V> SerializableTreeMap<K,V> loadtData(String fileName, SerializableTreeMap<K,V> treemap){
+		return SerializationHelper.deserialize(treemap, fileName);
+	}
+	
 }

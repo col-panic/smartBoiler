@@ -41,17 +41,17 @@ public class DemandCalculationTests {
 		testInverseModel(600, 10, 1000, 100, 1e2);
 	}
 
-	private void testInverseModel(int deltat, int interpolationFactor, double maxDemand, int iterations, double error) {
+	private void testInverseModel(int deltat, int interpolationFactor, float maxDemand, int iterations, double error) {
 		SerializableTreeMap<Long, Boolean> switchMap = new SerializableTreeMap<Long, Boolean>();
-		SerializableTreeMap<Long, Double> temp = new SerializableTreeMap<Long, Double>();
-		SerializableTreeMap<Long, Double> demands = new SerializableTreeMap<Long, Double>();
-		double temp0 = 40.0;
+		SerializableTreeMap<Long, Float> temp = new SerializableTreeMap<Long, Float>();
+		SerializableTreeMap<Long, Float> demands = new SerializableTreeMap<Long, Float>();
+		float temp0 = 40.0f;
 
 		Random random = new Random();
 		Boolean u = false;
 		for (Long i = 0L; i < iterations; i++) {
 			temp.put(i * deltat, temp0);
-			double demand = random.nextDouble() * maxDemand;
+			float demand = random.nextFloat() * maxDemand;
 			demands.put(i * deltat, demand);
 			byte uByte = 0;
 			if (u) {
@@ -59,10 +59,10 @@ public class DemandCalculationTests {
 			}
 			double[][] temp1 = SingleNodeDHWHThermalModel.simulateDHWH(uByte, temp0, demand, deltat);
 			switchMap.put(i * deltat, temp1[0][0] > 0);
-			temp0 = temp1[1][1];
+			temp0 = (float) temp1[1][1];
 			u = random.nextBoolean();
 		}
-		TreeMap<Long, Double> measureddemands = DemandCalculationModel.calculateDemand(switchMap, temp, deltat
+		TreeMap<Long, Float> measureddemands = DemandCalculationModel.calculateDemand(switchMap, temp, deltat
 				/ interpolationFactor);
 		if (interpolationFactor == 1) {
 			for (Long key : measureddemands.keySet()) {
@@ -72,15 +72,15 @@ public class DemandCalculationTests {
 			}			
 		}
 		else{
-			double measuredSum = getSum(measureddemands.values());
-			double realSum = getSum(demands.values());
+			float measuredSum = getSum(measureddemands.values());
+			float realSum = getSum(demands.values());
 			assertEquals(realSum*interpolationFactor, measuredSum, error*measureddemands.size());
 		}
 	}
 
-	private double getSum(Collection<Double> values) {
-		double retVal = 0;
-		for (Double value : values) {
+	private float getSum(Collection<Float> values) {
+		float retVal = 0;
+		for (Float value : values) {
 			retVal+=value;
 		}
 

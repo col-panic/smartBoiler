@@ -28,7 +28,7 @@ public class SingleNodeDHWHThermalModel {
 	 * @param demand
 	 *            the demand in W
 	 * @param deltat
-	 * 			  the time step size
+	 * 			  the time step size in millis
 	 * @return a two dimensional array holding: the adapted switch [0][*] and
 	 *         the resulted temperature[1][*]
 	 */
@@ -44,7 +44,7 @@ public class SingleNodeDHWHThermalModel {
 	 * @param demand
 	 *            the demand in W
 	 * @param deltat
-	 * 			  the time step size
+	 * 			  the time step size in millis
 	 * @return a two dimensional array holding: the adapted switch [0][*] and
 	 *         the resulted temperature[1][*]
 	 */
@@ -63,11 +63,12 @@ public class SingleNodeDHWHThermalModel {
 	 * @param timeSteps
 	 *            the number of steps to take
 	 * @param deltat
-	 * 			  the time step size
+	 * 			  the time step size in millis
 	 * @return a two dimensional array holding: the adapted switch [0][*] and
 	 *         the resulted temperature[1][*]
 	 */
 	public static double[][] simulateDHWH(byte[] u, double startTemp, double[] demand, int timeSteps, double deltat) {
+		deltat = deltat/1000;
 		double[] temp = new double[timeSteps + 1];
 		double[][] retVal = new double[2][timeSteps + 1];
 		temp[0] = startTemp;
@@ -92,11 +93,11 @@ public class SingleNodeDHWHThermalModel {
 	 * Provide the inputs in a way, that the relais and temperature entries refer to the same positions in time by index
 	 * @param temp temperature
 	 * @param u relais state
-	 * @param deltat time step size
+	 * @param deltat time step size in millis
 	 * @return the values of the demand as a double array
 	 */
-	public static double[] calculateDemand(double[] temp, double[] u, double deltat){
-		double[] Q_dem = new double[temp.length];
+	public static float[] calculateDemand(float[] temp, float[] u, float deltat){
+		float[] Q_dem = new float[temp.length];
 		for (int i=1;i<temp.length;i++) {	    	
 			Q_dem[i-1]=calculateDemand(temp[i], temp[i-1], u[i-1], deltat);
 		}	
@@ -108,11 +109,12 @@ public class SingleNodeDHWHThermalModel {
 	 * @param temp_1 resulting temperature
 	 * @param temp_0 intial temperature
 	 * @param u relais state
-	 * @param deltat time step size
+	 * @param deltat time step size in millis
 	 * @return the value of the demand
 	 */
-	public static double calculateDemand(double temp_1, double temp_0, double u, double deltat){
-		double dem = -((p2*(temp_1-temp_0)/deltat)-(u*pEl)-(p1*(tempEnv-((temp_0+temp_1)/2))));
+	public static float calculateDemand(float temp_1, float temp_0, float u, float deltat){
+		deltat = deltat/1000;
+		float dem = (float) -((p2*(temp_1-temp_0)/deltat)-(u*pEl)-(p1*(tempEnv-((temp_0+temp_1)/2))));
 		//double lambda = Math.exp(-p1/p2*deltat);
 		//double dem = ((temp_0*lambda -(temp_1))*p1/(1-lambda)+(u*pEl)+(tempEnv*p1));
 		return dem;
