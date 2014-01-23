@@ -1,6 +1,7 @@
 package at.fhv.smartdevices.datamining;
 
 import java.util.Random;
+import java.util.TreeMap;
 
 import org.junit.Test;
 
@@ -19,6 +20,7 @@ public class KNNTests {
 		SerializableTreeMap<Long, Boolean> switchMap = new SerializableTreeMap<Long, Boolean>();
 		SerializableTreeMap<Long, Float> temp = new SerializableTreeMap<Long, Float>();
 		SerializableTreeMap<Long, Float> demands = new SerializableTreeMap<Long, Float>();
+		TreeMap<Long,Integer> costs = new TreeMap<Long, Integer>();
 		float temp0 = 40.0f;
 
 		Random random = new Random();
@@ -35,9 +37,10 @@ public class KNNTests {
 			switchMap.put(i * deltat, temp1[0][0] > 0);
 			temp0 = (float) temp1[1][1];
 			u = random.nextBoolean();
+			costs.put(i*deltat, random.nextInt(10));
 		}
 		
-		KNN.calculateSwitchingTimes(switchMap , temp , deltat, 5L, 5L);
+		KNN.calculateSwitchingTimes(switchMap , temp , costs, deltat, 5L, 5L);
 	}
 	
 }

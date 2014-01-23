@@ -161,6 +161,20 @@ public class DataAquisition implements ISchedulable {
 			_lock.unlock();
 		}
 	}
+	
+	/**
+	 * 
+	 * @return the current available future costs
+	 */
+	public TreeMap<Long,Integer> getFutureCosts() {
+		_lock.lock();
+		try {			
+			return new TreeMap<Long, Integer>(_costsHistory.tailMap(_clock.getDate()));
+		} finally {
+			_lock.unlock();
+		}
+		
+	}
 
 	/**
 	 * @return the _iciHistory
