@@ -80,8 +80,8 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 		Calendar dateNow = Calendar.getInstance();
 		dateNow.setTimeInMillis(now);
 
-		double elapsedTime = (dateNow.getTimeInMillis() - startDate.getTimeInMillis()) / 1000.0;
-		if (elapsedTime <= 60) {
+		double elapsedTime = (dateNow.getTimeInMillis() - startDate.getTimeInMillis()) ;
+		if (elapsedTime <= 60000) {
 			// no detectable change!
 			return;
 		} else {

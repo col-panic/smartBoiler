@@ -3,33 +3,22 @@
  */
 package at.fhv.smartdevices.datamining;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.NavigableMap;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.collections.primitives.ArrayFloatList;
-import org.apache.commons.collections.primitives.ArrayLongList;
-import org.apache.commons.collections.primitives.FloatCollection;
+import org.apache.commons.collections.primitives.*;
+import org.apache.commons.collections.primitives.adapters.DoubleListList;
+import org.apache.commons.collections.primitives.adapters.ListDoubleList;
 
 import at.fhv.smartdevices.commons.INumericMetric;
 import at.fhv.smartdevices.commons.ISchedulable;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
-import at.fhv.smartdevices.helper.InterpolationHelper;
-import at.fhv.smartdevices.helper.MapHelper;
 import at.fhv.smartdevices.scheduling.DataAquisition;
 import at.fhv.smartdevices.scheduling.SchedulableSwitch;
 import at.fhv.smartdevices.singleNodeDHWH.DemandCalculationModel;
-import at.fhv.smartgrid.rasbpi.internal.SensorInformation;
-
-import org.apache.commons.collections.*;
 
 /**
  * @author kepe
@@ -47,6 +36,7 @@ public class KNN implements ISchedulable{
 	private long _timeStepsBack=60*12;//in delta t
 	private long _timeStepsForward = 60*24; // in delta t
 	private long _timeStep;
+	private static short _k;
 	
 	private static long getDayInDeltatSteps(long deltat){
 		return (24*60*60*1000)/deltat;
@@ -61,54 +51,77 @@ public class KNN implements ISchedulable{
 		_timeStep = timeStep;
 	}
 	
+	/**
+	 * 
+	 * @param relaisStateHistory
+	 * @param sensorInfoHistory
+	 * @param deltat
+	 * @param timeStepsBack
+	 * @param timeStepsForward
+	 * @return
+	 */
 	static SerializableTreeMap<Long, Boolean> calculateSwitchingTimes(SerializableTreeMap<Long, Boolean> relaisStateHistory, SerializableTreeMap<Long, Float> sensorInfoHistory, long deltat, long timeStepsBack, long timeStepsForward){
-		TreeMap<Long,float[]> historicData = getHistoricData(relaisStateHistory,sensorInfoHistory, deltat, timeStepsBack, timeStepsForward);
+		
+		TreeMap<Long,double[]> historicData = getHistoricData(relaisStateHistory,sensorInfoHistory, deltat, timeStepsBack, timeStepsForward);
+		double[] currentTimeSeries= historicData.lastEntry().getValue();
+		TreeMap<Long,Double> distances = new TreeMap<Long,Double>();
+		for (Long key : historicData.navigableKeySet()) {
+			double d = MetricHelper.calculateMinkowskiMetric(historicData.get(key), currentTimeSeries, 2);
+			distances.put(key, d);
+		}
+		
+		short i=0;
+		double[][] candidates =  new double[_k][];
+		for(Long key : distances.navigableKeySet()){
+			if(i>=_k){
+				break;
+			}
+			else{
+				candidates[i] = historicData.get(key);
+			}
+		}
+		
+		
+		
 		return null;	
 	}
 	
 	
-	static TreeMap<Long,float[]> getHistoricData(SerializableTreeMap<Long, Boolean> relaisStateHistory, SerializableTreeMap<Long, Float> sensorInfoHistory, long deltat, long timeStepsBack, long timeStepsForward){		
-		SerializableTreeMap<Long, Float> demands = DemandCalculationModel.calculateDemand(relaisStateHistory, sensorInfoHistory, deltat);
+	/**
+	 * 
+	 * @param relaisStateHistory
+	 * @param sensorInfoHistory
+	 * @param deltat
+	 * @param timeStepsBack
+	 * @param timeStepsForward
+	 * @return
+	 */
+	static TreeMap<Long,double[]> getHistoricData(SerializableTreeMap<Long, Boolean> relaisStateHistory, SerializableTreeMap<Long, Float> sensorInfoHistory, long deltat, long timeStepsBack, long timeStepsForward){		
+		SerializableTreeMap<Long, Double> demands = DemandCalculationModel.calculateDemand(relaisStateHistory, sensorInfoHistory, deltat, true);
 			
 		long[] cuttingPoints = findCuttingPoints(demands,timeStepsBack, deltat);
-		TreeMap<Long,float[]> historicData = new TreeMap<Long, float[]>();		
-		
+		TreeMap<Long, double[]> historicData = new TreeMap<Long, double[]>();			
 		for (int i = 0; i < cuttingPoints.length; i++) {
-			NavigableMap<Long, Float> submap = demands.subMap(cuttingPoints[i], true, cuttingPoints[i]+(deltat*timeStepsBack)+(deltat*timeStepsForward), true);
-			ArrayFloatList values = new ArrayFloatList();
-			for (Float value : submap.values()) {
+			NavigableMap<Long, Double> submap = demands.subMap(cuttingPoints[i], true, cuttingPoints[i]+(deltat*timeStepsBack)+(deltat*timeStepsForward), true);
+			
+			DoubleList values =  new ArrayDoubleList();
+			for (double value : submap.values()) {				
 				values.add(value);
-			}			
-			values.trimToSize();
+			}						
 			historicData.put(cuttingPoints[i], values.toArray());							
 		}		
 		return historicData;
 	}	
 	
 
-//	private TreeMap<Long, float[]> cutDemands(SerializableTreeMap<Long, Float> demands) {		
-//		Calendar now = Calendar.getInstance();
-//		now.setTimeInMillis(demands.lastKey());
-//		Calendar windowStart = Calendar.getInstance();
-//		windowStart.setTimeInMillis(demands.lastKey()-_timeWindowBack);	
-//		
-//		HashMap<Long,Long> cuttingPointsOfStart= findCuttingPoints(demands, _timeWindowBack, demands.lastKey());
-//		TreeMap<Long,float[]> historicData= new TreeMap<Long, float[]>();
-//		
-//		for (int day=0; day<cuttingPointsOfStart.length-1; day++){			
-//			SortedMap<Long,Float> dayMap = demands.subMap(cuttingPointsOfStart[day], cuttingPointsOfStart[day]+_timeWindowBack+_timeWindowForward);			
-//			float[] x0 = MapHelper.keysToDoubleArray(dayMap);
-//			float[] y0 = MapHelper.valuesToDoubleArray(dayMap);			
-//			float[] x1 = InterpolationHelper.createLinearArray(cuttingPointsOfStart[day], _deltat, cuttingPointsOfStart[day]+_timeWindowBack+_timeWindowForward-1);
-//			float[] y1= InterpolationHelper.interpolateLinear(x0, y0, x1);
-//			historicData.put(cuttingPointsOfStart[day],y1);			
-//		}
-//		historicData.put
-//		
-//		return historicData;
-//	}
-//
-	private static long[] findCuttingPoints(TreeMap<Long, Float> demands, long timeStepsBack, long deltat) {
+	/**
+	 * 
+	 * @param demands
+	 * @param timeStepsBack
+	 * @param deltat
+	 * @return
+	 */
+	private static long[] findCuttingPoints(TreeMap<Long, Double> demands, long timeStepsBack, long deltat) {
 		
 		ArrayLongList retVal = new ArrayLongList();		
 		for (int counter=0; counter<Integer.MAX_VALUE; counter++){

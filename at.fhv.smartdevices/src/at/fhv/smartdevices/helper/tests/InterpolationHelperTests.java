@@ -17,10 +17,10 @@ public class InterpolationHelperTests {
 
 	@Test
 	public void testLinearInterpolation(){
-		float[] x0 = new float[]{0,1,2,3};
-		float[] y0 = new float[]{0,1,2,3};
-		float[] x1= new float[]{0,1,2,3,-0.5f,0.5f,1.5f,2.5f,3.5f};
-		float[] y1= InterpolationHelper.interpolateLinear(x0, y0, x1);
+		double[] x0 = new double[]{0,1,2,3};
+		double[] y0 = new double[]{0,1,2,3};
+		double[] x1= new double[]{0,1,2,3,-0.5f,0.5f,1.5f,2.5f,3.5f};
+		double[] y1= InterpolationHelper.interpolateLinear(x0, y0, x1);
 		assertArrayEquals(y1, x1, 0);
 	}
 	
