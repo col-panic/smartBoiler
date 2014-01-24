@@ -36,8 +36,6 @@ public class KNNTests {
 
 	@Test
 	public void testKNN() {
-		long deltat = 60*60000;
-
 		/*
 		 * SerializableTreeMap<Long, Boolean> switchMap = new
 		 * SerializableTreeMap<Long, Boolean>(); SerializableTreeMap<Long,
@@ -57,14 +55,14 @@ public class KNNTests {
 		 * costs.put(j * deltat, random.nextInt(10)); }
 		 */
 
-		KNNBasedOptimization knn = new KNNBasedOptimization(_dm, _switch, "0", new MinkowskiMetric(2), deltat, 10, 10, (short) 1);
+		KNNBasedOptimization knn = new KNNBasedOptimization(_dm, _switch, "0", new MinkowskiMetric(2), 60*60*1000, 10, 10, (short) 1);
 
-		_controller.setHysteresisMode(40, 70);		
+		//_controller.setHysteresisMode(40, 70);		
 		
 		for (int i = 0; i < 24*7; i++) {
-			_currentTime.add(Calendar.MILLISECOND, (int) deltat);
-			_controller.SetTime(_currentTime.getTimeInMillis());
-			
+			_currentTime.add(Calendar.HOUR, (int) 1);
+			_clock.waitFor((long)1000*60*60);
+			System.out.println(_clock.getDate());
 			_dm.run();
 		}		
 		_controller.setHysteresisMode(5, 90);

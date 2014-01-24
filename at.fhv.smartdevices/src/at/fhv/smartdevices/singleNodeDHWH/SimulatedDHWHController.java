@@ -258,7 +258,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 
 		float[] retVal = new float[values.size()];
 		for (int i = 0; i < values.size(); i++) {
-			retVal[i] = Float.parseFloat(values.get(i));
+			retVal[i] = (float) (Float.parseFloat(values.get(i))/3600*((40-12)*4.18e3));
 		}
 		return retVal;
 	}

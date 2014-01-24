@@ -5,8 +5,12 @@
          <object class="at.fhv.smartdevices.commons.SerializableTreeMap">
             <_map>
                <value>
-                  <key class="java.lang.Long">1390578679506</key>
-                  <object class="java.lang.Float">39.873917</object>
+                  <key class="java.lang.Long">1390585424186</key>
+                  <object class="java.lang.Float">39.35564</object>
+               </value>
+               <value>
+                  <key class="java.lang.Long">1390603424186</key>
+                  <object class="java.lang.Float">38.24007</object>
                </value>
             </_map>
          </object>
