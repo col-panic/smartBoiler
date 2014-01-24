@@ -16,7 +16,7 @@ public class MinkowskiMetric implements INumericMetric {
 	private double _p;
 		
 	public MinkowskiMetric(double p){
-		if (!(_p > 0)) {
+		if (!(p > 0)) {
 			throw new IllegalArgumentException("The p must be positive");
 		}		
 		_p=p;

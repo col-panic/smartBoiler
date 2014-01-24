@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices.datamining;
+package at.fhv.smartdevices.singleNodeDHWH;
 
 import java.util.Arrays;
 

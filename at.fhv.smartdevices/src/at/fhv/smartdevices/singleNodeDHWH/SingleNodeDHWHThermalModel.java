@@ -10,11 +10,11 @@ public class SingleNodeDHWHThermalModel {
 	static final double pEl = 2175.0d;// [W] el. power of the heater
 	// private static final double tempIn=12;//[°C] temperature of inlet water;
 	private static final double tempEnv = 20.0d;// [°C] outside temperature;
-	private static final double tempMax = 90.0d;// [°C] max allowed temperature
+	private static double tempMax = 90.0d;// [°C] max allowed temperature
 												// in
 												// water heater;
-	// private static final double tempMin=38;//[°C] lowest allowed temperature
-	// in water heater;
+	private static double tempMin = 5;// [°C] lowest allowed temperature
+												// // in water heater;
 	private static final double p1 = 1.19720d;// [W/K] heat conduction * area,
 												// Water below Iso/2;
 	private static final double p2 = 6.815e5d;// [J/K] thermal mass (m_i*c_i)
@@ -22,6 +22,19 @@ public class SingleNodeDHWHThermalModel {
 
 	// private static final double tempDemand = 38;
 	// private static final double deltat = 60;
+
+	protected static double getTempMax() {
+		return tempMax;
+	}
+	protected static void setTempMax(double temp) {
+		tempMax = temp;
+	}
+	protected static double getTempMin() {
+		return tempMin;
+	}
+	protected static void setTempMin(double temp) {
+		tempMin = temp;
+	}
 
 	/**
 	 * @param u
@@ -78,6 +91,8 @@ public class SingleNodeDHWHThermalModel {
 		for (int i = 1; i <= timeSteps; i++) {
 			if (temp[i - 1] > tempMax) {
 				u[i - 1] = 0;
+			} else if (temp[i - 1] < tempMin) {
+				u[i-1] = 1;
 			}
 			temp[i] = (temp[i - 1] * lambda) + ((1 - lambda) * ((u[i - 1] * pEl / p1) - (demand[i - 1] / p1) + tempEnv));
 

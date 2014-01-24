@@ -19,6 +19,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 
 	private long _stateTimeStamp = -1;
 	private List<SensorInformation> _sis;
+	public String _mainTempSensorId = "0";
 	private float _currentTemp;
 	private List<ImpulsCounterInformation> _icis;
 	private List<MarketPriceAtom> _cmp;
@@ -29,6 +30,11 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 	private final String COUNTER_ID = "impuls";
 
 	public SimulatedDHWHController() {
+	}
+	
+	public void setHysteresisMode(float tempMin, float tempMax){
+		SingleNodeDHWHThermalModel.setTempMax(tempMax);
+		SingleNodeDHWHThermalModel.setTempMin(tempMin);
 	}
 
 	@Override
@@ -152,7 +158,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 	private void setSensorInformation() {
 		_sis = new ArrayList<SensorInformation>();
 		SensorInformation si = new SensorInformation();
-		si.setSensorId("0");
+		si.setSensorId(_mainTempSensorId);
 		si.setSensorValue(_currentTemp);
 		_sis.add(si);
 	}

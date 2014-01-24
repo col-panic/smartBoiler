@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices.datamining;
+package at.fhv.smartdevices.singleNodeDHWH;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +16,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.collections.primitives.*;
+
 import at.fhv.smartdevices.commons.INumericMetric;
 import at.fhv.smartdevices.commons.ISchedulable;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
@@ -23,7 +24,6 @@ import at.fhv.smartdevices.helper.InterpolationHelper;
 import at.fhv.smartdevices.helper.MapHelper;
 import at.fhv.smartdevices.scheduling.DataAquisition;
 import at.fhv.smartdevices.scheduling.SchedulableSwitch;
-import at.fhv.smartdevices.singleNodeDHWH.DemandCalculationModel;
 
 /**
  * @author kepe
@@ -37,8 +37,8 @@ public class KNNBasedOptimization implements ISchedulable {
 	// TODO: Store already calculated demand! private final String FILE_DEMAND = "/dataStore/demand";
 	private String _tempID;
 	private static INumericMetric _metric;
-	private long _timeStepsBack = 60 * 12;// in delta t
-	private long _timeStepsForward = 60 * 24; // in delta t
+	private long _timeStepsBack = 5;// in delta t
+	private long _timeStepsForward = 5; // in delta t
 	private long _timeStep;
 	private long _deltat;
 	private static short _k = 1;
@@ -49,7 +49,7 @@ public class KNNBasedOptimization implements ISchedulable {
 		return (24 * 60 * 60 * 1000) / deltat;
 	}
 
-	public KNNBasedOptimization(DataAquisition dA, SchedulableSwitch switcher, String tempID, INumericMetric metric, long timeStep, short k) {
+	public KNNBasedOptimization(DataAquisition dA, SchedulableSwitch switcher, String tempID, INumericMetric metric, long deltat , long timeStepsBack, long timeStepsForward, short k) {
 		_tempID = tempID;
 		if(!dA.getSencorIds().contains(tempID)){
 			throw new IllegalArgumentException("Sensor must exist! Sensor ID not valid");
@@ -57,10 +57,13 @@ public class KNNBasedOptimization implements ISchedulable {
 		_dataAquisition = dA;
 		_switcher = switcher;
 		_metric = metric;
-		if(timeStep<=0){
+		if(deltat<=0){
 			throw new IllegalArgumentException("time step delta t needs to be positive");
 		}		
-		_timeStep = timeStep;
+		_deltat = deltat;
+		_timeStepsBack = timeStepsBack;
+		_timeStepsForward = timeStepsForward;
+		
 		if(k<1)
 		{
 			throw new IllegalArgumentException("Number of nearest neighbors (k) needs to be greater or equal to 1");
@@ -78,7 +81,7 @@ public class KNNBasedOptimization implements ISchedulable {
 	 * @param timeStepsForward
 	 * @return
 	 */
-	static SerializableTreeMap<Long, Boolean> calculateSwitchingTimes(SerializableTreeMap<Long, Boolean> relaisStateHistory,
+	private SerializableTreeMap<Long, Boolean> calculateSwitchingTimes(SerializableTreeMap<Long, Boolean> relaisStateHistory,
 			SerializableTreeMap<Long, Float> sensorInfoHistory, TreeMap<Long, Integer> futureCosts, long deltat, long timeStepsBack, long timeStepsForward) {
 
 		TreeMap<Long, double[]> historicData = getHistoricData(relaisStateHistory, sensorInfoHistory, deltat, timeStepsBack, timeStepsForward);
