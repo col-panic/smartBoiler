@@ -22,10 +22,9 @@ import cern.colt.matrix.DoubleMatrix2D;
 
 import com.joptimizer.functions.ConvexMultivariateRealFunction;
 
-
 /**
- * Optimization problem.
- * Setting the field's values you define an optimization problem.
+ * Optimization problem. Setting the field's values you define an optimization
+ * problem.
  * 
  * @see "S.Boyd and L.Vandenberghe, Convex Optimization"
  * @author alberto trivellato (alberto.trivellato@gmail.com)
@@ -33,133 +32,135 @@ import com.joptimizer.functions.ConvexMultivariateRealFunction;
 public class OptimizationRequest {
 
 	/**
-	 * Maximum number of iteration in the search algorithm.
-	 * Not mandatory, default is provided.
+	 * Maximum number of iteration in the search algorithm. Not mandatory,
+	 * default is provided.
 	 */
 	private int maxIteration = JOptimizer.DEFAULT_MAX_ITERATION;
-	
+
 	/**
-	 * Tolerance for the minimum value.
-	 * Not mandatory, default is provided.
+	 * Tolerance for the minimum value. Not mandatory, default is provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private double tolerance = JOptimizer.DEFAULT_TOLERANCE;
-	
+
 	/**
-	 * Tolerance for the constraints satisfaction.
-	 * Not mandatory, default is provided.
+	 * Tolerance for the constraints satisfaction. Not mandatory, default is
+	 * provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private double toleranceFeas = JOptimizer.DEFAULT_FEASIBILITY_TOLERANCE;
-	
+
 	/**
-	 * Tolerance for inner iterations in the barrier-method.
-	 * NB: it makes sense only for barrier method.
-	 * Not mandatory, default is provided.
+	 * Tolerance for inner iterations in the barrier-method. NB: it makes sense
+	 * only for barrier method. Not mandatory, default is provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private double toleranceInnerStep = JOptimizer.DEFAULT_TOLERANCE_INNER_STEP;
-	
+
 	/**
-	 * Calibration parameter for line search.
-	 * Not mandatory, default is provided.
+	 * Calibration parameter for line search. Not mandatory, default is
+	 * provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private double alpha = JOptimizer.DEFAULT_ALPHA;
-	
+
 	/**
-	 * Calibration parameter for line search.
-	 * Not mandatory, default is provided.
+	 * Calibration parameter for line search. Not mandatory, default is
+	 * provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private double beta = JOptimizer.DEFAULT_BETA;
-	
+
 	/**
-	 * Calibration parameter for line search.
-	 * Not mandatory, default is provided.
+	 * Calibration parameter for line search. Not mandatory, default is
+	 * provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private double mu = JOptimizer.DEFAULT_MU;
-	
+
 	/**
-	 * Activate progress condition check during iterations.
-     * If true, a progress in the relevant algorithm norms is required during iterations,
-     * otherwise the iteration will be exited with a warning (and solution
-     * must be manually checked against the desired accuracy).
-	 * Not mandatory, default is provided.
+	 * Activate progress condition check during iterations. If true, a progress
+	 * in the relevant algorithm norms is required during iterations, otherwise
+	 * the iteration will be exited with a warning (and solution must be
+	 * manually checked against the desired accuracy). Not mandatory, default is
+	 * provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private boolean checkProgressConditions = false;
-	
+
 	/**
-	 * Check the accuracy of the solution of KKT system during iterations.
-     * If true, every inversion of the system must have an accuracy that satisfy
-     * the given toleranceKKT.
-	 * Not mandatory, default is provided.
+	 * Check the accuracy of the solution of KKT system during iterations. If
+	 * true, every inversion of the system must have an accuracy that satisfy
+	 * the given toleranceKKT. Not mandatory, default is provided.
+	 * 
 	 * @see "Convex Optimization, p. 11.7.3"
 	 */
 	private boolean checkKKTSolutionAccuracy = false;
-	
+
 	/**
-	 * Acceptable tolerance for KKT system resolution.
-	 * Not mandatory, default is provided.
+	 * Acceptable tolerance for KKT system resolution. Not mandatory, default is
+	 * provided.
 	 */
 	private double toleranceKKT = JOptimizer.DEFAULT_KKT_TOLERANCE;
-	
+
 	/**
-	 * The objective function to minimize.
-	 * Mandatory.
+	 * The objective function to minimize. Mandatory.
 	 */
 	private ConvexMultivariateRealFunction f0;
-	
+
 	/**
-	 * Feasible starting point for the minimum search.
-	 * It must be feasible.
-	 * Not mandatory.
+	 * Feasible starting point for the minimum search. It must be feasible. Not
+	 * mandatory.
 	 */
 	private DoubleMatrix1D initialPoint = null;
-	
+
 	/**
-	 * Not-feasible starting point for the minimum search.
-	 * It does not have to be feasible. This provide the possibility to give the algorithm
-	 * a starting point even if it does not satisfies inequality constraints. The algorithm
-	 * will search a feasible point starting from here.
-	 * Not mandatory.
+	 * Not-feasible starting point for the minimum search. It does not have to
+	 * be feasible. This provide the possibility to give the algorithm a
+	 * starting point even if it does not satisfies inequality constraints. The
+	 * algorithm will search a feasible point starting from here. Not mandatory.
 	 */
 	private DoubleMatrix1D notFeasibleInitialPoint = null;
-	
+
 	/**
-	 * Starting point for the Lagrangian multipliers.
-	 * Must have the same dimension of the inequalities constraints array.
-	 * Not mandatory, but very useful in some case.
+	 * Starting point for the Lagrangian multipliers. Must have the same
+	 * dimension of the inequalities constraints array. Not mandatory, but very
+	 * useful in some case.
 	 */
 	private DoubleMatrix1D initialLagrangian = null;
-	
+
 	/**
-	 * Equalities constraints matrix.
-	 * Must be rank(A) < dimension of the variable.
-	 * Not mandatory.
+	 * Equalities constraints matrix. Must be rank(A) < dimension of the
+	 * variable. Not mandatory.
+	 * 
 	 * @see "Convex Optimization, 11.1"
 	 */
 	private DoubleMatrix2D A = null;
-	
+
 	/**
-	 * Equalities constraints vector.
-	 * Not mandatory.
+	 * Equalities constraints vector. Not mandatory.
+	 * 
 	 * @see "Convex Optimization, 11.1"
 	 */
 	private DoubleMatrix1D b = null;
-	
+
 	/**
-	 * Inequalities constraints array.
-	 * Not mandatory.
+	 * Inequalities constraints array. Not mandatory.
+	 * 
 	 * @see "Convex Optimization, 11.1"
 	 */
 	private ConvexMultivariateRealFunction[] fi;
-	
+
 	/**
-	 * The chosen interior-point method.
-	 * Must be barrier-method or primal-dual method. 
+	 * The chosen interior-point method. Must be barrier-method or primal-dual
+	 * method.
 	 */
 	private String interiorPointMethod = JOptimizer.PRIMAL_DUAL_METHOD;
 
@@ -170,7 +171,7 @@ public class OptimizationRequest {
 	public void setMaxIteration(int maxIteration) {
 		this.maxIteration = maxIteration;
 	}
-	
+
 	double getTolerance() {
 		return tolerance;
 	}
@@ -280,7 +281,7 @@ public class OptimizationRequest {
 	}
 
 	public void setA(double[][] a) {
-		if(a!=null){
+		if (a != null) {
 			A = DoubleFactory2D.dense.make(a);
 		}
 	}
@@ -290,7 +291,7 @@ public class OptimizationRequest {
 	}
 
 	public void setB(double[] b) {
-		if(b!=null){
+		if (b != null) {
 			this.b = DoubleFactory1D.dense.make(b);
 		}
 	}

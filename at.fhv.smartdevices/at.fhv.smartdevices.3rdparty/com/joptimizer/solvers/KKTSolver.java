@@ -89,30 +89,30 @@ public abstract class KKTSolver {
 	public void setCheckKKTSolutionAccuracy(boolean b) {
 		this.checkKKTSolutionAccuracy = b;
 	}
-	
+
 	/**
-	 * Solve the KKT system as a whole.
-	 * Useful only if A not null.
+	 * Solve the KKT system as a whole. Useful only if A not null.
+	 * 
 	 * @see "S.Boyd and L.Vandenberghe, Convex Optimization, p. 547"
 	 */
-	protected double[][] solveFullKKT(KKTSolver kktSolver) throws Exception{
+	protected double[][] solveFullKKT(KKTSolver kktSolver) throws Exception {
 		log.debug("solveFullKKT");
-		
-		//if the KKT matrix is nonsingular, then H + [A]T.A > 0.
+
+		// if the KKT matrix is nonsingular, then H + [A]T.A > 0.
 		RealMatrix HATA = H.add(AT.multiply(A));
-		try{
+		try {
 			CholeskyDecomposition cFact = new CholeskyDecomposition(HATA);
 			cFact.getSolver().getInverse();
-		}catch(Exception e){
+		} catch (Exception e) {
 			throw new Exception("singular KKT system");
 		}
-		
-		kktSolver.setHMatrix(HATA.getData());//this is positive
+
+		kktSolver.setHMatrix(HATA.getData());// this is positive
 		kktSolver.setAMatrix(A.getData());
 		kktSolver.setATMatrix(AT.getData());
 		kktSolver.setGVector(g.toArray());
-		
-		if(h!=null){
+
+		if (h != null) {
 			RealVector ATQh = AT.operate(MatrixUtils.createRealIdentityMatrix(A.getRowDimension()).operate(h));
 			RealVector gATQh = g.add(ATQh);
 			kktSolver.setGVector(gATQh.toArray());
@@ -125,25 +125,24 @@ public abstract class KKTSolver {
 	protected boolean checkKKTSolutionAccuracy(RealVector v, RealVector w) {
 		// build the full KKT matrix
 		double norm;
-		
+
 		DoubleMatrix2D M = F2.make(this.H.getData());
 		if (this.A != null) {
-			if(h!=null){
-				DoubleMatrix2D[][] parts = { { F2.make(this.H.getData()), F2.make(this.AT.getData()) },
-						 { F2.make(this.A.getData()), null } };
+			if (h != null) {
+				DoubleMatrix2D[][] parts = { { F2.make(this.H.getData()), F2.make(this.AT.getData()) }, { F2.make(this.A.getData()), null } };
 				M = F2.compose(parts);
 				RealMatrix KKT = new Array2DRowRealMatrix(M.toArray());
 				RealVector X = v.append(w);
 				RealVector Y = g.append(h);
 				// check ||KKT.X+Y||<tolerance
 				norm = KKT.operate(X).add(Y).getNorm();
-			}else{
-				//H.v + [A]T.w = -g
+			} else {
+				// H.v + [A]T.w = -g
 				norm = H.operate(v).add(AT.operate(w)).add(g).getNorm();
 			}
-		}else{
+		} else {
 			// check ||H.X+h||<tolerance
-			norm = H.operate(v).add(g).getNorm(); 
+			norm = H.operate(v).add(g).getNorm();
 		}
 		log.debug("KKT solution error: " + norm);
 		return norm < toleranceKKT;

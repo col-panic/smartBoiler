@@ -13,8 +13,7 @@ import at.fhv.smartgrid.rasbpi.internal.MarketPriceAtom;
 import at.fhv.smartgrid.rasbpi.internal.SensorInformation;
 
 /**
- * @author kepe
- * Simulates a dhwh by using the single node dhwh thermal model
+ * @author kepe Simulates a dhwh by using the single node dhwh thermal model
  */
 public class SimulatedDHWHController implements ISimulatedSmartController {
 
@@ -80,7 +79,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 		Calendar dateNow = Calendar.getInstance();
 		dateNow.setTimeInMillis(now);
 
-		double elapsedTime = (dateNow.getTimeInMillis() - startDate.getTimeInMillis()) ;
+		double elapsedTime = (dateNow.getTimeInMillis() - startDate.getTimeInMillis());
 		if (elapsedTime <= 60000) {
 			// no detectable change!
 			return;
@@ -145,8 +144,9 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 				consumption -= 1;
 			}
 		}
-		if(ic.impulsOccurences.size()>0){
-			_icis.add(ic);}
+		if (ic.impulsOccurences.size() > 0) {
+			_icis.add(ic);
+		}
 	}
 
 	private void setSensorInformation() {
@@ -194,7 +194,9 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 	}
 
 	/**
-	 * simulates the dhwh behavior and returns the switch [0] and the temperature [1]
+	 * simulates the dhwh behavior and returns the switch [0] and the
+	 * temperature [1]
+	 * 
 	 * @param dateNow
 	 * @param startDate
 	 * @return
@@ -233,8 +235,7 @@ public class SimulatedDHWHController implements ISimulatedSmartController {
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.YEAR, date.get(Calendar.YEAR));
-		int minutesSinceStartOfYear = (int) Math.max(0,
-				Math.floor((date.getTimeInMillis() - c.getTimeInMillis()) / 1000.0 / 60.0));
+		int minutesSinceStartOfYear = (int) Math.max(0, Math.floor((date.getTimeInMillis() - c.getTimeInMillis()) / 1000.0 / 60.0));
 		return minutesSinceStartOfYear;
 	}
 

@@ -28,9 +28,11 @@ import org.apache.commons.math3.linear.RealMatrix;
 import com.joptimizer.util.Utils;
 
 /**
- * Generalized logarithmic barrier function for semidefinite programming.
- * <br>If F(x) = G + Sum[x_i * F_i(x),i] is the constraint of the problem, then we have:
- * <br><i>&Phi;</i> = -logdet(-F(x))
+ * Generalized logarithmic barrier function for semidefinite programming. <br>
+ * If F(x) = G + Sum[x_i * F_i(x),i] is the constraint of the problem, then we
+ * have: <br>
+ * <i>&Phi;</i> = -logdet(-F(x))
+ * 
  * @see "S.Boyd and L.Vandenberghe, Convex Optimization, p. 600"
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
@@ -42,10 +44,13 @@ public class SDPLogarithmicBarrier implements BarrierFunction {
 	private int p = -1;
 
 	/**
-	 * Build the genaralized logarithmic barrier function for the constraint
-	 * <br>G + Sum[x_i * F_i(x),i] < 0,  F_i, G symmetric matrices
-	 * @param Fi symmetric matrices
-	 * @param G symmetric matrix
+	 * Build the genaralized logarithmic barrier function for the constraint <br>
+	 * G + Sum[x_i * F_i(x),i] < 0, F_i, G symmetric matrices
+	 * 
+	 * @param Fi
+	 *            symmetric matrices
+	 * @param G
+	 *            symmetric matrix
 	 */
 	public SDPLogarithmicBarrier(List<double[][]> FiMatrixList, double[][] GMatrix) {
 		int dim = FiMatrixList.size();
@@ -55,11 +60,11 @@ public class SDPLogarithmicBarrier implements BarrierFunction {
 			throw new IllegalArgumentException("All matrices must be symmetric");
 		}
 		this.G = Gg;
-		int pp = G.getRowDimension(); 
+		int pp = G.getRowDimension();
 		for (int i = 0; i < dim; i++) {
 			double[][] FiMatrix = FiMatrixList.get(i);
 			RealMatrix Fii = new Array2DRowRealMatrix(FiMatrix);
-			if (Fii.getRowDimension() != Fii.getColumnDimension() || pp!=Fii.getRowDimension()) {
+			if (Fii.getRowDimension() != Fii.getColumnDimension() || pp != Fii.getRowDimension()) {
 				throw new IllegalArgumentException("All matrices must be symmetric and with the same dimensions");
 			}
 			this.Fi[i] = Fii;
@@ -73,11 +78,11 @@ public class SDPLogarithmicBarrier implements BarrierFunction {
 	 */
 	public double value(double[] X) {
 		RealMatrix S = buildS(X);
-		try{
+		try {
 			CholeskyDecomposition cFact = new CholeskyDecomposition(S);
 			double detS = cFact.getDeterminant();
 			return -Math.log(detS);
-		}catch(NonPositiveDefiniteMatrixException e){
+		} catch (NonPositiveDefiniteMatrixException e) {
 			return Double.NaN;
 		}
 	}
@@ -106,75 +111,77 @@ public class SDPLogarithmicBarrier implements BarrierFunction {
 		double[][] ret = new double[dim][dim];
 		for (int i = 0; i < dim; i++) {
 			for (int j = i; j < dim; j++) {
-				double h = SInv.multiply(this.Fi[i])
-						.multiply(SInv.multiply(this.Fi[j])).getTrace();
+				double h = SInv.multiply(this.Fi[i]).multiply(SInv.multiply(this.Fi[j])).getTrace();
 				ret[i][j] = h;
 				ret[j][i] = h;
 			}
 		}
 		return ret;
 	}
-	
+
 	/**
-	 * Create the barrier function for the Phase I.
-	 * It is an instance of this class for the constraint: 
-	 * <br>G + Sum[x_i * F_i(x),i] < t * I
+	 * Create the barrier function for the Phase I. It is an instance of this
+	 * class for the constraint: <br>
+	 * G + Sum[x_i * F_i(x),i] < t * I
+	 * 
 	 * @see "S.Boyd and L.Vandenberghe, Convex Optimization, 11.6.2"
 	 */
-	public BarrierFunction createPhase1BarrierFunction(){
+	public BarrierFunction createPhase1BarrierFunction() {
 		List<double[][]> FiPh1MatrixList = new ArrayList<double[][]>();
-		for(int i=0; i<this.Fi.length; i++){
+		for (int i = 0; i < this.Fi.length; i++) {
 			FiPh1MatrixList.add(FiPh1MatrixList.size(), this.Fi[i].getData());
 		}
 		FiPh1MatrixList.add(FiPh1MatrixList.size(), MatrixUtils.createRealIdentityMatrix(p).scalarMultiply(-1).getData());
 		return new SDPLogarithmicBarrier(FiPh1MatrixList, this.G.getData());
 	}
-	
+
 	/**
-	 * Calculates the initial value for the s parameter in Phase I.
-	 * Return s so that F(x)-s.I is negative definite
+	 * Calculates the initial value for the s parameter in Phase I. Return s so
+	 * that F(x)-s.I is negative definite
+	 * 
 	 * @see "S.Boyd and L.Vandenberghe, Convex Optimization, 11.6.2"
 	 * @see "S.Boyd and L.Vandenberghe, Semidefinite programming, 6.1"
 	 */
-	public double calculatePhase1InitialFeasiblePoint(double[] originalNotFeasiblePoint, double tolerance){
+	public double calculatePhase1InitialFeasiblePoint(double[] originalNotFeasiblePoint, double tolerance) {
 		RealMatrix F = this.buildS(originalNotFeasiblePoint).scalarMultiply(-1);
 		RealMatrix S = F.scalarMultiply(-1);
-		try{
+		try {
 			new CholeskyDecomposition(S);
-			//already feasible
+			// already feasible
 			return -1;
-		}catch(NonPositiveDefiniteMatrixException ee){
-			//it does NOT mean that F is negative, it can be not definite
+		} catch (NonPositiveDefiniteMatrixException ee) {
+			// it does NOT mean that F is negative, it can be not definite
 			EigenDecomposition eFact = new EigenDecomposition(F, Double.NaN);
 			double[] eValues = eFact.getRealEigenvalues();
 			double minEigenValue = eValues[Utils.getMinIndex(eValues)];
-			return  -Math.min(minEigenValue * Math.pow(tolerance, -0.5), 0.);
+			return -Math.min(minEigenValue * Math.pow(tolerance, -0.5), 0.);
 		}
 	}
 
-//  public double calculatePhase1InitialFeasiblePoint(double[] originalNotFeasiblePoint, double tolerance){
-//		RealMatrix F = this.buildS(originalNotFeasiblePoint).scalarMultiply(-1);
-//		try{
-//			CholeskyDecomposition cFact = new CholeskyDecomposition(F);
-//			double detF = cFact.getDeterminant();
-//			//if here, detF must be positive
-//			return Math.pow(detF, 1./p)  + tolerance;
-//		}catch(NonPositiveDefiniteMatrixException e){
-//			//it does NOT mean that F is negative, it can be not definite
-//			RealMatrix S = F.scalarMultiply(-1);
-//			try{
-//				new CholeskyDecomposition(S);
-//				//already feasible
-//				return -1;
-//			}catch(NonPositiveDefiniteMatrixException ee){
-//				EigenDecomposition eFact = new EigenDecomposition(S, Double.NaN);
-//				double[] eValues = eFact.getRealEigenvalues();
-//				double maxEigenValue = eValues[Utils.getMaxIndex(eValues)];
-//				return maxEigenValue*2;
-//			}
-//		}
-//	}
-		
+	// public double calculatePhase1InitialFeasiblePoint(double[]
+	// originalNotFeasiblePoint, double tolerance){
+	// RealMatrix F = this.buildS(originalNotFeasiblePoint).scalarMultiply(-1);
+	// try{
+	// CholeskyDecomposition cFact = new CholeskyDecomposition(F);
+	// double detF = cFact.getDeterminant();
+	// //if here, detF must be positive
+	// return Math.pow(detF, 1./p) + tolerance;
+	// }catch(NonPositiveDefiniteMatrixException e){
+	// //it does NOT mean that F is negative, it can be not definite
+	// RealMatrix S = F.scalarMultiply(-1);
+	// try{
+	// new CholeskyDecomposition(S);
+	// //already feasible
+	// return -1;
+	// }catch(NonPositiveDefiniteMatrixException ee){
+	// EigenDecomposition eFact = new EigenDecomposition(S, Double.NaN);
+	// double[] eValues = eFact.getRealEigenvalues();
+	// double maxEigenValue = eValues[Utils.getMaxIndex(eValues)];
+	// return maxEigenValue*2;
+	// }
+	// }
+	// }
+
 	/**
 	 * @see "S.Boyd and L.Vandenberghe, Convex Optimization, p. 618"
 	 */
@@ -189,9 +196,9 @@ public class SDPLogarithmicBarrier implements BarrierFunction {
 	public int getDim() {
 		return this.dim;
 	}
-	
+
 	public double getDualityGap(double t) {
-		return ((double)p)/t;
+		return ((double) p) / t;
 	}
 
 }

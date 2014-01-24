@@ -36,20 +36,20 @@ public class CholeskyFactorization {
 	double[][] LT;
 	List<Double> eigenvalues;
 	private Log log = LogFactory.getLog(this.getClass().getName());
-	
-	public CholeskyFactorization(double[][] Q) throws Exception{
+
+	public CholeskyFactorization(double[][] Q) throws Exception {
 		this.Q = Q;
 		factorize();
 	}
-	
+
 	/**
 	 * Cholesky factorization L of psd matrix, Q = L.LT
 	 */
-	private void factorize() throws Exception{
+	private void factorize() throws Exception {
 		if (!MatrixUtils.isSymmetric(new Array2DRowRealMatrix(Q), Utils.getDoubleMachineEpsilon())) {
 			throw new Exception("Matrix is not symmetric");
 		}
-		
+
 		int N = Q.length;
 		double[][] L = new double[N][N];
 		this.eigenvalues = new ArrayList<Double>();
@@ -60,29 +60,33 @@ public class CholeskyFactorization {
 				for (int k = 0; k < j; k++) {
 					sum += L[i][k] * L[j][k];
 				}
-				if (i == j){
-					double d = Math.sqrt(Q[i][i] - sum); 
-					if (Double.isNaN(d) || d*d<Utils.getDoubleMachineEpsilon()) {//d*d is a Q's eigenvalue
-						log.warn("Not positive eigenvalues: "+d*d);
+				if (i == j) {
+					double d = Math.sqrt(Q[i][i] - sum);
+					if (Double.isNaN(d) || d * d < Utils.getDoubleMachineEpsilon()) {// d*d
+																						// is
+																						// a
+																						// Q's
+																						// eigenvalue
+						log.warn("Not positive eigenvalues: " + d * d);
 						throw new Exception("not positive definite matrix");
 					}
 					L[i][i] = d;
-					this.eigenvalues.add(this.eigenvalues.size(), d*d);
+					this.eigenvalues.add(this.eigenvalues.size(), d * d);
 				} else {
 					L[i][j] = 1.0 / L[j][j] * (Q[i][j] - sum);
 				}
 			}
 		}
-		
+
 		this.L = L;
 	}
-	
+
 	public double[][] getInverse() {
 
-		//QInv = LTInv * LInv, but for symmetry (QInv=QInvT)
-		//QInv = LInvT * LTInvT = LInvT * LInv, so
-		//LInvT = LTInv, and we calculate
-		//QInv = LInvT * LInv
+		// QInv = LTInv * LInv, but for symmetry (QInv=QInvT)
+		// QInv = LInvT * LTInvT = LInvT * LInv, so
+		// LInvT = LTInv, and we calculate
+		// QInv = LInvT * LInv
 
 		double[][] lTData = getLT();
 		int dim = lTData.length;
@@ -135,13 +139,13 @@ public class CholeskyFactorization {
 
 		return QInvData;
 	}
-	
+
 	public double[][] getL() {
 		return L;
 	}
 
 	public double[][] getLT() {
-		if(this.LT == null){
+		if (this.LT == null) {
 			this.LT = new Array2DRowRealMatrix(this.L).transpose().getData();
 		}
 		return this.LT;

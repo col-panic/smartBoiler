@@ -19,20 +19,19 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.linalg.EigenvalueDecomposition;
 
 /**
- * 1/2 * x.P.x + q.x + r,
- * P positive semi-definite
+ * 1/2 * x.P.x + q.x + r, P positive semi-definite
  * 
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
-public class PSDQuadraticMultivariateRealFunction extends QuadraticMultivariateRealFunction implements	ConvexMultivariateRealFunction {
+public class PSDQuadraticMultivariateRealFunction extends QuadraticMultivariateRealFunction implements ConvexMultivariateRealFunction {
 
-	public PSDQuadraticMultivariateRealFunction(double[][] PMatrix,	double[] qVector, double r) {
+	public PSDQuadraticMultivariateRealFunction(double[][] PMatrix, double[] qVector, double r) {
 		this(PMatrix, qVector, r, true);
 	}
-	
-	public PSDQuadraticMultivariateRealFunction(double[][] PMatrix,	double[] qVector, double r, boolean checkPSD) {
+
+	public PSDQuadraticMultivariateRealFunction(double[][] PMatrix, double[] qVector, double r, boolean checkPSD) {
 		super(PMatrix, qVector, r);
-		if(checkPSD){
+		if (checkPSD) {
 			EigenvalueDecomposition eDecomp = new EigenvalueDecomposition(P);
 			DoubleMatrix1D realEigenvalues = eDecomp.getRealEigenvalues();
 			for (int i = 0; i < realEigenvalues.size(); i++) {

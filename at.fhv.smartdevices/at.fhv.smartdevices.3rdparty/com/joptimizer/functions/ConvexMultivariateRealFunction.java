@@ -15,11 +15,11 @@
  */
 package com.joptimizer.functions;
 
-
 /**
  * Use this whenever possible, because the algorithm will check that.
+ * 
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
-public interface ConvexMultivariateRealFunction extends TwiceDifferentiableMultivariateRealFunction{
+public interface ConvexMultivariateRealFunction extends TwiceDifferentiableMultivariateRealFunction {
 
 }

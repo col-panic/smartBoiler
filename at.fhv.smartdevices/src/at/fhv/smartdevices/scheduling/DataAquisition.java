@@ -63,6 +63,11 @@ public class DataAquisition implements ISchedulable {
 			_sensorSensitivity.put(id, (float) 1.0);
 		}
 	}
+	
+	
+	public Set<String> getSencorIds(){
+		return _sensorInformationHistory.keySet();
+	}
 
 	/**
 	 * Called to perform a data collection on the controller sensors and persist
@@ -78,8 +83,7 @@ public class DataAquisition implements ISchedulable {
 		for (SensorInformation si : siList) {
 			Float newValue = si.getSensorValue();
 			SerializableTreeMap<Long, Float> values = _sensorInformationHistory.get(si.getSensorId());
-			if (values.lastEntry() == null
-					|| (Math.abs(values.lastEntry().getValue() - newValue) > _sensorSensitivity.get(si.getSensorId()))) {
+			if (values.lastEntry() == null || (Math.abs(values.lastEntry().getValue() - newValue) > _sensorSensitivity.get(si.getSensorId()))) {
 				values.put(_clock.getDate(), newValue);
 				changeInData = true;
 			}
@@ -161,19 +165,19 @@ public class DataAquisition implements ISchedulable {
 			_lock.unlock();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @return the current available future costs
 	 */
-	public TreeMap<Long,Integer> getFutureCosts() {
+	public TreeMap<Long, Integer> getFutureCosts() {
 		_lock.lock();
-		try {			
+		try {
 			return new TreeMap<Long, Integer>(_costsHistory.tailMap(_clock.getDate()));
 		} finally {
 			_lock.unlock();
 		}
-		
+
 	}
 
 	/**
@@ -193,8 +197,7 @@ public class DataAquisition implements ISchedulable {
 	 * 
 	 * @returns the created sensor information history object
 	 */
-	private SerializableTreeMap<String, SerializableTreeMap<Long, Float>> createSensorHistoryMaps(
-			List<SensorInformation> siList) {
+	private SerializableTreeMap<String, SerializableTreeMap<Long, Float>> createSensorHistoryMaps(List<SensorInformation> siList) {
 		SerializableTreeMap<String, SerializableTreeMap<Long, Float>> retVal = new SerializableTreeMap<String, SerializableTreeMap<Long, Float>>();
 
 		for (SensorInformation si : siList) {
@@ -212,11 +215,9 @@ public class DataAquisition implements ISchedulable {
 
 		_costsHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Integer>(), COSTS_FILENAME);
 
-		_sensorInformationHistory = SerializationHelper.deserialize(
-				createSensorHistoryMaps(_controller.getSensorInformation()), SIH_FILENAME);
+		_sensorInformationHistory = SerializationHelper.deserialize(createSensorHistoryMaps(_controller.getSensorInformation()), SIH_FILENAME);
 
-		_relaisPowerStateHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Boolean>(),
-				RELAIS_FILENAME);
+		_relaisPowerStateHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Boolean>(), RELAIS_FILENAME);
 
 		_iciHistory = SerializationHelper.deserialize(new SerializableTreeMap<Long, Long>(), ICI_FILENAME);
 	}
@@ -255,13 +256,13 @@ public class DataAquisition implements ISchedulable {
 	public Boolean getExeSingleThreaded() {
 		return _exeSingleThreaded;
 	}
-	
-	public <K,V> void persistData(String fileName, SerializableTreeMap<K,V> treemap){
+
+	public <K, V> void persistData(String fileName, SerializableTreeMap<K, V> treemap) {
 		SerializationHelper.serialize(treemap, fileName);
 	}
-	
-	public <K,V> SerializableTreeMap<K,V> loadtData(String fileName, SerializableTreeMap<K,V> treemap){
+
+	public <K, V> SerializableTreeMap<K, V> loadtData(String fileName, SerializableTreeMap<K, V> treemap) {
 		return SerializationHelper.deserialize(treemap, fileName);
 	}
-	
+
 }

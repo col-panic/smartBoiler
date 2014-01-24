@@ -50,9 +50,9 @@ public class BasicKKTSolver extends KKTSolver {
 			log.debug("g: " + ArrayUtils.toString(g.toArray()));
 		}
 		RealMatrix HInv;
-		try{
+		try {
 			HInv = Utils.squareMatrixInverse(H);
-		}catch(SingularMatrixException e){
+		} catch (SingularMatrixException e) {
 			HInv = null;
 		}
 
@@ -80,14 +80,14 @@ public class BasicKKTSolver extends KKTSolver {
 			}
 		} else {
 			// Solving the full KKT system
-			if(A!=null){
+			if (A != null) {
 				KKTSolver kktSolver = new BasicKKTSolver();
 				kktSolver.setCheckKKTSolutionAccuracy(false);
-				double[][] fullSol =  this.solveFullKKT(new BasicKKTSolver());
+				double[][] fullSol = this.solveFullKKT(new BasicKKTSolver());
 				v = new ArrayRealVector(fullSol[0]);
 				w = new ArrayRealVector(fullSol[1]);
-			}else{
-				//@TODO: try with rescaled H
+			} else {
+				// @TODO: try with rescaled H
 				throw new Exception("KKT solution failed");
 			}
 		}

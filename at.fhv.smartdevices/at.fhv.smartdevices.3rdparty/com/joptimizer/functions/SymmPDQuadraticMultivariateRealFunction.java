@@ -18,8 +18,7 @@ package com.joptimizer.functions;
 import cern.colt.matrix.linalg.CholeskyDecomposition;
 
 /**
- * 1/2 * x.P.x + q.x + r, 
- * P positive definite and symmetric.
+ * 1/2 * x.P.x + q.x + r, P positive definite and symmetric.
  * 
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
@@ -28,16 +27,16 @@ public abstract class SymmPDQuadraticMultivariateRealFunction extends PDQuadrati
 	public SymmPDQuadraticMultivariateRealFunction(double[][] PMatrix, double[] qVector, double r) {
 		this(PMatrix, qVector, r, true);
 	}
-	
+
 	public SymmPDQuadraticMultivariateRealFunction(double[][] PMatrix, double[] qVector, double r, boolean checkSPD) {
 		super(PMatrix, qVector, r, false);
-		if(checkSPD){
-			try{
+		if (checkSPD) {
+			try {
 				CholeskyDecomposition cDecomp = new CholeskyDecomposition(P);
-				if(!cDecomp.isSymmetricPositiveDefinite()){
+				if (!cDecomp.isSymmetricPositiveDefinite()) {
 					throw new Exception();
 				}
-			}catch(Exception e){
+			} catch (Exception e) {
 				throw new IllegalArgumentException("P not symmetric positive definite");
 			}
 		}

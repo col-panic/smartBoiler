@@ -19,24 +19,23 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.linalg.EigenvalueDecomposition;
 
 /**
- * 1/2 * x.P.x + q.x + r,  
- * P positive definite
+ * 1/2 * x.P.x + q.x + r, P positive definite
  * 
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
-public class PDQuadraticMultivariateRealFunction extends PSDQuadraticMultivariateRealFunction implements StrictlyConvexMultivariateRealFunction{
+public class PDQuadraticMultivariateRealFunction extends PSDQuadraticMultivariateRealFunction implements StrictlyConvexMultivariateRealFunction {
 
 	public PDQuadraticMultivariateRealFunction(double[][] PMatrix, double[] qVector, double r) {
 		this(PMatrix, qVector, r, true);
 	}
-	
+
 	public PDQuadraticMultivariateRealFunction(double[][] PMatrix, double[] qVector, double r, boolean checkPD) {
 		super(PMatrix, qVector, r, false);
-		if(checkPD){
+		if (checkPD) {
 			EigenvalueDecomposition eDecomp = new EigenvalueDecomposition(P);
-			DoubleMatrix1D realEigenvalues= eDecomp.getRealEigenvalues();
-			for(int i=0; i<realEigenvalues.size(); i++){
-				if(realEigenvalues.get(i)<=0){
+			DoubleMatrix1D realEigenvalues = eDecomp.getRealEigenvalues();
+			for (int i = 0; i < realEigenvalues.size(); i++) {
+				if (realEigenvalues.get(i) <= 0) {
 					throw new IllegalArgumentException("Not positive definite matrix");
 				}
 			}

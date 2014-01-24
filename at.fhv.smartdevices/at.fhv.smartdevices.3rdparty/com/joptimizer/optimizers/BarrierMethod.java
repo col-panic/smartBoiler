@@ -44,11 +44,11 @@ public class BarrierMethod extends OptimizationRequestHandler {
 	private DoubleFactory2D F2 = DoubleFactory2D.dense;
 	private BarrierFunction barrierFunction = null;
 	private Log log = LogFactory.getLog(this.getClass().getName());
-	
+
 	public BarrierMethod(BarrierFunction barrierFunction) {
 		this.barrierFunction = barrierFunction;
 	}
-	
+
 	@Override
 	public int optimize() throws Exception {
 		log.info("optimize");
@@ -56,60 +56,63 @@ public class BarrierMethod extends OptimizationRequestHandler {
 		OptimizationResponse response = new OptimizationResponse();
 
 		// @TODO: check assumptions!!!
-//		if(getA()!=null){
-//			if(ALG.rank(getA())>=getA().rows()){
-//				throw new IllegalArgumentException("A-rank must be less than A-rows");
-//			}
-//		}
-		
+		// if(getA()!=null){
+		// if(ALG.rank(getA())>=getA().rows()){
+		// throw new
+		// IllegalArgumentException("A-rank must be less than A-rows");
+		// }
+		// }
+
 		DoubleMatrix1D X0 = getInitialPoint();
-		if(X0==null){
+		if (X0 == null) {
 			DoubleMatrix1D X0NF = getNotFeasibleInitialPoint();
-			if(X0NF!=null){
+			if (X0NF != null) {
 				double rPriX0NFNorm = Math.sqrt(ALG.norm2(rPri(X0NF)));
-				if(rPriX0NFNorm <= getToleranceFeas() && !Double.isNaN(this.barrierFunction.value(X0NF.toArray()))){
+				if (rPriX0NFNorm <= getToleranceFeas() && !Double.isNaN(this.barrierFunction.value(X0NF.toArray()))) {
 					log.debug("the provided initial point is already feasible");
 					X0 = X0NF;
 				}
-//				DoubleMatrix1D fiX0NF = getFi(X0NF);
-//				int maxIndex = Utils.getMaxIndex(fiX0NF);
-//				double maxValue = fiX0NF.get(maxIndex);
-//				if (log.isDebugEnabled()) {
-//					log.debug("X0NF  :  " + ArrayUtils.toString(X0NF.toArray()));
-//					log.debug("fiX0NF:  " + ArrayUtils.toString(fiX0NF.toArray()));
-//				}
-//				if(maxValue<0){
-//					//the provided not-feasible starting point is already feasible
-//					log.debug("the provided initial point is already feasible");
-//					X0 = X0NF;
-//				}
+				// DoubleMatrix1D fiX0NF = getFi(X0NF);
+				// int maxIndex = Utils.getMaxIndex(fiX0NF);
+				// double maxValue = fiX0NF.get(maxIndex);
+				// if (log.isDebugEnabled()) {
+				// log.debug("X0NF  :  " + ArrayUtils.toString(X0NF.toArray()));
+				// log.debug("fiX0NF:  " +
+				// ArrayUtils.toString(fiX0NF.toArray()));
+				// }
+				// if(maxValue<0){
+				// //the provided not-feasible starting point is already
+				// feasible
+				// log.debug("the provided initial point is already feasible");
+				// X0 = X0NF;
+				// }
 			}
-			if(X0 == null){
+			if (X0 == null) {
 				BasicPhaseIBM bf1 = new BasicPhaseIBM(this);
 				X0 = F1.make(bf1.findFeasibleInitialPoint());
 			}
 		}
-		
-		//check X0 feasibility
+
+		// check X0 feasibility
 		double rPriX0Norm = Math.sqrt(ALG.norm2(rPri(X0)));
-		if(Double.isNaN(this.barrierFunction.value(X0.toArray())) || rPriX0Norm > getToleranceFeas()){
+		if (Double.isNaN(this.barrierFunction.value(X0.toArray())) || rPriX0Norm > getToleranceFeas()) {
 			throw new Exception("initial point must be strictly feasible");
 		}
-//		DoubleMatrix1D fiX0 = getFi(X0);
-//		if(fiX0!=null){
-//			int maxIndex = Utils.getMaxIndex(fiX0);
-//			double maxValue = fiX0.get(maxIndex);
-//			if(maxValue >= 0){
-//				log.debug("ineqX0      : " + ArrayUtils.toString(fiX0.toArray()));
-//				log.debug("max ineq index: " + maxIndex);
-//				log.debug("max ineq value: " + maxValue);
-//				throw new Exception("initial point must be strictly feasible");
-//			}
-//		}
-		
-		DoubleMatrix1D V0 = (getA()!=null)? F1.make(getA().rows()) : F1.make(0);
-		
-		if(log.isDebugEnabled()){
+		// DoubleMatrix1D fiX0 = getFi(X0);
+		// if(fiX0!=null){
+		// int maxIndex = Utils.getMaxIndex(fiX0);
+		// double maxValue = fiX0.get(maxIndex);
+		// if(maxValue >= 0){
+		// log.debug("ineqX0      : " + ArrayUtils.toString(fiX0.toArray()));
+		// log.debug("max ineq index: " + maxIndex);
+		// log.debug("max ineq value: " + maxValue);
+		// throw new Exception("initial point must be strictly feasible");
+		// }
+		// }
+
+		DoubleMatrix1D V0 = (getA() != null) ? F1.make(getA().rows()) : F1.make(0);
+
+		if (log.isDebugEnabled()) {
 			log.debug("X0: " + ArrayUtils.toString(X0.toArray()));
 			log.debug("V0: " + ArrayUtils.toString(V0.toArray()));
 		}
@@ -120,49 +123,50 @@ public class BarrierMethod extends OptimizationRequestHandler {
 		int outerIteration = 0;
 		while (true) {
 			outerIteration++;
-			if(log.isDebugEnabled()){
+			if (log.isDebugEnabled()) {
 				log.debug("outerIteration: " + outerIteration);
 				log.debug("X=" + ArrayUtils.toString(X.toArray()));
 				log.debug("f(X)=" + getF0(X));
 			}
-			
-			//Stopping criterion: quit if gap < tolerance.
+
+			// Stopping criterion: quit if gap < tolerance.
 			double gap = this.barrierFunction.getDualityGap(t);
-			log.debug("gap: "+gap);
-			if(gap <= getTolerance()){
+			log.debug("gap: " + gap);
+			if (gap <= getTolerance()) {
 				break;
 			}
-			
+
 			// custom exit condition
-			if(checkCustomExitConditions(X)){
+			if (checkCustomExitConditions(X)) {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
-			
-			//Centering step: compute x*(t) by minimizing tf0 + phi (the barrier function), subject to Ax = b, starting at x.
+
+			// Centering step: compute x*(t) by minimizing tf0 + phi (the
+			// barrier function), subject to Ax = b, starting at x.
 			final double tIter = t;
-			log.debug("t: "+tIter);
+			log.debug("t: " + tIter);
 			ConvexMultivariateRealFunction newObjectiveFunction = new ConvexMultivariateRealFunction() {
-				
+
 				public double value(double[] X) {
 					DoubleMatrix1D x = F1.make(X);
 					double phi = barrierFunction.value(X);
 					return tIter * getF0(x) + phi;
 				}
-				
+
 				public double[] gradient(double[] X) {
 					DoubleMatrix1D x = F1.make(X);
 					DoubleMatrix1D phiGrad = F1.make(barrierFunction.gradient(X));
 					return getGradF0(x).assign(Mult.mult(tIter)).assign(phiGrad, Functions.plus).toArray();
 				}
-				
+
 				public double[][] hessian(double[] X) {
 					DoubleMatrix1D x = F1.make(X);
 					DoubleMatrix2D hessF0X = getHessF0(x);
 					double[][] hessX = barrierFunction.hessian(X);
-					if(hessX == FunctionsUtils.ZEROES_2D_ARRAY_PLACEHOLDER){
+					if (hessX == FunctionsUtils.ZEROES_2D_ARRAY_PLACEHOLDER) {
 						return hessF0X.assign(Mult.mult(tIter)).toArray();
-					}else{
+					} else {
 						DoubleMatrix2D phiHess = F2.make(hessX);
 						return hessF0X.assign(Mult.mult(tIter)).assign(phiHess, Functions.plus).toArray();
 					}
@@ -172,12 +176,12 @@ public class BarrierMethod extends OptimizationRequestHandler {
 					return dim;
 				}
 			};
-			
-			//NB: cannot use the same request object for the inner step
+
+			// NB: cannot use the same request object for the inner step
 			OptimizationRequest or = new OptimizationRequest();
-			or.setA( (getA()!=null)? getA().toArray() : null );
+			or.setA((getA() != null) ? getA().toArray() : null);
 			or.setAlpha(getAlpha());
-			or.setB((getB()!=null)? getB().toArray() : null);
+			or.setB((getB() != null) ? getB().toArray() : null);
 			or.setBeta(getBeta());
 			or.setCheckKKTSolutionAccuracy(isCheckKKTSolutionAccuracy());
 			or.setCheckProgressConditions(isCheckProgressConditions());
@@ -187,34 +191,34 @@ public class BarrierMethod extends OptimizationRequestHandler {
 			or.setMu(getMu());
 			or.setTolerance(getToleranceInnerStep());
 			or.setToleranceKKT(getToleranceKKT());
-			
+
 			BarrierNewtonLEConstrainedFSP opt = new BarrierNewtonLEConstrainedFSP(true, this);
 			opt.setOptimizationRequest(or);
-			if(opt.optimize() == OptimizationResponse.FAILED){
+			if (opt.optimize() == OptimizationResponse.FAILED) {
 				response.setReturnCode(OptimizationResponse.FAILED);
 				break;
 			}
 			OptimizationResponse newtonResponse = opt.getOptimizationResponse();
-			
-			//Update. x := x*(t).
+
+			// Update. x := x*(t).
 			X = F1.make(newtonResponse.getSolution());
-			
-//			//Stopping criterion: quit if gap < tolerance.
-//			double gap = this.barrierFunction.getDualityGap(t);
-//			log.debug("gap: "+gap);
-//			if(gap <= getTolerance()){
-//				break;
-//			}
-//			
-//			// custom exit condition
-//			if(checkCustomExitConditions(X)){
-//				response.setReturnCode(OptimizationResponse.SUCCESS);
-//				break;
-//			}
-			
-			//Increase t: t := mu*t.
+
+			// //Stopping criterion: quit if gap < tolerance.
+			// double gap = this.barrierFunction.getDualityGap(t);
+			// log.debug("gap: "+gap);
+			// if(gap <= getTolerance()){
+			// break;
+			// }
+			//
+			// // custom exit condition
+			// if(checkCustomExitConditions(X)){
+			// response.setReturnCode(OptimizationResponse.SUCCESS);
+			// break;
+			// }
+
+			// Increase t: t := mu*t.
 			t = getMu() * t;
-			
+
 			// iteration limit condition
 			if (outerIteration == getMaxIteration()) {
 				response.setReturnCode(OptimizationResponse.WARN);
@@ -229,54 +233,54 @@ public class BarrierMethod extends OptimizationRequestHandler {
 		setOptimizationResponse(response);
 		return response.getReturnCode();
 	}
-	
+
 	/**
 	 * Use the barrier function instead.
 	 */
 	@Override
-	protected DoubleMatrix1D getFi(DoubleMatrix1D X){
+	protected DoubleMatrix1D getFi(DoubleMatrix1D X) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * Use the barrier function instead.
 	 */
-	protected DoubleMatrix2D getGradFi(DoubleMatrix1D X){
+	protected DoubleMatrix2D getGradFi(DoubleMatrix1D X) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
 	 * Use the barrier function instead.
 	 */
-	protected DoubleMatrix2D[] getHessFi(DoubleMatrix1D X){
+	protected DoubleMatrix2D[] getHessFi(DoubleMatrix1D X) {
 		throw new UnsupportedOperationException();
 	}
-	
-	protected BarrierFunction getBarrierFunction(){
+
+	protected BarrierFunction getBarrierFunction() {
 		return this.barrierFunction;
 	}
 
-	private class BarrierNewtonLEConstrainedFSP extends NewtonLEConstrainedFSP{
+	private class BarrierNewtonLEConstrainedFSP extends NewtonLEConstrainedFSP {
 		BarrierMethod father = null;
-		
-		public BarrierNewtonLEConstrainedFSP(boolean activateChain, BarrierMethod father){
+
+		public BarrierNewtonLEConstrainedFSP(boolean activateChain, BarrierMethod father) {
 			super(activateChain);
 			this.father = father;
 		}
-		
+
 		@Override
-		protected boolean checkCustomExitConditions(DoubleMatrix1D Y){
+		protected boolean checkCustomExitConditions(DoubleMatrix1D Y) {
 			boolean ret = father.checkCustomExitConditions(Y);
 			log.debug("checkCustomExitConditions: " + ret);
 			return ret;
 		}
 	}
-	
-//	private DoubleMatrix1D rPri(DoubleMatrix1D X) {
-//		if(getA()==null){
-//			return F1.make(0);
-//		}
-//		return getA().zMult(X, getB().copy(), 1., -1., false);
-//	}
-		
+
+	// private DoubleMatrix1D rPri(DoubleMatrix1D X) {
+	// if(getA()==null){
+	// return F1.make(0);
+	// }
+	// return getA().zMult(X, getB().copy(), 1., -1., false);
+	// }
+
 }

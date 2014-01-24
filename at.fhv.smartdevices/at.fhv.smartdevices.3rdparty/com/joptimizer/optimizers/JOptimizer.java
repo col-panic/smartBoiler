@@ -15,7 +15,6 @@
  */
 package com.joptimizer.optimizers;
 
-
 /**
  * Convex Optimizer.
  * 
@@ -38,20 +37,19 @@ public class JOptimizer {
 	public static final String BARRIER_METHOD = "BARRIER_METHOD";
 	public static final String PRIMAL_DUAL_METHOD = "PRIMAL_DUAL_METHOD";
 	public static final String DEFAULT_INTERIOR_POINT_METHOD = PRIMAL_DUAL_METHOD;
-	
 
 	private OptimizationRequest request = null;
 	private OptimizationResponse response = null;
-	
+
 	public int optimize() throws Exception {
-		//start with the first step in the chain.
+		// start with the first step in the chain.
 		OptimizationRequestHandler handler = new NewtonUnconstrained(true);
 		handler.setOptimizationRequest(request);
 		int retCode = handler.optimize();
 		this.response = handler.getOptimizationResponse();
 		return retCode;
 	}
-	
+
 	public void setOptimizationRequest(OptimizationRequest or) {
 		this.request = or;
 	}

@@ -52,8 +52,7 @@ public class DiagonalKKTSolver extends KKTSolver {
 		}
 
 		// solution checking
-		if (this.checkKKTSolutionAccuracy
-				&& !this.checkKKTSolutionAccuracy(v, w)) {
+		if (this.checkKKTSolutionAccuracy && !this.checkKKTSolutionAccuracy(v, w)) {
 			log.error("KKT solution failed");
 			throw new Exception("KKT solution failed");
 		}

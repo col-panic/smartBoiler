@@ -10,7 +10,7 @@ import org.simpleframework.xml.core.Persister;
 
 /**
  * @author kepe
- *
+ * 
  */
 public class SerializationHelper {
 
@@ -18,9 +18,11 @@ public class SerializationHelper {
 	 * Tries to deserialize the data stored in the file to create an instance of
 	 * type T and return that.
 	 * 
-	 * @param instance The instance to overwrite - is returned if deserialization
-	 *            is not possible
-	 * @param filename The file of serialized data
+	 * @param instance
+	 *            The instance to overwrite - is returned if deserialization is
+	 *            not possible
+	 * @param filename
+	 *            The file of serialized data
 	 * @return the instance of type T resulting from deserialization, or the
 	 *         passed instance otherwise.
 	 */
@@ -36,8 +38,8 @@ public class SerializationHelper {
 		}
 		return instance;
 	}
-	
-	public static <T> Boolean serialize(T instance, String filename){
+
+	public static <T> Boolean serialize(T instance, String filename) {
 		Serializer serializer = new Persister();
 		File file = new File(filename);
 		try {

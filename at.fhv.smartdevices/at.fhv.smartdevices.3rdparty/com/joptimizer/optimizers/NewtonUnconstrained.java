@@ -39,16 +39,16 @@ public class NewtonUnconstrained extends OptimizationRequestHandler {
 
 	private Algebra ALG = Algebra.DEFAULT;
 	private DoubleFactory1D F1 = DoubleFactory1D.dense;
-	private DoubleFactory2D F2 = DoubleFactory2D.dense; 
+	private DoubleFactory2D F2 = DoubleFactory2D.dense;
 	private Log log = LogFactory.getLog(this.getClass().getName());
-	
-	public NewtonUnconstrained(boolean activateChain){
-		if(activateChain){
+
+	public NewtonUnconstrained(boolean activateChain) {
+		if (activateChain) {
 			this.successor = new NewtonLEConstrainedFSP(true);
 		}
 	}
-	
-	public NewtonUnconstrained(){
+
+	public NewtonUnconstrained() {
 		this(false);
 	}
 
@@ -57,7 +57,7 @@ public class NewtonUnconstrained extends OptimizationRequestHandler {
 		log.debug("optimize");
 		OptimizationResponse response = new OptimizationResponse();
 
-    // checking responsibility
+		// checking responsibility
 		if (getA() != null || getFi() != null) {
 			// forward to the chain
 			return forwardOptimizationRequest();
@@ -73,7 +73,7 @@ public class NewtonUnconstrained extends OptimizationRequestHandler {
 		if (X0 == null) {
 			X0 = F1.make(getDim());
 		}
-		if(log.isDebugEnabled()){
+		if (log.isDebugEnabled()) {
 			log.debug("X0:  " + ArrayUtils.toString(X0.toArray()));
 		}
 
@@ -83,64 +83,67 @@ public class NewtonUnconstrained extends OptimizationRequestHandler {
 		while (true) {
 			iteration++;
 			double F0X = getF0(X);
-			if(log.isDebugEnabled()){
+			if (log.isDebugEnabled()) {
 				log.debug("iteration " + iteration);
 				log.debug("X=" + ArrayUtils.toString(X.toArray()));
 				log.debug("f(X)=" + F0X);
 			}
-			
+
 			// custom exit condition
-			if(checkCustomExitConditions(X)){
+			if (checkCustomExitConditions(X)) {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
-			
+
 			DoubleMatrix1D gradX = getGradF0(X);
 			DoubleMatrix2D hessX = getHessF0(X);
 
 			// Newton step and decrement
-			DoubleMatrix1D step = calculateNewtonStep(hessX, gradX); 
-			//DoubleMatrix1D step = calculateNewtonStepCM(hessX, gradX);
-			if(log.isDebugEnabled()){
+			DoubleMatrix1D step = calculateNewtonStep(hessX, gradX);
+			// DoubleMatrix1D step = calculateNewtonStepCM(hessX, gradX);
+			if (log.isDebugEnabled()) {
 				log.debug("step: " + ArrayUtils.toString(step.toArray()));
 			}
 
-			//Newton decrement
+			// Newton decrement
 			double lambda = Math.sqrt(-ALG.mult(gradX, step));
 			log.debug("lambda: " + lambda);
 			if (lambda / 2. <= getTolerance()) {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
-			
+
 			// iteration limit condition
 			if (iteration == getMaxIteration()) {
 				response.setReturnCode(OptimizationResponse.WARN);
 				log.warn("Max iterations limit reached");
 				break;
 			}
-			
+
 			// progress conditions
-			if(isCheckProgressConditions()){
+			if (isCheckProgressConditions()) {
 				log.debug("previous: " + previousLambda);
 				if (!Double.isNaN(previousLambda) && previousLambda <= lambda) {
 					log.warn("No progress achieved, exit iterations loop without desired accuracy");
 					response.setReturnCode(OptimizationResponse.WARN);
 					break;
-				} 
+				}
 			}
 			previousLambda = lambda;
-			
+
 			// backtracking line search
 			double s = 1d;
 			DoubleMatrix1D X1 = null;
 			int cnt = 0;
 			while (cnt < 25) {
-              cnt++;
-				// @TODO: can we use semplification 9.7.1 (Pre-computation for line searches)?
-				X1 = X.copy().assign(step.copy().assign(Mult.mult(s)), Functions.plus);// x + t*step
+				cnt++;
+				// @TODO: can we use semplification 9.7.1 (Pre-computation for
+				// line searches)?
+				X1 = X.copy().assign(step.copy().assign(Mult.mult(s)), Functions.plus);// x
+																						// +
+																						// t*step
 				double condSX = getF0(X1);
-				//NB: this will also check !Double.isNaN(getF0(X1))
+				// NB: this will also check !Double.isNaN(getF0(X1))
 				double condDX = F0X + getAlpha() * s * ALG.mult(gradX, step);
 				if (condSX <= condDX) {
 					break;
@@ -160,12 +163,12 @@ public class NewtonUnconstrained extends OptimizationRequestHandler {
 		return response.getReturnCode();
 	}
 
-  //@TODO: can we use semplification 9.7.2 ??
-	//NB: the matrix hessX is square
-	//Hess.step = -Grad
+	// @TODO: can we use semplification 9.7.2 ??
+	// NB: the matrix hessX is square
+	// Hess.step = -Grad
 	private DoubleMatrix1D calculateNewtonStep(DoubleMatrix2D hessX, DoubleMatrix1D gradX) throws Exception {
 		KKTSolver kktSolver = new BasicKKTSolver();
-		if(isCheckKKTSolutionAccuracy()){
+		if (isCheckKKTSolutionAccuracy()) {
 			kktSolver.setCheckKKTSolutionAccuracy(isCheckKKTSolutionAccuracy());
 			kktSolver.setToleranceKKT(getToleranceKKT());
 		}
@@ -175,5 +178,5 @@ public class NewtonUnconstrained extends OptimizationRequestHandler {
 		DoubleMatrix1D step = F1.make(sol[0]);
 		return step;
 	}
-	
+
 }

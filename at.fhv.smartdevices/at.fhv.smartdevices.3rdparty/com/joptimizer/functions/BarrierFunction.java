@@ -16,25 +16,31 @@
 package com.joptimizer.functions;
 
 /**
- * Interface for the barrier function used by a given barrier optimization method.
+ * Interface for the barrier function used by a given barrier optimization
+ * method.
+ * 
  * @see "S.Boyd and L.Vandenberghe, Convex Optimization, 11.2"
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
-public interface BarrierFunction extends TwiceDifferentiableMultivariateRealFunction{
+public interface BarrierFunction extends TwiceDifferentiableMultivariateRealFunction {
 
 	/**
-	* Calculates the duality gap for a barrier method build with this barrier function. 
-	*/
+	 * Calculates the duality gap for a barrier method build with this barrier
+	 * function.
+	 */
 	public double getDualityGap(double t);
-	
+
 	/**
 	 * Create the barrier function for the basic Phase I method.
+	 * 
 	 * @see "S.Boyd and L.Vandenberghe, Convex Optimization, 11.4.1"
 	 */
 	public BarrierFunction createPhase1BarrierFunction();
-	
+
 	/**
-	 * Calculates the initial value for the additional variable s in basic Phase I method.
+	 * Calculates the initial value for the additional variable s in basic Phase
+	 * I method.
+	 * 
 	 * @see "S.Boyd and L.Vandenberghe, Convex Optimization, 11.4.1"
 	 */
 	public double calculatePhase1InitialFeasiblePoint(double[] originalNotFeasiblePoint, double tolerance);

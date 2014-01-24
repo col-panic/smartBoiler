@@ -48,23 +48,23 @@ public class QuadraticMultivariateRealFunction implements ConvexMultivariateReal
 	 * Constant factor.
 	 */
 	protected double r = 0;
-	
+
 	private Algebra ALG = Algebra.DEFAULT;
 
 	public QuadraticMultivariateRealFunction(double[][] PMatrix, double[] qVector, double r) {
-		
-		this.P = (PMatrix!=null)? DoubleFactory2D.dense.make(PMatrix) : null;
-		this.q = (qVector!=null)? DoubleFactory1D.dense.make(qVector) : null;
+
+		this.P = (PMatrix != null) ? DoubleFactory2D.dense.make(PMatrix) : null;
+		this.q = (qVector != null) ? DoubleFactory1D.dense.make(qVector) : null;
 		this.r = r;
-		
-		if(P==null && q==null){
+
+		if (P == null && q == null) {
 			throw new IllegalArgumentException("Impossible to create the function");
 		}
 		if (P != null && !Property.DEFAULT.isSquare(P)) {
 			throw new IllegalArgumentException("Not quadratic argument");
 		}
-		
-		this.dim = (P != null)? P.columns() : q.size();
+
+		this.dim = (P != null) ? P.columns() : q.size();
 		if (this.dim < 0) {
 			throw new IllegalArgumentException("Impossible to create the function");
 		}
@@ -85,25 +85,25 @@ public class QuadraticMultivariateRealFunction implements ConvexMultivariateReal
 	public final double[] gradient(double[] X) {
 		DoubleMatrix1D x = DoubleFactory1D.dense.make(X);
 		DoubleMatrix1D ret = null;
-		if(P!=null){
+		if (P != null) {
 			if (q != null) {
 				ret = P.zMult(x, q.copy(), 1, 1, false);
 			} else {
 				ret = ALG.mult(P, x);
 			}
-		}else{
+		} else {
 			ret = q.copy();
 		}
 		return ret.toArray();
-		
+
 	}
 
 	public final double[][] hessian(double[] X) {
 		DoubleMatrix2D ret = null;
-		if(P!=null){
+		if (P != null) {
 			ret = P.copy();
-		}else{
-			//ret = DoubleFactory2D.dense.make(dim, dim);
+		} else {
+			// ret = DoubleFactory2D.dense.make(dim, dim);
 			return FunctionsUtils.ZEROES_2D_ARRAY_PLACEHOLDER;
 		}
 		return ret.toArray();

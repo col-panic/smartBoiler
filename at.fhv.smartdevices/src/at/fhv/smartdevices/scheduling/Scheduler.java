@@ -14,30 +14,28 @@ import at.fhv.smartdevices.commons.ISchedulable;
  * @author kepe_nb
  * 
  */
-public class Scheduler implements Runnable{	
+public class Scheduler implements Runnable {
 	private IClock _clock;
 	private ArrayList<ISchedulable> _schedulables;
 	private Long _timeFrame;
 
 	public Scheduler(IClock clock, ArrayList<ISchedulable> schedulables) {
-		
-		//TODO: check Long.Max for correct behavior;
-		this(clock, schedulables, Long.MAX_VALUE);		
+
+		// TODO: check Long.Max for correct behavior;
+		this(clock, schedulables, Long.MAX_VALUE);
 	}
 
-	public Scheduler(IClock clock, ArrayList<ISchedulable> schedulables, Long timeFrame)
-	{
-		_timeFrame=timeFrame;
+	public Scheduler(IClock clock, ArrayList<ISchedulable> schedulables, Long timeFrame) {
+		_timeFrame = timeFrame;
 		_clock = clock;
-		_schedulables=schedulables;		
-	}	
+		_schedulables = schedulables;
+	}
 
 	@Override
 	public void run() {
-		List<Thread> threads = startScheduling(new ArrayList<ISchedulable>(_schedulables), _timeFrame);		
+		List<Thread> threads = startScheduling(new ArrayList<ISchedulable>(_schedulables), _timeFrame);
 		for (Thread thread : threads) {
-			if(thread.isAlive())
-			{
+			if (thread.isAlive()) {
 				try {
 					thread.join();
 				} catch (InterruptedException e) {
@@ -47,19 +45,19 @@ public class Scheduler implements Runnable{
 			}
 		}
 	}
-	
+
 	private List<Thread> startScheduling(ArrayList<ISchedulable> schedulables, Long elapsingTime) {
 
 		List<Thread> retVal = new ArrayList<Thread>();
-		long now =_clock.getDate();
-		long end = now+elapsingTime;
+		long now = _clock.getDate();
+		long end = now + elapsingTime;
 		HashMap<ISchedulable, Long> map = new HashMap<ISchedulable, Long>();
 
 		for (ISchedulable schedulable : schedulables) {
 			map.put(schedulable, schedulable.getScheduleTimeStep() + now);
 		}
 
-		while (now<=end) {
+		while (now <= end) {
 			long nextScheduledTime = Long.MAX_VALUE;
 			ISchedulable scheduledClass = null;
 
@@ -76,8 +74,7 @@ public class Scheduler implements Runnable{
 			thread.setPriority(scheduledClass.getPriority());
 			thread.run();
 			retVal.add(thread);
-			if(scheduledClass.getExeSingleThreaded())
-			{
+			if (scheduledClass.getExeSingleThreaded()) {
 				try {
 					thread.join();
 				} catch (InterruptedException e) {
@@ -85,10 +82,10 @@ public class Scheduler implements Runnable{
 					e.printStackTrace();
 				}
 			}
-			
+
 			map.put(scheduledClass, scheduledClass.getScheduleTimeStep() + _clock.getDate());
-			now=_clock.getDate();
+			now = _clock.getDate();
 		}
-		return retVal;		
+		return retVal;
 	}
 }

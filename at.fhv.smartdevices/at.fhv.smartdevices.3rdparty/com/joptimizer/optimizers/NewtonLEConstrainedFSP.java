@@ -44,14 +44,14 @@ public class NewtonLEConstrainedFSP extends OptimizationRequestHandler {
 	private DoubleFactory2D F2 = DoubleFactory2D.dense;
 	private KKTSolver kktSolver;
 	private Log log = LogFactory.getLog(this.getClass().getName());
-	
-	public NewtonLEConstrainedFSP(boolean activateChain){
-		if(activateChain){
+
+	public NewtonLEConstrainedFSP(boolean activateChain) {
+		if (activateChain) {
 			this.successor = new NewtonLEConstrainedISP(true);
 		}
 	}
-	
-	public NewtonLEConstrainedFSP(){
+
+	public NewtonLEConstrainedFSP() {
 		this(false);
 	}
 
@@ -59,82 +59,84 @@ public class NewtonLEConstrainedFSP extends OptimizationRequestHandler {
 	public int optimize() throws Exception {
 		log.debug("optimize");
 		OptimizationResponse response = new OptimizationResponse();
-		
-	    //checking responsibility
+
+		// checking responsibility
 		if (getFi() != null) {
 			// forward to the chain
 			return forwardOptimizationRequest();
 		}
-		
+
 		long tStart = System.currentTimeMillis();
-		
-		//initial point must be feasible (i.e., satisfy x in domF and Ax = b).
+
+		// initial point must be feasible (i.e., satisfy x in domF and Ax = b).
 		DoubleMatrix1D X0 = getInitialPoint();
-		double rPriX0Norm = (X0 != null)? Math.sqrt(ALG.norm2(rPri(X0))) : 0d;
-		//if (X0 == null	|| (getA()!=null && Double.compare(ALG.norm2(getA().zMult(X0, getB().copy(), 1., -1., false)), 0d) != 0)) {
-		//if (X0 == null	|| rPriX0Norm > Utils.getDoubleMachineEpsilon()) {	
-		if (X0 == null	|| rPriX0Norm > getTolerance()) {	
+		double rPriX0Norm = (X0 != null) ? Math.sqrt(ALG.norm2(rPri(X0))) : 0d;
+		// if (X0 == null || (getA()!=null &&
+		// Double.compare(ALG.norm2(getA().zMult(X0, getB().copy(), 1., -1.,
+		// false)), 0d) != 0)) {
+		// if (X0 == null || rPriX0Norm > Utils.getDoubleMachineEpsilon()) {
+		if (X0 == null || rPriX0Norm > getTolerance()) {
 			// infeasible starting point, forward to the chain
 			return forwardOptimizationRequest();
 		}
-		
-		if(log.isDebugEnabled()){
+
+		if (log.isDebugEnabled()) {
 			log.debug("X0:  " + ArrayUtils.toString(X0.toArray()));
 		}
 		DoubleMatrix1D X = X0;
 		double F0X;
-		//double previousF0X = Double.NaN;
+		// double previousF0X = Double.NaN;
 		double previousLambda = Double.NaN;
 		int iteration = 0;
 		while (true) {
 			iteration++;
 			F0X = getF0(X);
-			if(log.isDebugEnabled()){
+			if (log.isDebugEnabled()) {
 				log.debug("iteration " + iteration);
 				log.debug("X=" + ArrayUtils.toString(X.toArray()));
 				log.debug("f(X)=" + F0X);
 			}
-			
-//			if(!Double.isNaN(previousF0X)){
-//				if (previousF0X < F0X) {
-//					throw new Exception("critical minimization problem");
-//				}
-//			}
-//			previousF0X = F0X;
-			
+
+			// if(!Double.isNaN(previousF0X)){
+			// if (previousF0X < F0X) {
+			// throw new Exception("critical minimization problem");
+			// }
+			// }
+			// previousF0X = F0X;
+
 			// custom exit condition
-			if(checkCustomExitConditions(X)){
+			if (checkCustomExitConditions(X)) {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
-			
+
 			DoubleMatrix1D gradX = getGradF0(X);
 			DoubleMatrix2D hessX = getHessF0(X);
-			
+
 			double gradXNorm = Math.sqrt(ALG.norm2(gradX));
-			if(gradXNorm < Utils.getDoubleMachineEpsilon()){
+			if (gradXNorm < Utils.getDoubleMachineEpsilon()) {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
 
 			// Newton step and decrement
-			if(this.kktSolver==null){
+			if (this.kktSolver == null) {
 				this.kktSolver = new BasicKKTSolver();
 			}
-			if(isCheckKKTSolutionAccuracy()){
+			if (isCheckKKTSolutionAccuracy()) {
 				kktSolver.setCheckKKTSolutionAccuracy(isCheckKKTSolutionAccuracy());
 				kktSolver.setToleranceKKT(getToleranceKKT());
 			}
 			kktSolver.setHMatrix(hessX.toArray());
 			kktSolver.setGVector(gradX.toArray());
-			if(getA()!=null){
+			if (getA() != null) {
 				kktSolver.setAMatrix(getA().toArray());
 				kktSolver.setATMatrix(getAT().toArray());
 			}
 			double[][] sol = kktSolver.solve();
 			DoubleMatrix1D step = F1.make(sol[0]);
-			DoubleMatrix1D w = (sol[1]!=null)? F1.make(sol[1]) : F1.make(0);
-			if(log.isDebugEnabled()){
+			DoubleMatrix1D w = (sol[1] != null) ? F1.make(sol[1]) : F1.make(0);
+			if (log.isDebugEnabled()) {
 				log.debug("stepX: " + ArrayUtils.toString(step.toArray()));
 				log.debug("w    : " + ArrayUtils.toString(w.toArray()));
 			}
@@ -146,16 +148,16 @@ public class NewtonLEConstrainedFSP extends OptimizationRequestHandler {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
-			
+
 			// iteration limit condition
 			if (iteration == getMaxIteration()) {
 				response.setReturnCode(OptimizationResponse.WARN);
 				log.warn("Max iterations limit reached");
 				break;
 			}
-			
-		    // progress conditions
-			if(isCheckProgressConditions()){
+
+			// progress conditions
+			if (isCheckProgressConditions()) {
 				if (!Double.isNaN(previousLambda) && previousLambda <= lambda) {
 					log.warn("No progress achieved, exit iterations loop without desired accuracy");
 					response.setReturnCode(OptimizationResponse.WARN);
@@ -171,15 +173,17 @@ public class NewtonLEConstrainedFSP extends OptimizationRequestHandler {
 			while (cnt < 250) {
 				cnt++;
 				// @TODO: can we use simplification 9.7.1 ??
-				X1 = X.copy().assign(step.copy().assign(Mult.mult(s)), Functions.plus);// x + t*step
-				//log.debug("X1: "+ArrayUtils.toString(X1.toArray()));
-				
+				X1 = X.copy().assign(step.copy().assign(Mult.mult(s)), Functions.plus);// x
+																						// +
+																						// t*step
+				// log.debug("X1: "+ArrayUtils.toString(X1.toArray()));
+
 				if (isInDomainF0(X1)) {
 					double condSX = getF0(X1);
-					//NB: this will also check !Double.isNaN(getF0(X1))
+					// NB: this will also check !Double.isNaN(getF0(X1))
 					double condDX = F0X + getAlpha() * s * ALG.mult(gradX, step);
-					//log.debug("condSX: "+condSX);
-					//log.debug("condDX: "+condDX);
+					// log.debug("condSX: "+condSX);
+					// log.debug("condDX: "+condDX);
 					if (condSX <= condDX) {
 						break;
 					}
@@ -198,7 +202,7 @@ public class NewtonLEConstrainedFSP extends OptimizationRequestHandler {
 		setOptimizationResponse(response);
 		return response.getReturnCode();
 	}
-	
+
 	public void setKKTSolver(KKTSolver kktSolver) {
 		this.kktSolver = kktSolver;
 	}

@@ -20,7 +20,8 @@ public class Clock implements IClock {
 	private ISmartController _controller;
 	private Boolean _simulation = false;
 	private Lock _lock = new ReentrantLock();
-	public long SimulationFactor = 1500*60; //1500*60 refers to about 1sec, 1500 to about 1min per day
+	public long SimulationFactor = 1500 * 60; // 1500*60 refers to about 1sec,
+												// 1500 to about 1min per day
 
 	@Override
 	public long getDate() {
@@ -56,9 +57,9 @@ public class Clock implements IClock {
 			if (_simulation) {
 				((ISimulatedSmartController) _controller).SetTime(dateInMillis);
 				try {
-					Thread.sleep((dateInMillis-_time)/SimulationFactor); 
-					
-				} catch (InterruptedException e) {					
+					Thread.sleep((dateInMillis - _time) / SimulationFactor);
+
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				_time = dateInMillis;

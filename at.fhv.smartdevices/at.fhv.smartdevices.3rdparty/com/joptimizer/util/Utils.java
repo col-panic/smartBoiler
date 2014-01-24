@@ -35,10 +35,10 @@ import cern.colt.matrix.linalg.Algebra;
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
 public class Utils {
-	
+
 	private static Double RELATIVE_MACHINE_PRECISION = Double.NaN;
 	private static Log log = LogFactory.getLog(Utils.class);
-	
+
 	public static DoubleMatrix2D randomValuesMatrix(int rows, int cols, double min, double max) {
 		return randomValuesMatrix(rows, cols, min, max, null);
 	}
@@ -54,7 +54,7 @@ public class Utils {
 		}
 		return DoubleFactory2D.dense.make(matrix);
 	}
-	
+
 	/**
 	 * @TODO: check this!!!
 	 * @see "http://mathworld.wolfram.com/PositiveDefiniteMatrix.html"
@@ -62,83 +62,91 @@ public class Utils {
 	public static DoubleMatrix2D randomValuesPositiveMatrix(int rows, int cols, double min, double max, Long seed) {
 		DoubleMatrix2D Q = Utils.randomValuesMatrix(rows, cols, min, max, seed);
 		DoubleMatrix2D P = Algebra.DEFAULT.mult(Q, Algebra.DEFAULT.transpose(Q.copy()));
-    return Algebra.DEFAULT.mult(P, P);
+		return Algebra.DEFAULT.mult(P, P);
 	}
-	
+
 	/**
 	 * Residual conditions check after resolution of A.x=b.
 	 * 
-	 * eps := The relative machine precision
-	 * N   := matrix dimension
+	 * eps := The relative machine precision N := matrix dimension
 	 * 
-     * Checking the residual of the solution. 
-     * Inversion pass if scaled residuals are less than 10:
-	 * ||Ax-b||_oo/( (||A||_oo . ||x||_oo + ||b||_oo) . N . eps ) < 10.
+	 * Checking the residual of the solution. Inversion pass if scaled residuals
+	 * are less than 10: ||Ax-b||_oo/( (||A||_oo . ||x||_oo + ||b||_oo) . N .
+	 * eps ) < 10.
 	 * 
-	 * @param A not-null matrix
-	 * @param x not-null vector
-	 * @param b not-null vector
+	 * @param A
+	 *            not-null matrix
+	 * @param x
+	 *            not-null vector
+	 * @param b
+	 *            not-null vector
 	 */
-//	public static boolean checkScaledResiduals(DoubleMatrix2D A, DoubleMatrix1D x, DoubleMatrix1D b, Algebra ALG) {
-//	  //The relative machine precision
-//		double eps = RELATIVE_MACHINE_PRECISION;
-//		int N = A.rows();//matrix dimension
-//		double residual = -Double.MAX_VALUE;
-//		if(Double.compare(ALG.normInfinity(x), 0.)==0 && Double.compare(ALG.normInfinity(b), 0.)==0){
-//			return true;
-//		}else{
-//			residual = ALG.normInfinity(ALG.mult(A, x).assign(b,	Functions.minus)) / 
-//	          ((ALG.normInfinity(A)*ALG.normInfinity(x) + ALG.normInfinity(b)) * N * eps);
-//			log.debug("scaled residual: " + residual);
-//			return residual < 10;
-//		}
-//	}
-	
+	// public static boolean checkScaledResiduals(DoubleMatrix2D A,
+	// DoubleMatrix1D x, DoubleMatrix1D b, Algebra ALG) {
+	// //The relative machine precision
+	// double eps = RELATIVE_MACHINE_PRECISION;
+	// int N = A.rows();//matrix dimension
+	// double residual = -Double.MAX_VALUE;
+	// if(Double.compare(ALG.normInfinity(x), 0.)==0 &&
+	// Double.compare(ALG.normInfinity(b), 0.)==0){
+	// return true;
+	// }else{
+	// residual = ALG.normInfinity(ALG.mult(A, x).assign(b, Functions.minus)) /
+	// ((ALG.normInfinity(A)*ALG.normInfinity(x) + ALG.normInfinity(b)) * N *
+	// eps);
+	// log.debug("scaled residual: " + residual);
+	// return residual < 10;
+	// }
+	// }
+
 	/**
 	 * The smallest positive (epsilon) such that 1.0 + epsilon != 1.0.
-	 * @see http://en.wikipedia.org/wiki/Machine_epsilon#Approximation_using_Java
+	 * 
+	 * @see http
+	 *      ://en.wikipedia.org/wiki/Machine_epsilon#Approximation_using_Java
 	 */
 	public static final double getDoubleMachineEpsilon() {
-		
-		if(!Double.isNaN(RELATIVE_MACHINE_PRECISION)){
+
+		if (!Double.isNaN(RELATIVE_MACHINE_PRECISION)) {
 			return RELATIVE_MACHINE_PRECISION;
 		}
-		
-		synchronized(RELATIVE_MACHINE_PRECISION){
-			
-			if(!Double.isNaN(RELATIVE_MACHINE_PRECISION)){
+
+		synchronized (RELATIVE_MACHINE_PRECISION) {
+
+			if (!Double.isNaN(RELATIVE_MACHINE_PRECISION)) {
 				return RELATIVE_MACHINE_PRECISION;
 			}
-			
+
 			double eps = 1.;
 			do {
 				eps /= 2.;
 			} while ((double) (1. + (eps / 2.)) != 1.);
-			
+
 			log.debug("Calculated double machine epsilon: " + eps);
 			RELATIVE_MACHINE_PRECISION = eps;
 		}
-		
+
 		return RELATIVE_MACHINE_PRECISION;
 	}
-	
+
 	/**
-	 * @see http://en.wikipedia.org/wiki/Machine_epsilon#Approximation_using_Java
+	 * @see http
+	 *      ://en.wikipedia.org/wiki/Machine_epsilon#Approximation_using_Java
 	 */
-//	public static final float calculateFloatMachineEpsilon() {
-//		float eps = 1.0f;
-//		do {
-//			eps /= 2.0f;
-//		} while ((float) (1.0 + (eps / 2.0)) != 1.0);
-//		log.debug("Calculated float machine epsilon: " + eps);
-//		return eps;
-//	}
-	
-	public static RealMatrix squareMatrixInverse(RealMatrix M) throws SingularMatrixException{
-		if(!M.isSquare()){
+	// public static final float calculateFloatMachineEpsilon() {
+	// float eps = 1.0f;
+	// do {
+	// eps /= 2.0f;
+	// } while ((float) (1.0 + (eps / 2.0)) != 1.0);
+	// log.debug("Calculated float machine epsilon: " + eps);
+	// return eps;
+	// }
+
+	public static RealMatrix squareMatrixInverse(RealMatrix M) throws SingularMatrixException {
+		if (!M.isSquare()) {
 			throw new IllegalArgumentException("Not square matrix!");
 		}
-		
+
 		// try commons-math cholesky
 		try {
 			CholeskyDecomposition cd = new CholeskyDecomposition(M);
@@ -148,7 +156,7 @@ public class Utils {
 		} catch (Exception e) {
 			log.debug(e.getMessage());
 		}
-		
+
 		// try joptimizer cholesky
 		try {
 			CholeskyFactorization cd = new CholeskyFactorization(M.getData());
@@ -157,9 +165,9 @@ public class Utils {
 		} catch (Exception e) {
 			log.debug(e.getMessage());
 		}
-		
+
 		// try LU
-		try{
+		try {
 			LUDecomposition ld = new LUDecomposition(M);
 			return ld.getSolver().getInverse();
 		} catch (SingularMatrixException e) {
@@ -177,42 +185,40 @@ public class Utils {
 		} catch (Exception e) {
 			log.debug(e.getMessage());
 		}
-		
+
 		return null;
 	}
-	 
+
 	/**
-	   * Get the index of the maximum entry.
-	   */
-	  public static int getMaxIndex(double[] v){
-	  	int maxIndex = -1;
-	  	double maxValue = -Double.MAX_VALUE;
-	  	for(int i=0; i<v.length; i++){
-	  		if(v[i]>maxValue){
-	  			maxIndex = i;
-	  			maxValue = v[i]; 
-	  		}
-	  	}
-	  	return maxIndex; 
-	  } 
-	  
-	  
-	  
-	  /**
-	   * Get the index of the minimum entry.
-	   */
-	  public static int getMinIndex(double[] v){
-	  	int minIndex = -1;
-	  	double minValue = Double.MAX_VALUE;
-	  	for(int i=0; i<v.length; i++){
-	  		if(v[i]<minValue){
-	  			minIndex = i;
-	  			minValue = v[i]; 
-	  		}
-	  	}
-	  	return minIndex; 
-	  }
-	  
+	 * Get the index of the maximum entry.
+	 */
+	public static int getMaxIndex(double[] v) {
+		int maxIndex = -1;
+		double maxValue = -Double.MAX_VALUE;
+		for (int i = 0; i < v.length; i++) {
+			if (v[i] > maxValue) {
+				maxIndex = i;
+				maxValue = v[i];
+			}
+		}
+		return maxIndex;
+	}
+
+	/**
+	 * Get the index of the minimum entry.
+	 */
+	public static int getMinIndex(double[] v) {
+		int minIndex = -1;
+		double minValue = Double.MAX_VALUE;
+		for (int i = 0; i < v.length; i++) {
+			if (v[i] < minValue) {
+				minIndex = i;
+				minValue = v[i];
+			}
+		}
+		return minIndex;
+	}
+
 	public static final double[][] createConstantDiagonalMatrix(int dim, double c) {
 		double[][] matrix = new double[dim][dim];
 		for (int i = 0; i < dim; i++) {
@@ -220,9 +226,9 @@ public class Utils {
 		}
 		return matrix;
 	}
-	
+
 	public static final double[][] upperTriangularMatrixUnverse(double[][] L) throws Exception {
-		
+
 		// Solve L*X = Id
 		int dim = L.length;
 		double[][] x = Utils.createConstantDiagonalMatrix(dim, 1.);
@@ -241,17 +247,17 @@ public class Utils {
 				}
 			}
 		}
-        
+
 		return new Array2DRowRealMatrix(x).transpose().getData();
 	}
-	
+
 	public static final double[][] lowerTriangularMatrixUnverse(double[][] L) throws Exception {
-		
+
 		double[][] LT = new Array2DRowRealMatrix(L).transpose().getData();
 		double[][] x = upperTriangularMatrixUnverse(LT);
 		return new Array2DRowRealMatrix(x).transpose().getData();
 	}
-	
+
 	/**
 	 * Brute-force determinant calculation.
 	 */

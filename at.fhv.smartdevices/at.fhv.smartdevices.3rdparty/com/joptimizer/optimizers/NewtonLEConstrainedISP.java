@@ -47,14 +47,14 @@ public class NewtonLEConstrainedISP extends OptimizationRequestHandler {
 	private DoubleFactory2D F2 = DoubleFactory2D.dense;
 	private KKTSolver kktSolver;
 	private Log log = LogFactory.getLog(this.getClass().getName());
-	
-	public NewtonLEConstrainedISP(boolean activateChain){
-		if(activateChain){
+
+	public NewtonLEConstrainedISP(boolean activateChain) {
+		if (activateChain) {
 			this.successor = new PrimalDualMethod();
 		}
 	}
-	
-	public NewtonLEConstrainedISP(){
+
+	public NewtonLEConstrainedISP() {
 		this(false);
 	}
 
@@ -62,33 +62,33 @@ public class NewtonLEConstrainedISP extends OptimizationRequestHandler {
 	public int optimize() throws Exception {
 		log.debug("optimize");
 		OptimizationResponse response = new OptimizationResponse();
-		
-	  //checking responsibility
+
+		// checking responsibility
 		if (getFi() != null) {
 			// forward to the chain
 			return forwardOptimizationRequest();
 		}
-		
+
 		long tStart = System.currentTimeMillis();
 		DoubleMatrix1D X0 = getInitialPoint();
 		if (X0 == null) {
-			if(getA()!=null){
+			if (getA() != null) {
 				X0 = F1.make(findEqFeasiblePoint(getA().toArray(), getB().toArray()));
 				log.debug("Switch to the linear equality feasible starting point Newton algorithm ");
 				NewtonLEConstrainedFSP opt = new NewtonLEConstrainedFSP();
 				OptimizationRequest req = getOptimizationRequest();
 				req.setInitialPoint(X0.toArray());
 				opt.setOptimizationRequest(req);
-				int retcode = opt.optimize(); 
+				int retcode = opt.optimize();
 				OptimizationResponse resp = opt.getOptimizationResponse();
 				setOptimizationResponse(resp);
 				return retcode;
-			}else{
+			} else {
 				X0 = F1.make(getDim());
 			}
 		}
-		DoubleMatrix1D V0 = (getA()!=null)? F1.make(getA().rows()) : F1.make(0);
-		if(log.isDebugEnabled()){
+		DoubleMatrix1D V0 = (getA() != null) ? F1.make(getA().rows()) : F1.make(0);
+		if (log.isDebugEnabled()) {
 			log.debug("X0:  " + ArrayUtils.toString(X0.toArray()));
 		}
 
@@ -106,94 +106,94 @@ public class NewtonLEConstrainedISP extends OptimizationRequestHandler {
 		while (true) {
 			iteration++;
 			F0X = getF0(X);
-			if(log.isDebugEnabled()){
+			if (log.isDebugEnabled()) {
 				log.debug("iteration " + iteration);
 				log.debug("X=" + ArrayUtils.toString(X.toArray()));
 				log.debug("V=" + ArrayUtils.toString(V.toArray()));
 				log.debug("f(X)=" + F0X);
 			}
-			
-//			if(!Double.isNaN(previousF0X)){
-//				if (previousF0X < F0X) {
-//					throw new Exception("critical minimization problem");
-//				}
-//			}
-//			previousF0X = F0X;
-			
+
+			// if(!Double.isNaN(previousF0X)){
+			// if (previousF0X < F0X) {
+			// throw new Exception("critical minimization problem");
+			// }
+			// }
+			// previousF0X = F0X;
+
 			// custom exit condition
-			if(checkCustomExitConditions(X)){
+			if (checkCustomExitConditions(X)) {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
-			
+
 			gradX = getGradF0(X);
 			hessX = getHessF0(X);
 			rDualXV = rDual(X, V, gradX);
 			rPriX = rPri(X);
-			
+
 			// exit condition
-			double rPriXNorm = Math.sqrt(ALG.norm2(rPriX)); 
+			double rPriXNorm = Math.sqrt(ALG.norm2(rPriX));
 			double rDualXVNorm = Math.sqrt(ALG.norm2(rDualXV));
-			log.debug("rPriXNorm : "+rPriXNorm);
-			log.debug("rDualXVNorm: "+rDualXVNorm);
-			double rXVNorm = Math.sqrt(Math.pow(rPriXNorm, 2)+ Math.pow(rDualXVNorm, 2));
+			log.debug("rPriXNorm : " + rPriXNorm);
+			log.debug("rDualXVNorm: " + rDualXVNorm);
+			double rXVNorm = Math.sqrt(Math.pow(rPriXNorm, 2) + Math.pow(rDualXVNorm, 2));
 			if (rPriXNorm <= getTolerance() && rXVNorm <= getTolerance()) {
 				response.setReturnCode(OptimizationResponse.SUCCESS);
 				break;
 			}
 
 			// Newton step and decrement
-			if(this.kktSolver==null){
+			if (this.kktSolver == null) {
 				this.kktSolver = new BasicKKTSolver();
 			}
-			if(isCheckKKTSolutionAccuracy()){
+			if (isCheckKKTSolutionAccuracy()) {
 				kktSolver.setCheckKKTSolutionAccuracy(isCheckKKTSolutionAccuracy());
 				kktSolver.setToleranceKKT(getToleranceKKT());
 			}
 			kktSolver.setHMatrix(hessX.toArray());
 			kktSolver.setGVector(rDualXV.toArray());
-			if(getA()!=null){
+			if (getA() != null) {
 				kktSolver.setAMatrix(getA().toArray());
 				kktSolver.setATMatrix(getAT().toArray());
 				kktSolver.setHVector(rPriX.toArray());
 			}
 			double[][] sol = kktSolver.solve();
 			DoubleMatrix1D stepX = F1.make(sol[0]);
-			DoubleMatrix1D stepV = (sol[1]!=null)? F1.make(sol[1]) : F1.make(0);
-			if(log.isDebugEnabled()){
+			DoubleMatrix1D stepV = (sol[1] != null) ? F1.make(sol[1]) : F1.make(0);
+			if (log.isDebugEnabled()) {
 				log.debug("stepX: " + ArrayUtils.toString(stepX.toArray()));
 				log.debug("stepV: " + ArrayUtils.toString(stepV.toArray()));
 			}
 
-//			// exit condition
-//			double rPriXNorm = Math.sqrt(ALG.norm2(rPriX)); 
-//			double rDualXVNorm = Math.sqrt(ALG.norm2(rDualXV));
-//			log.debug("rPriXNorm : "+rPriXNorm);
-//			log.debug("rDualXVNorm: "+rDualXVNorm);
-//			double rXVNorm = Math.sqrt(Math.pow(rPriXNorm, 2)+ Math.pow(rDualXVNorm, 2));
-//			if (rPriXNorm <= getTolerance() && rXVNorm <= getTolerance()) {
-//				response.setReturnCode(OptimizationResponse.SUCCESS);
-//				break;
-//			}
-			
+			// // exit condition
+			// double rPriXNorm = Math.sqrt(ALG.norm2(rPriX));
+			// double rDualXVNorm = Math.sqrt(ALG.norm2(rDualXV));
+			// log.debug("rPriXNorm : "+rPriXNorm);
+			// log.debug("rDualXVNorm: "+rDualXVNorm);
+			// double rXVNorm = Math.sqrt(Math.pow(rPriXNorm, 2)+
+			// Math.pow(rDualXVNorm, 2));
+			// if (rPriXNorm <= getTolerance() && rXVNorm <= getTolerance()) {
+			// response.setReturnCode(OptimizationResponse.SUCCESS);
+			// break;
+			// }
+
 			// iteration limit condition
 			if (iteration == getMaxIteration()) {
 				response.setReturnCode(OptimizationResponse.WARN);
 				log.warn("Max iterations limit reached");
 				break;
 			}
-			
-		    // progress conditions
-			if(isCheckProgressConditions()){
-				if (!Double.isNaN(previousRPriXNorm)	&& !Double.isNaN(previousRXVNorm)) {
-					if ((previousRPriXNorm <= rPriXNorm && rPriXNorm >= getTolerance())|| 
-						(previousRXVNorm <= rXVNorm && rXVNorm >= getTolerance())) {
+
+			// progress conditions
+			if (isCheckProgressConditions()) {
+				if (!Double.isNaN(previousRPriXNorm) && !Double.isNaN(previousRXVNorm)) {
+					if ((previousRPriXNorm <= rPriXNorm && rPriXNorm >= getTolerance()) || (previousRXVNorm <= rXVNorm && rXVNorm >= getTolerance())) {
 						log.warn("No progress achieved, exit iterations loop without desired accuracy");
 						response.setReturnCode(OptimizationResponse.WARN);
 						break;
-					
+
 					}
-				} 
+				}
 			}
 			previousRPriXNorm = rPriXNorm;
 			previousRXVNorm = rXVNorm;
@@ -207,10 +207,14 @@ public class NewtonLEConstrainedISP extends OptimizationRequestHandler {
 			DoubleMatrix1D rPriX1V1 = null;
 			double previousNormRX1V1 = Double.NaN;
 			while (true) {
-              // @TODO: can we use 9.7.1?
-				X1 = X.copy().assign(stepX.copy().assign(Mult.mult(s)), Functions.plus);// X + s*stepX
-				V1 = V.copy().assign(stepV.copy().assign(Mult.mult(s)), Functions.plus);// V + s*stepV
-				if(isInDomainF0(X1)){
+				// @TODO: can we use 9.7.1?
+				X1 = X.copy().assign(stepX.copy().assign(Mult.mult(s)), Functions.plus);// X
+																						// +
+																						// s*stepX
+				V1 = V.copy().assign(stepV.copy().assign(Mult.mult(s)), Functions.plus);// V
+																						// +
+																						// s*stepV
+				if (isInDomainF0(X1)) {
 					gradX1 = getGradF0(X1);
 					rDualX1V1 = rDual(X1, V1, gradX1);
 					rPriX1V1 = rPri(X1);
@@ -218,8 +222,8 @@ public class NewtonLEConstrainedISP extends OptimizationRequestHandler {
 					if (normRX1V1 <= (1 - getAlpha() * s) * rXVNorm) {
 						break;
 					}
-					
-					log.debug("normRX1V1: "+normRX1V1);
+
+					log.debug("normRX1V1: " + normRX1V1);
 					if (!Double.isNaN(previousNormRX1V1)) {
 						if (previousNormRX1V1 <= normRX1V1) {
 							log.warn("No progress achieved in backtracking with norm");
@@ -228,7 +232,7 @@ public class NewtonLEConstrainedISP extends OptimizationRequestHandler {
 					}
 					previousNormRX1V1 = normRX1V1;
 				}
-				
+
 				s = getBeta() * s;
 			}
 			log.debug("s: " + s);
@@ -247,34 +251,34 @@ public class NewtonLEConstrainedISP extends OptimizationRequestHandler {
 
 	// rDual(x,v) := gradF(X)+[A]T*V (p 532)
 	private DoubleMatrix1D rDual(DoubleMatrix1D X, DoubleMatrix1D V, DoubleMatrix1D gradX) {
-		if(getA()==null){
+		if (getA() == null) {
 			return gradX;
 		}
 		return getAT().zMult(V, gradX.copy(), 1., 1, false);
 	}
 
 	// rPri(x,v) := Ax - b (p 532)
-//	private DoubleMatrix1D rPri(DoubleMatrix1D X) {
-//		if(getA()==null){
-//			return F1.make(0);
-//		}
-//		return getA().zMult(X, getB().copy(), 1., -1., false);
-//	}
-	
+	// private DoubleMatrix1D rPri(DoubleMatrix1D X) {
+	// if(getA()==null){
+	// return F1.make(0);
+	// }
+	// return getA().zMult(X, getB().copy(), 1., -1., false);
+	// }
+
 	@Override
 	protected int forwardOptimizationRequest() throws Exception {
 		if (successor != null) {
-			//this mean the chain was activated
-			if(JOptimizer.PRIMAL_DUAL_METHOD.equals(getInteriorPointMethod())){
+			// this mean the chain was activated
+			if (JOptimizer.PRIMAL_DUAL_METHOD.equals(getInteriorPointMethod())) {
 				this.successor = new PrimalDualMethod();
-			}else if(JOptimizer.BARRIER_METHOD.equals(getInteriorPointMethod())){
+			} else if (JOptimizer.BARRIER_METHOD.equals(getInteriorPointMethod())) {
 				BarrierFunction bf = new LogarithmicBarrier(getFi(), getDim());
 				this.successor = new BarrierMethod(bf);
 			}
 		}
 		return super.forwardOptimizationRequest();
 	}
-	
+
 	public void setKKTSolver(KKTSolver kktSolver) {
 		this.kktSolver = kktSolver;
 	}

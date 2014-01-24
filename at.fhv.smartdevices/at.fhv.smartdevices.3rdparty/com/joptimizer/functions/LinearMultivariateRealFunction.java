@@ -15,13 +15,12 @@
  */
 package com.joptimizer.functions;
 
-
 /**
  * f(x) = q.x + r
  * 
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
-public class LinearMultivariateRealFunction extends	QuadraticMultivariateRealFunction implements ConvexMultivariateRealFunction {
+public class LinearMultivariateRealFunction extends QuadraticMultivariateRealFunction implements ConvexMultivariateRealFunction {
 
 	public LinearMultivariateRealFunction(double[] qVector, double r) {
 		super(null, qVector, r);

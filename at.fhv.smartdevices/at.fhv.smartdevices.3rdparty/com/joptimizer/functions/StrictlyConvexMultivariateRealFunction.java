@@ -16,7 +16,9 @@
 package com.joptimizer.functions;
 
 /**
- * Use children classes whenever possible, because the algorithm will check that.
+ * Use children classes whenever possible, because the algorithm will check
+ * that.
+ * 
  * @author alberto trivellato (alberto.trivellato@gmail.com)
  */
 public interface StrictlyConvexMultivariateRealFunction extends ConvexMultivariateRealFunction {

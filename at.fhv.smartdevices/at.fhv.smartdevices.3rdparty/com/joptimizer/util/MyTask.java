@@ -19,9 +19,10 @@ import java.util.concurrent.Callable;
 
 /**
  * Parallelized task.
+ * 
  * @see "http://embarcaderos.net/2011/01/23/parallel-processing-and-multi-core-utilization-with-java/"
  * @author alberto trivellato (alberto.trivellato@gmail.com)
- *
+ * 
  */
 public class MyTask implements Callable<Integer> {
 	private int seq;
@@ -40,12 +41,12 @@ public class MyTask implements Callable<Integer> {
 		try {
 			// sleep for 1 second to simulate a remote call,
 			// just waiting for the call to return
-			//Thread.sleep(1000);
+			// Thread.sleep(1000);
 			// loop that just concatenate a str to simulate
 			// work on the result form remote call
-			for (int i = 0; i < 100000000*Math.random(); i++) {
-				//str = str + 't';
-				for(int k=0; k<10000; k++){
+			for (int i = 0; i < 100000000 * Math.random(); i++) {
+				// str = str + 't';
+				for (int k = 0; k < 10000; k++) {
 					new java.util.Date().getTime();
 				}
 			}
@@ -53,7 +54,7 @@ public class MyTask implements Callable<Integer> {
 
 		}
 		Double secs = new Double((new java.util.Date().getTime() - begTest) * 0.001);
-		System.out.println("run time for " +seq + ": " + secs + " secs");
+		System.out.println("run time for " + seq + ": " + secs + " secs");
 		return seq;
 	}
 }

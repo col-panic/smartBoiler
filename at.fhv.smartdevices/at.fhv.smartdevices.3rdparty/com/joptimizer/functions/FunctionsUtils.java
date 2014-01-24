@@ -33,22 +33,20 @@ public class FunctionsUtils {
 	 * Placeholder for 2D-arrays of zeroes.
 	 */
 	public static final double[][] ZEROES_2D_ARRAY_PLACEHOLDER = new double[0][0];
-	
+
 	/**
 	 * Placeholder for a matrix of zeroes.
 	 */
 	public static final DoubleMatrix2D ZEROES_MATRIX_PLACEHOLDER = DoubleFactory2D.dense.make(0, 0);
 	private static DoubleFactory1D F1 = DoubleFactory1D.dense;
 	private static DoubleFactory2D F2 = DoubleFactory2D.dense;
-	
-	public static ConvexMultivariateRealFunction createCircle(final int dim,
-			final double radius) {
+
+	public static ConvexMultivariateRealFunction createCircle(final int dim, final double radius) {
 		double[] center = new double[dim];
 		return createCircle(dim, radius, center);
 	}
 
-	public static ConvexMultivariateRealFunction createCircle(final int dim,
-			final double radius, final double[] center) {
+	public static ConvexMultivariateRealFunction createCircle(final int dim, final double radius, final double[] center) {
 
 		final DoubleMatrix1D C = F1.make(center);
 		return new ConvexMultivariateRealFunction() {

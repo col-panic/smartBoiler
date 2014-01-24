@@ -26,16 +26,15 @@ public class SchedulableSwitch implements ISchedulable {
 	private final Long TimeLoop = (long) 600000;
 	private Boolean _exeSingleThreaded;
 
-	
-	public SchedulableSwitch(ISmartController controller, IReadOnlyClock clock)
-	{
+	public SchedulableSwitch(ISmartController controller, IReadOnlyClock clock) {
 		new SchedulableSwitch(controller, clock, false);
 	}
+
 	public SchedulableSwitch(ISmartController controller, IReadOnlyClock clock, Boolean exeSingleThreaded) {
 		_controller = controller;
 
 		_clock = clock;
-		
+
 		_exeSingleThreaded = exeSingleThreaded;
 	}
 
@@ -77,7 +76,7 @@ public class SchedulableSwitch implements ISchedulable {
 	public long getScheduleTimeStep() {
 		_lock.lock();
 		try {
-			_next = _switchingTimes.ceilingEntry(_clock.getDate()).getKey();			
+			_next = _switchingTimes.ceilingEntry(_clock.getDate()).getKey();
 		} catch (NullPointerException e) {
 			_switchingTimes.put(_clock.getDate() + TimeLoop, _switchingTimes.lastEntry().getValue());
 			_next = _switchingTimes.lastKey();
