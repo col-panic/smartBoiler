@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices.scheduling.tests;
+package at.fhv.smartdevices.scheduling;
 
 import static org.junit.Assert.*;
 

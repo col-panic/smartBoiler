@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.fhv.smartdevices.helper.tests;
+package at.fhv.smartdevices.helper;
 
 import static org.junit.Assert.*;
 

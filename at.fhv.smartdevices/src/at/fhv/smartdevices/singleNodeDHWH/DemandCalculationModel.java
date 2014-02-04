@@ -23,7 +23,7 @@ public class DemandCalculationModel {
 	 *            time step in millis
 	 * @return
 	 */
-	public static SerializableTreeMap<Long, Double> calculateDemand(SerializableTreeMap<Long, Boolean> switchBoolMap, SerializableTreeMap<Long, Float> temp,
+	protected static SerializableTreeMap<Long, Double> calculateDemand(SerializableTreeMap<Long, Boolean> switchBoolMap, SerializableTreeMap<Long, Float> temp,
 			long deltat, boolean solveOde) {
 		SerializableTreeMap<Long, Double> retVal = new SerializableTreeMap<Long, Double>();
 		SerializableTreeMap<Long, Byte> switchMap = MapHelper.ConvertTreeMapBooleanValueToByte(switchBoolMap);

@@ -1,6 +1,7 @@
-package at.fhv.smartdevices.singleNodeDHWH.tests;
+package at.fhv.smartdevices.singleNodeDHWH;
 
 import java.util.Calendar;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +9,7 @@ import at.fhv.smartdevices.datamining.MinkowskiMetric;
 import at.fhv.smartdevices.scheduling.Clock;
 import at.fhv.smartdevices.scheduling.DataAquisition;
 import at.fhv.smartdevices.scheduling.SchedulableSwitch;
-import at.fhv.smartdevices.scheduling.tests.TestHelper;
+import at.fhv.smartdevices.scheduling.TestHelper;
 import at.fhv.smartdevices.singleNodeDHWH.KNNBasedOptimization;
 import at.fhv.smartdevices.singleNodeDHWH.SimulatedDHWHController;
 
@@ -68,6 +69,7 @@ public class KNNTests {
 		_controller.setHysteresisMode(5, 90);
 		
 		knn.run();
+		
 	}
 
 }

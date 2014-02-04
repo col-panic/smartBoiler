@@ -9,17 +9,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.collections.primitives.*;
-
 import at.fhv.smartdevices.commons.INumericMetric;
 import at.fhv.smartdevices.commons.ISchedulable;
 import at.fhv.smartdevices.commons.SerializableTreeMap;
+import at.fhv.smartdevices.datamining.TimeSeriesHelper;
 import at.fhv.smartdevices.helper.InterpolationHelper;
 import at.fhv.smartdevices.helper.MapHelper;
 import at.fhv.smartdevices.scheduling.DataAquisition;
@@ -45,10 +43,17 @@ public class KNNBasedOptimization implements ISchedulable {
 
 
 
-	private static long getDayInDeltatSteps(long deltat) {
-		return (24 * 60 * 60 * 1000) / deltat;
-	}
-
+	/**
+	 * Public constructor
+	 * @param dA dataAquistion
+	 * @param switcher the schedulable switch to apply the optimal control
+	 * @param tempID the sensor ID of the temperature sensor
+	 * @param metric the metric to define distance
+	 * @param deltat the time step to base the time series analysis on
+	 * @param timeStepsBack the amount of delta t steps back to take into account
+	 * @param timeStepsForward the amount of delta t steps forward to optimize for
+	 * @param k the number of nearest neighbors
+	 */
 	public KNNBasedOptimization(DataAquisition dA, SchedulableSwitch switcher, String tempID, INumericMetric metric, long deltat , long timeStepsBack, long timeStepsForward, short k) {
 		_tempID = tempID;
 		if(!dA.getSencorIds().contains(tempID)){
@@ -72,21 +77,20 @@ public class KNNBasedOptimization implements ISchedulable {
 	}
 
 	/**
-	 * 
-	 * @param relaisStateHistory
-	 * @param sensorInfoHistory
-	 * @param futureCosts
-	 * @param deltat
-	 * @param timeStepsBack
-	 * @param timeStepsForward
-	 * @return
+	 * Calculates the optimal switching times based on a nearest neighbor approach 
+	 * @return a tree map of optimal switching times (time, state) for the relais. 
 	 */
-	private SerializableTreeMap<Long, Boolean> calculateSwitchingTimes(SerializableTreeMap<Long, Boolean> relaisStateHistory,
-			SerializableTreeMap<Long, Float> sensorInfoHistory, TreeMap<Long, Integer> futureCosts, long deltat, long timeStepsBack, long timeStepsForward) {
-
-		TreeMap<Long, double[]> historicData = getHistoricData(relaisStateHistory, sensorInfoHistory, deltat, timeStepsBack, timeStepsForward);
+	protected SerializableTreeMap<Long, Boolean> calculateSwitchingTimes() {
+		
+		SerializableTreeMap<Long, Boolean> relaisStateHistory= _dataAquisition.getRelaisStateHistory();
+		SerializableTreeMap<Long, Float> sensorInfoHistory = _dataAquisition.GetSensorInformationHistory().get(_tempID);
+		TreeMap<Long, Integer> futureCosts= _dataAquisition.getFutureCosts();
+		
+		SerializableTreeMap<Long, Double> demands = DemandCalculationModel.calculateDemand(relaisStateHistory, sensorInfoHistory, _deltat, true);
+		
+		TreeMap<Long, double[]> historicData = TimeSeriesHelper.cutTimeSeries(demands, _deltat, _timeStepsBack, _timeStepsForward, 24 * 60 * 60 * 1000);
 		double[] currentTimeSeries = historicData.lastEntry().getValue();
-		long nowInterpolated = currentTimeSeries.length * deltat + historicData.lastKey();
+		long nowInterpolated = currentTimeSeries.length * _deltat + historicData.lastKey();
 		historicData.remove(historicData.lastKey());
 		TreeMap<Long, Double> distances = new TreeMap<Long, Double>();
 		for (Long key : historicData.navigableKeySet()) {
@@ -105,10 +109,10 @@ public class KNNBasedOptimization implements ISchedulable {
 				i++;
 			}
 		}
-		double[] t = InterpolationHelper.createLinearArray(nowInterpolated, deltat, futureCosts.lastKey());
+		double[] t = InterpolationHelper.createLinearArray(nowInterpolated, _deltat, futureCosts.lastKey());
 		double[] interpolatedFutureCosts = InterpolationHelper.interpolateLinear(MapHelper.keysToDoubleArray(futureCosts), MapHelper.valuesToDoubleArray(futureCosts), t);
 
-		double[] u_opt = LinearDeterministicOptimizer.optimize(futureDemand, interpolatedFutureCosts, deltat, sensorInfoHistory.lastEntry().getValue());
+		double[] u_opt = LinearDeterministicOptimizer.optimize(futureDemand, interpolatedFutureCosts, _deltat, sensorInfoHistory.lastEntry().getValue());
 		SerializableTreeMap<Long, Boolean> switchingTimes = new SerializableTreeMap<Long, Boolean>();
 		for (int j = 0; j < u_opt.length; j++) {
 			switchingTimes.put(Math.round(t[j]), u_opt[j] > 0.1);
@@ -131,55 +135,7 @@ public class KNNBasedOptimization implements ISchedulable {
 		return entries;
 	}
 
-	/**
-	 * 
-	 * @param relaisStateHistory
-	 * @param sensorInfoHistory
-	 * @param deltat
-	 * @param timeStepsBack
-	 * @param timeStepsForward
-	 * @return
-	 */
-	static TreeMap<Long, double[]> getHistoricData(SerializableTreeMap<Long, Boolean> relaisStateHistory, SerializableTreeMap<Long, Float> sensorInfoHistory,
-			long deltat, long timeStepsBack, long timeStepsForward) {
-		SerializableTreeMap<Long, Double> demands = DemandCalculationModel.calculateDemand(relaisStateHistory, sensorInfoHistory, deltat, true);
-
-		long[] cuttingPoints = findCuttingPoints(demands, timeStepsBack, deltat);
-		TreeMap<Long, double[]> historicData = new TreeMap<Long, double[]>();
-		for (int i = 0; i < cuttingPoints.length; i++) {
-			NavigableMap<Long, Double> submap = demands.subMap(cuttingPoints[i], true, cuttingPoints[i] + (deltat * timeStepsBack)
-					+ (deltat * timeStepsForward), true);
-
-			DoubleList values = new ArrayDoubleList();
-			for (double value : submap.values()) {
-				values.add(value);
-			}
-			historicData.put(cuttingPoints[i], values.toArray());
-		}
-		return historicData;
-	}
-
-	/**
-	 * 
-	 * @param demands
-	 * @param timeStepsBack
-	 * @param deltat
-	 * @return
-	 */
-	private static long[] findCuttingPoints(TreeMap<Long, Double> demands, long timeStepsBack, long deltat) {
-
-		ArrayLongList retVal = new ArrayLongList();
-		for (int counter = 0; counter < Integer.MAX_VALUE; counter++) {
-			Long key = demands.floorKey(demands.lastKey() - (timeStepsBack * deltat) - (getDayInDeltatSteps(deltat) * deltat * counter));
-			if (key != null) {
-				retVal.add(key);
-			} else {
-				break;
-			}
-		}
-
-		return retVal.toArray();
-	}
+	
 
 	@Override
 	public long getScheduleTimeStep() {
@@ -200,8 +156,7 @@ public class KNNBasedOptimization implements ISchedulable {
 	public void run() {
 		_lock.lock();
 		try {
-			_switcher.setSwitchingTimes(calculateSwitchingTimes(_dataAquisition.getRelaisStateHistory(),
-					_dataAquisition.GetSensorInformationHistory().get(_tempID), _dataAquisition.getFutureCosts(), _deltat, _timeStepsBack, _timeStepsForward));
+			_switcher.setSwitchingTimes(calculateSwitchingTimes());
 
 		} finally {
 			_lock.unlock();
