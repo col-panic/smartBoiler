@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/at.fhv.smartboiler.anext.feature_1.0.0.qualifier.jar" id="at.fhv.smartboiler.anext.feature" version="1.0.0.qualifier">
+      <category name="at.fhv.smartBoiler"/>
+   </feature>
+   <category-def name="at.fhv.smartBoiler" label="SmartBoiler"/>
+</site>

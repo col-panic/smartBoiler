@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FHV SmartDevices AutomationNext Release Engineering
+Bundle-SymbolicName: at.fhv.smartdevices.anext.releng
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: fhv.at
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"

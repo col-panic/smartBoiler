@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="Running Platform" sequenceNumber="43">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="at.anext.os.base.environment.feature.group" version="4.3.0"/>
+<unit id="at.anext.os.base.webserver.feature.group" version="4.1.0"/>
+<unit id="at.anext.os.base.environment.linux.feature.group" version="4.1.0"/>
+<unit id="at.anext.os.base.p2.feature.group" version="4.2.0"/>
+<unit id="at.anext.os.base.feature.group" version="4.3.0"/>
+<unit id="at.anext.os.base.product" version="4.3.0"/>
+<repository location="http://repository.automationnext.com/4.0/dev/MM/dev_base/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="at.anext.os.firmware.feature.group" version="4.1.36"/>
+<unit id="at.anext.ba.bundle.nextengine.feature.group" version="4.2.14"/>
+<unit id="at.anext.gc.http.feature.group" version="4.1.0"/>
+<unit id="at.anext.gc.ext.waphtml.feature.group" version="4.1.0"/>
+<unit id="at.anext.gc.tcpcomm.feature.group" version="4.1.0"/>
+<unit id="at.anext.ba.branding.nextos.feature.feature.group" version="4.1.0"/>
+<unit id="at.anext.ba.modules.dali.feature.group" version="4.2.1"/>
+<unit id="at.anext.ba.firmware.nextsystem.feature.group" version="4.2.0.1"/>
+<unit id="at.anext.os.extif.nextmanager.feature.group" version="4.2.0"/>
+<unit id="at.anext.gc.udp.feature.feature.group" version="4.2.0"/>
+<unit id="at.anext.ba.modules.beckhoff.feature.group" version="4.2.6"/>
+<unit id="at.anext.gc.ext.database.postgresql.feature.group" version="4.2.0"/>
+<unit id="at.anext.ba.modules.eib.feature.group" version="4.2.1"/>
+<repository location="http://repository.automationnext.com/4.2/stable"/>
+</location>
+</locations>
+<environment>
+<os>macosx</os>
+<ws>cocoa</ws>
+<arch>x86_64</arch>
+<nl>de_DE</nl>
+</environment>
+<launcherArgs>
+<vmArgs>-Dosgi.requiredJavaVersion=1.6 -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -XX:MaxPermSize=256m -Xms40m -Xmx512m -Xdock:icon=../Resources/Eclipse.icns -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgs>
+</launcherArgs>
+</target>

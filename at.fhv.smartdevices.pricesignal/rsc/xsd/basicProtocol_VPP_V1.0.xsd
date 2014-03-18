@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:complexType name="Request">
+    <xs:sequence>
+      <xs:element name="asset" minOccurs="1" maxOccurs="1" type="Asset"/>
+      <xs:element name="context" minOccurs="1" maxOccurs="1" type="Context"/>
+      <xs:element name="method" minOccurs="1" maxOccurs="1" type="Method"/>
+      <xs:element name="action" minOccurs="0" maxOccurs="1" type="Action"/>
+      <xs:element name="ping" minOccurs="0" maxOccurs="1" type="Ping"/>
+      <xs:element name="state" minOccurs="0" maxOccurs="1" type="State"/>
+      <xs:element name="measurement" minOccurs="0" maxOccurs="1" type="Measurement"/>
+      <xs:element name="timeSeries" minOccurs="0" maxOccurs="1" type="TimeSeries"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Messages">
+    <xs:sequence>
+      <xs:element name="message" minOccurs="1" maxOccurs="unbounded" type="Message"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="messages" type="Messages"/>
+  <xs:complexType name="Asset">
+    <xs:sequence>
+      <xs:element name="id" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Measurement">
+    <xs:sequence>
+      <xs:element name="key" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="value" minOccurs="0" maxOccurs="1" type="xs:anySimpleType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="State">
+    <xs:sequence>
+      <xs:element name="key" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="value" minOccurs="0" maxOccurs="1" type="xs:anySimpleType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TimeSeries">
+    <xs:sequence>
+      <xs:element name="key" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="records" minOccurs="0" maxOccurs="1" type="Records"/>
+      <xs:element name="from" minOccurs="0" maxOccurs="1" type="xs:dateTime"/>
+      <xs:element name="to" minOccurs="0" maxOccurs="1" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Records">
+    <xs:sequence>
+      <xs:element name="record" minOccurs="1" maxOccurs="unbounded" type="Record"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Record">
+    <xs:sequence>
+      <xs:element name="from" minOccurs="1" maxOccurs="1" type="xs:dateTime"/>
+      <xs:element name="to" minOccurs="1" maxOccurs="1" type="xs:dateTime"/>
+      <xs:element name="value" minOccurs="1" maxOccurs="1" type="xs:anySimpleType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Action">
+    <xs:sequence>
+      <xs:element name="executeOn" minOccurs="0" maxOccurs="1" type="xs:dateTime"/>
+      <xs:element name="key" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="parameters" minOccurs="1" maxOccurs="1" type="xs:anyType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Response">
+    <xs:sequence>
+      <xs:element name="result" minOccurs="1" maxOccurs="1" type="xs:boolean"/>
+      <xs:element name="action" minOccurs="0" maxOccurs="1" type="xs:anyType"/>
+      <xs:element name="measurement" minOccurs="0" maxOccurs="1" type="Measurement"/>
+      <xs:element name="state" minOccurs="0" maxOccurs="1" type="State"/>
+      <xs:element name="timeSeries" minOccurs="0" maxOccurs="1" type="TimeSeries"/>
+      <xs:element name="error" type="Error" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Message">
+    <xs:sequence>
+      <xs:element name="id" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="referenceId" minOccurs="0" maxOccurs="1" type="xs:string"/>
+      <xs:element name="type" minOccurs="1" maxOccurs="1" type="Type"/>
+      <xs:element name="request" minOccurs="0" maxOccurs="1" type="Request"/>
+      <xs:element name="response" minOccurs="0" maxOccurs="1" type="Response"/>
+      <xs:element name="createdOn" minOccurs="1" maxOccurs="1" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="request"/>
+      <xs:enumeration value="response"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Context">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="action"/>
+      <xs:enumeration value="measurement"/>
+      <xs:enumeration value="ping"/>
+      <xs:enumeration value="state"/>
+      <xs:enumeration value="timeSeries"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Method">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="create"/>
+      <xs:enumeration value="delete"/>
+      <xs:enumeration value="execute"/>
+      <xs:enumeration value="get"/>
+      <xs:enumeration value="query"/>
+      <xs:enumeration value="update"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Ping">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="Error">
+    <xs:sequence>
+      <xs:element name="code" minOccurs="1" maxOccurs="1" type="xs:string"/>
+      <xs:element name="message" minOccurs="0" maxOccurs="1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

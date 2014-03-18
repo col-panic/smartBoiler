@@ -1,0 +1,11 @@
+<project default="generate-jaxb-code">
+	<target name="generate-jaxb-code">
+		<java classname="com.sun.tools.internal.xjc.XJCFacade">
+			<arg value="-d" />
+			<arg value="src-gen" />
+			<arg value="-p" />
+			<arg value="com.bosch.vpp" />
+			<arg value="rsc/xsd/basicProtocol_VPP_V1.0.xsd" />
+		</java>
+	</target>
+</project>

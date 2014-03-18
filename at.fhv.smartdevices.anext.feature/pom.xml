@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+  <parent>
+    <relativePath>../at.fhv.smartboiler.releng</relativePath>
+    <groupId>at.fhv.smartboiler</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>at.fhv.smartboiler.feature</artifactId>
+  <packaging>eclipse-feature</packaging>
+
+</project> 
